@@ -1,4 +1,4 @@
-package com.example.firstgame
+package com.example.vaccineapp
 
 import org.junit.Test
 
