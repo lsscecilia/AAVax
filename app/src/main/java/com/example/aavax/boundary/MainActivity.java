@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.boundary;
 
 import android.os.Bundle;
 import android.view.MenuItem;
