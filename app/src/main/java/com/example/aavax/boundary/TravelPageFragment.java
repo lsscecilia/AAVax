@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.boundary;
 
 import android.os.Bundle;
 
@@ -11,11 +11,12 @@ import android.view.ViewGroup;
 
 import com.example.aavax.R;
 
-public class HomePageFragment extends Fragment {
+
+public class TravelPageFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home_page, container, false);
+        return inflater.inflate(R.layout.fragment_travel_page, container, false);
     }
 }

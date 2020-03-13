@@ -1,4 +1,4 @@
-package com.example.aavax.ui.login;
+package com.example.aavax.boundary.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,7 +19,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         final Button createAccount = findViewById(R.id.create_account_button);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.create_account_toolbar);
+        Toolbar toolbar = findViewById(R.id.create_account_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
 
         // back button
@@ -30,7 +30,6 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        // TODO : make create account button work
         // create account button
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,7 +37,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
     }
 
     @Override

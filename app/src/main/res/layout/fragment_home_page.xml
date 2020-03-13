@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/appBackground">
@@ -10,17 +12,57 @@
         android:layout_height="80dp"
         android:background="@color/colorPrimary" />
 
+    <ImageButton
+        android:id="@+id/add_vaccine_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="320dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        tools:ignore="VectorDrawableCompat"
+        android:layout_marginLeft="320dp" />
+
+    <ImageButton
+        android:id="@+id/delete_vaccine_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="360dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_delete_black_24dp"
+        tools:ignore="VectorDrawableCompat"
+        android:layout_marginLeft="360dp" />
+
     <TextView
         android:id="@+id/textView"
-        android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="37dp"
         android:layout_marginBottom="664dp"
+        android:maxLines="1"
         android:text="@string/my_vaccines"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/taken"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="90dp"
+        android:text="@string/taken"
+        android:textColor="#71787A"
+        android:textSize="18sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vaccine_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="130dp"
+        android:background="@color/white"/>
 
 </RelativeLayout>

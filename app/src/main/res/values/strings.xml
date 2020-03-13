@@ -26,4 +26,7 @@
     <string name="first_name">"First Name"</string>
     <string name="last_name">"Last Name"</string>
     <string name="dob">"Date Of Birth"</string>
+
+    <!-- Main home vaccine page -->
+    <string name="taken">"Taken"</string>
 </resources>
