@@ -13,7 +13,4 @@
   - transitions: forgot password text, invalid login
 - Home page
   -  add button, delete button, click vaccine to view details
-  - sidebar
 - Reminders
-- Profile
-- Add profile(s)
