@@ -46,6 +46,7 @@ public class HomePageFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    //TODO: call profile method to get list of vaccine log entries
     private void createListData() {
         Vaccine vac1 = new Vaccine("Hepatitis A", "detail 1");
         vaccineArrayList.add(vac1);

@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:padding="1dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:drawableRight="@drawable/ic_arrow_right"
+        android:textSize="18sp"
+        android:drawableEnd="@drawable/ic_arrow_right" />
 
 </LinearLayout>
