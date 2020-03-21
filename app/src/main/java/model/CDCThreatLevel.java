@@ -1,4 +1,4 @@
-package Entity;
+package model;
 
 public class CDCThreatLevel {
     private int level;

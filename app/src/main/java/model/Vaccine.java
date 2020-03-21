@@ -1,4 +1,4 @@
-package Entity;
+package model;
 
 public class Vaccine {
     private String name;

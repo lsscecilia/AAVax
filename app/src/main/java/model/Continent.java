@@ -1,4 +1,4 @@
-package Entity;
+package model;
 
 public class Continent {
     private String name;
