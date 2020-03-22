@@ -1,7 +1,9 @@
 package com.example.aavax.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -13,9 +15,27 @@ import com.example.aavax.R;
 
 public class HomePageFragment extends Fragment {
 
+    private static final String TAG = "MyVaccinations";
+
+    private IMainActivity mIMainActivity;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mIMainActivity.setToolbarTitle(getTag());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+
+        return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mIMainActivity = (IMainActivity) getActivity();
     }
 }
