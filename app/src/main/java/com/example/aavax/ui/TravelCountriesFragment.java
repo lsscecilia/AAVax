@@ -18,7 +18,7 @@ import com.example.aavax.R;
 
 import java.util.ArrayList;
 
-import Entity.Country;
+import model.Country;
 
 
 public class TravelCountriesFragment extends Fragment {
