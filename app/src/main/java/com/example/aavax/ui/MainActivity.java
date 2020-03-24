@@ -1,15 +1,18 @@
 package com.example.aavax.ui;
 
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
+import java.util.*;
 import com.example.aavax.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -19,10 +22,13 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
 
     private TextView mToolbarTitle;
 
+    private String[] continents;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Resources res = getResources();
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -84,6 +90,16 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         mToolbarTitle.setText(fragmentTag);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void inflateFragment(String fragmentTag, String message) {
+        continents = getResources().getStringArray(R.array.continents);
+        if (Arrays.asList(continents).contains(fragmentTag)){
+            TravelCountriesFragment fragment = new TravelCountriesFragment();
+            doFragmentTransaction(fragment, fragmentTag, true, message);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -93,4 +109,5 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
             getSupportFragmentManager().beginTransaction().commit();
         }
     }
+
 }

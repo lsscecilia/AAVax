@@ -16,8 +16,19 @@
         <item>Japan</item>
     </string-array>
 
-    <string name="europe">Europe</string>
     <string name="destination">Destination</string>
+
+    <string-array name="continents">
+        <item>Europe</item>
+        <item>Oceania</item>
+        <item>Asia</item>
+        <item>Africa</item>
+        <item>North America</item>
+        <item>South America</item>
+        <item>Antarctica</item>
+    </string-array>
+
+    <string name="europe">Europe</string>
     <string name="oceania">Oceania</string>
     <string name="asia">Asia</string>
     <string name="africa">Africa</string>
