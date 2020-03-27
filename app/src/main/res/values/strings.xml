@@ -16,6 +16,12 @@
         <item>Japan</item>
     </string-array>
 
+    <string-array name="vaccines">
+        <item>Vaccine1</item>
+        <item>Vaccine2</item>
+    </string-array>
+
+
     <string name="europe">Europe</string>
     <string name="destination">Destination</string>
     <string name="oceania">Oceania</string>
@@ -47,6 +53,5 @@
 
     <!-- Main home vaccine page -->
     <string name="taken">"Taken"</string>
-
 
 </resources>
