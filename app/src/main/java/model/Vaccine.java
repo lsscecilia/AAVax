@@ -8,6 +8,9 @@ public class Vaccine {
     private int numMonths;
     private Boolean oneTime;
 
+    public Vaccine() {
+    }
+
     public Vaccine(String name, String detail, int numMonths, Boolean oneTime) {
         this.name = name;
         this.detail = detail;

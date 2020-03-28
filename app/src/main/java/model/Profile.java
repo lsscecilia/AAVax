@@ -1,16 +1,27 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Profile {
     private String name;
-    private Date dateOfBirth;
-    private VaccineLog vaccineLog;
+    private String dateOfBirth;
+    private List<VaccineLogEntry> vaccineLogEntries;
+   // private VaccineLog vaccineLog;
 
-    public Profile(String name, Date dateOfBirth, VaccineLog vaccineLog) {
+
+    public Profile(String name, String dateOfBirth, ArrayList<VaccineLogEntry> vaccineLogEntries) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
-        this.vaccineLog = vaccineLog;
+        this.vaccineLogEntries = vaccineLogEntries;
+    }
+
+    public Profile(String name, String dateOfBirth)
+    {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        vaccineLogEntries = new ArrayList<>();
     }
 
     public String getName() {
@@ -21,19 +32,19 @@ public class Profile {
         this.name = name;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public VaccineLog getVaccineLog() {
-        return vaccineLog;
+    public List<VaccineLogEntry> getVaccineLogEntries() {
+        return vaccineLogEntries;
     }
 
-    public void setVaccineLog(VaccineLog vaccineLog) {
-        this.vaccineLog = vaccineLog;
+    public void setVaccineLogEntries(List<VaccineLogEntry> vaccineLogEntries) {
+        this.vaccineLogEntries = vaccineLogEntries;
     }
 }

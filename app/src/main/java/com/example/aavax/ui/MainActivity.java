@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import java.util.*;
@@ -22,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
     private static final String TAG = "MainActivity";
 
     private TextView mToolbarTitle;
+    private FirebaseManager firebaseManager;
 
     private String[] continents;
     private String[] countries;
@@ -32,6 +32,11 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         setContentView(R.layout.activity_main);
         Resources res = getResources();
         mToolbarTitle = findViewById(R.id.toolbar_title);
+
+        /*
+        firebaseManager =  new FirebaseManager();
+        firebaseManager.updateVaccine();*/
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);

@@ -1,17 +1,25 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class VaccineLog {
     private Date lastUpdated;
     private ArrayList<VaccineLogEntry> vaccineLogEntries;
-    private String profile;
+    //private String profile;  kiv do we need this?
 
-    public VaccineLog(Date lastUpdated, ArrayList<VaccineLogEntry> vaccineLogEntries, String profile) {
+
+    public VaccineLog(Date lastUpdated, ArrayList<VaccineLogEntry> vaccineLogEntries) {
         this.lastUpdated = lastUpdated;
         this.vaccineLogEntries = vaccineLogEntries;
-        this.profile = profile;
+    }
+
+    public VaccineLog()
+    {
+        //how u gonna do this
+        lastUpdated = new Date();
+        vaccineLogEntries = new ArrayList<>();
     }
 
     public Date getLastUpdated() {
@@ -30,11 +38,5 @@ public class VaccineLog {
         this.vaccineLogEntries = vaccineLogEntries;
     }
 
-    public String getProfile() {
-        return profile;
-    }
 
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
 }

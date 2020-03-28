@@ -23,6 +23,12 @@
         <item>Antarctica</item>
     </string-array>
 
+    <string-array name="vaccines">
+        <item>Vaccine1</item>
+        <item>Vaccine2</item>
+    </string-array>
+
+
     <string name="europe">Europe</string>
     <string name="oceania">Oceania</string>
     <string name="asia">Asia</string>
@@ -61,6 +67,5 @@
         <item>MMR</item>
         <item>Tdap</item>
     </string-array>
-
 
 </resources>
