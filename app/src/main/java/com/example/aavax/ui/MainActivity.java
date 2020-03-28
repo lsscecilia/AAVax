@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.homepage.HomePageFragment;
+import com.example.aavax.ui.reminder.RemindersPageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.greenrobot.eventbus.EventBus;

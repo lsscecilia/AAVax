@@ -46,6 +46,21 @@ public class MyVaccInfoFragment extends Fragment {
         final TextView nextDue = view.findViewById(R.id.nextDueFillText);
         final TextView remindMe = view.findViewById(R.id.remindMeFillText);
         final Button editBtn = view.findViewById(R.id.editBtn);
+        final Button viewVaccineDetail = view.findViewById(R.id.moreInfoText);
+
+        viewVaccineDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                Fragment myFragment = new VaccineDetailFragment();
+                Bundle bundle = new Bundle();
+                //bundle.putString("uId", uId);
+                System.out.println("vaccine name lolol2" + vaccineName);
+                bundle.putString("vaccineName",vaccineName);
+                myFragment.setArguments(bundle);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
+            }
+        });
 
 
         vaccine.setText(vaccineName);

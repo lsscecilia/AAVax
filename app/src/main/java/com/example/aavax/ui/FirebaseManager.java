@@ -196,6 +196,34 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
+
+    public void retrieveVaccineLogWithReminder(final MyCallbackVaccineLog myCallback, final String Uid)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<VaccineLogEntry> vaccineLogArrayList = new ArrayList<>();
+                System.out.println("user id in firebase manager: " + Uid);
+                for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").child("0").child("vaccineLogEntries").getChildren())
+                {
+                    if (data.getValue(VaccineLogEntry.class).getReminder())
+                    {
+                        vaccineLogArrayList.add(data.getValue(VaccineLogEntry.class));
+                        System.out.println(data.getValue(VaccineLogEntry.class).getVaccine().getName() + "usre vaccine log");
+                    }
+
+                }
+                myCallback.onCallback(vaccineLogArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void retrieveVaccineLog(final MyCallbackVaccineLog myCallback, final String Uid){
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
