@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
     private TextView mToolbarTitle;
 
     private String[] continents;
+    private String[] countries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +92,18 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         mToolbarTitle.setText(fragmentTag);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void inflateFragment(String fragmentTag, String message) {
         continents = getResources().getStringArray(R.array.continents);
+        countries = getResources().getStringArray(R.array.all_countries);
         if (Arrays.asList(continents).contains(fragmentTag)){
             TravelCountriesFragment fragment = new TravelCountriesFragment();
             doFragmentTransaction(fragment, fragmentTag, true, message);
+        }
+        else if (Arrays.asList(countries).contains(fragmentTag)){
+            TravelVaccinesFragment fragment = new TravelVaccinesFragment();
+            doFragmentTransaction(fragment, fragmentTag, true, message);
+
         }
     }
 
