@@ -49,6 +49,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 Activity.RESULT_OK,
                 new Intent().putExtra("selectedDate", selectedDate)
         );
+
         //TextView dateChosen = view.findViewById(R.id.dateChosen);
         //Button lastTakenDateBtn = view.findViewById(R.id.lastUpdatedBtn);
        // dateChosen.setText(currentDateString);

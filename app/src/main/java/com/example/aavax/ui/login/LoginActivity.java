@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
-                            updateUiWithUser(user);
+                            updateUiWithUser(user.getUid());
                             onEventBus(user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -109,8 +109,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // Update UI when login is successful
-    private void updateUiWithUser(FirebaseUser user) {
+    private void updateUiWithUser(String uId) {
+
+        Bundle b = new Bundle();
+        b.putString("userId",uId);
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtras(b);
         startActivity(intent);
         //TODO: how to link user to the next shit?
     }

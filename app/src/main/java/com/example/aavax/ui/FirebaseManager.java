@@ -98,25 +98,24 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
-
-
-    /*
-    public void addVaccineLogEntry(final String userId, LocalDate date, String vaccineName)
+    public void deleteVaccineLogEntry(final String userId, final String vaccineName)
     {
         database = FirebaseDatabase.getInstance();
+        vaccinesRef = database.getReference("Vaccines");
         userRef = database.getReference("users");
-        Vaccine vaccine = findVaccine(vaccineName);
+        //vaccines = new ArrayList<>();
 
-        final VaccineLogEntry vaccineLogEntry = new VaccineLogEntry(date,vaccine);
-        //final HashMap<String, VaccineLogEntry> hash = new HashMap<>();
-        System.out.println(userId+"user IDDDDDD");
-        final String key = userRef.child(userId).child("profiles").child("0").child("vaccineLogEntries").push().getKey();
-        //hash.put(key, vaccineLogEntry);
-        System.out.println(key+"KEYYYY");
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userRef.child(userId).child("profiles").child("0").child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
+                System.out.println("vaccine log entry count" + dataSnapshot.child(userId).child("profiles").child("0").child("vaccineLogEntries").getChildrenCount());
+                for (DataSnapshot data : dataSnapshot.child(userId).child("profiles").child("0").child("vaccineLogEntries").getChildren()) {
+                    System.out.println(data.getValue(VaccineLogEntry.class).getVaccine().getName() + "vaccineee nam eeeee");
+                    if (data.getValue(VaccineLogEntry.class).getVaccine().getName() == vaccineName) {
+                        userRef.child(userId).child("profiles").child("0").child("vaccineLogEntries").child(data.getKey()).removeValue();
+                    }
+                }
+
             }
 
             @Override
@@ -124,7 +123,50 @@ public class FirebaseManager implements firebaseInterface {
 
             }
         });
-    }*/
+    }
+
+    public void updateVaccineLogEntry(final String userId, final String vaccineName, final Date dateTaken, final Date dateDue, final String reminder)
+    {
+        database = FirebaseDatabase.getInstance();
+        vaccinesRef = database.getReference("Vaccines");
+        userRef = database.getReference("users");
+        //vaccines = new ArrayList<>();
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String key="";
+                System.out.println("vaccine log entry count"+ dataSnapshot.child(userId).child("profiles").child("0").child("vaccineLogEntries").getChildrenCount());
+                for (DataSnapshot data: dataSnapshot.child(userId).child("profiles").child("0").child("vaccineLogEntries").getChildren())
+                {
+                    System.out.println(data.getValue(VaccineLogEntry.class).getVaccine().getName() + "vaccineee nam eeeee");
+                    if (data.getValue(VaccineLogEntry.class).getVaccine().getName()==vaccineName)
+                    {
+                        key =data.getKey();
+                    }
+                }
+                System.out.println("keyy for vaccine entry log: "+key);
+                Vaccine vaccine = dataSnapshot.child(userId).child("profiles").child("0").child("vaccineLogEntries").child(key).getValue(VaccineLogEntry.class).getVaccine();
+                userRef.child(userId).child("profiles").child("0").child("vaccineLogEntries").child(key).removeValue();
+                VaccineLogEntry vaccineLogEntry;
+                if (reminder.compareTo("true")==0)
+                    vaccineLogEntry = new VaccineLogEntry(dateTaken, vaccine, dateDue, true);
+                else
+                    vaccineLogEntry = new VaccineLogEntry(dateTaken, vaccine, dateDue, false);
+
+
+                final String key1 = userRef.child(userId).child("profiles").child("0").child("vaccineLogEntries").push().getKey();
+                //hash.put(key, vaccineLogEntry);
+                System.out.println(key + "KEYYYY");
+                userRef.child(userId).child("profiles").child("0").child("vaccineLogEntries").child(key1).setValue(vaccineLogEntry);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
     public void addVaccineLogEntry(final String userId,final Date date, final String vaccineName) {
@@ -145,15 +187,6 @@ public class FirebaseManager implements firebaseInterface {
                 //hash.put(key, vaccineLogEntry);
                 System.out.println(key + "KEYYYY");
                 userRef.child(userId).child("profiles").child("0").child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
-                /*
-                for (DataSnapshot data: dataSnapshot.getChildren() )
-                {
-
-                    System.out.println(data.getValue(Vaccine.class).toString());
-                    vaccines.add(data.getValue(Vaccine.class));
-                    System.out.println("vaccine name:" + data.getValue(Vaccine.class).getName() + "details: "+ data.getValue(Vaccine.class).getDetail() );
-                    System.out.println("eh hello u spoil ah");
-                }*/
             }
 
             @Override
@@ -163,32 +196,111 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
-    public ArrayList<Vaccine> retrieveVaccines() {
+    public void retrieveVaccineLog(final MyCallbackVaccineLog myCallback, final String Uid){
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<VaccineLogEntry> vaccineLogArrayList = new ArrayList<>();
+                System.out.println("user id in firebase manager: " + Uid);
+                for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").child("0").child("vaccineLogEntries").getChildren())
+                {
+                    vaccineLogArrayList.add(data.getValue(VaccineLogEntry.class));
+                    System.out.println(data.getValue(VaccineLogEntry.class).getVaccine().getName() + "usre vaccine log");
+                }
+                myCallback.onCallback(vaccineLogArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public interface MyCallbackVaccineLog {
+        void onCallback(ArrayList<VaccineLogEntry> value);
+    }
+
+
+
+    public void retrieveUserVaccine(final MyCallback myCallback, final String Uid)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Vaccine> vaccineArrayList = new ArrayList<>();
+                System.out.println("user id in firebase manager: " + Uid);
+                for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").child("0").child("vaccineLogEntries").getChildren())
+                {
+                    vaccineArrayList.add(data.getValue(VaccineLogEntry.class).getVaccine());
+                    System.out.println(data.getValue(VaccineLogEntry.class).getVaccine().getName() + "usre vaccine");
+                }
+                myCallback.onCallback(vaccineArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    public void retrieveVaccines(final MyCallback myCallback) {
         database = FirebaseDatabase.getInstance();
         vaccinesRef = database.getReference("Vaccines");
-        vaccines = new ArrayList<>();
+
 
 
         vaccinesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot data: dataSnapshot.getChildren() )
+                ArrayList<Vaccine> vaccineArrayList = new ArrayList<>();
+                for (DataSnapshot data: dataSnapshot.getChildren())
                 {
-                    System.out.println(data.getValue(Vaccine.class).toString());
-                    System.out.println("vaccine name:" + data.getValue(Vaccine.class).getName() + "details: "+ data.getValue(Vaccine.class).getDetail() );
-                    vaccines.add(data.getValue(Vaccine.class));
-
+                    vaccineArrayList.add(data.getValue(Vaccine.class));
                 }
+                myCallback.onCallback(vaccineArrayList);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-        System.out.println("Trail" + vaccines.get(0).getName());
-        return vaccines;
+        //System.out.println("Trail" + vaccines.get(0).getName());
     }
 
+    public interface MyCallback {
+        void onCallback(ArrayList<Vaccine> value);
+    }
+
+    public interface MyCallBackVaccine {
+        void onCallback(Vaccine value);
+    }
+
+    public void retrieveVaccine(final MyCallBackVaccine myCallback, final String vaccineName){
+        database = FirebaseDatabase.getInstance();
+        vaccinesRef = database.getReference("Vaccines");
+        vaccinesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Vaccine vaccine;
+                vaccine = dataSnapshot.child(vaccineName).getValue(Vaccine.class);
+                myCallback.onCallback(vaccine);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
     public void retrieveVaccinesName() {
         database = FirebaseDatabase.getInstance();
@@ -212,37 +324,4 @@ public class FirebaseManager implements firebaseInterface {
             }
         });
     }
-
-    /*
-    public void addVaccineIntoProfile(final String vaccineName, final String userId, final Date date) {
-        database = FirebaseDatabase.getInstance();
-        vaccinesRef = database.getReference("Vaccines");
-        userRef = database.getReference("users");
-        vaccinesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Vaccine vaccine = dataSnapshot.child(vaccineName).getValue(Vaccine.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            VaccineLogEntry vaccineLogEntry = new VaccineLogEntry(date, vaccine, )
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userRef.child(userId).child("profiles").setValue()
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }*/
 }

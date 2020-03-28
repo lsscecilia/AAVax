@@ -1,6 +1,7 @@
 package com.example.aavax.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -10,13 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.homepage.HomePageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity implements IMainActivity {
 
     private static final String TAG = "MainActivity";
 
     private TextView mToolbarTitle;
+    private String uId;
     private FirebaseManager firebaseManager;
 
     @Override
@@ -34,9 +41,13 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         //I added this if statement to keep the selected fragment when rotating the device
+        //Bundle extras = intent.getExtras();
+        //uId = savedInstanceState.getString("userId");
+        String uId = getIntent().getExtras().getString("userId");
+        System.out.println("userid here is:  "+ uId);
         if (savedInstanceState == null) {
             Fragment fragment = new HomePageFragment();
-            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
+            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
         }
     }
 
@@ -64,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
                             title = getString(R.string.title_profile);
                             break;
                     }
-                    doFragmentTransaction(selectedFragment, title, true, "");
+                    doFragmentTransaction(selectedFragment, title, true, uId);
 
                     return true;
                 }
@@ -98,4 +109,31 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
             getSupportFragmentManager().beginTransaction().commit();
         }
     }
+
+    /**
+     * On fragment start, it will register for EventBus, a subscription Mechanism
+     */
+    @Override
+    public void onStart(){
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * On stop, it will stop getting updates from EventBus
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CustomMessageEvent event) {
+        Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
+        uId = event.getCustomMessage();
+        //DisplayName.setText(usernameImported);
+
+    }
+
 }

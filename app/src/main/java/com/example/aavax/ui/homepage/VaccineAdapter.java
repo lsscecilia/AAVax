@@ -17,12 +17,13 @@ import model.Vaccine;
 public class VaccineAdapter extends RecyclerView.Adapter<VaccineHolder> {
 
     private Context context;
-
+    private String uId;
     private ArrayList<Vaccine> vaccines;
 
-    public VaccineAdapter(Context context, ArrayList<Vaccine> vaccines) {
+    public VaccineAdapter(Context context, ArrayList<Vaccine> vaccines, String uId) {
         this.context = context;
         this.vaccines = vaccines;
+        this.uId = uId;
     }
 
     @Override
@@ -41,5 +42,6 @@ public class VaccineAdapter extends RecyclerView.Adapter<VaccineHolder> {
     public void onBindViewHolder(VaccineHolder holder, int position) {
         Vaccine vaccine = vaccines.get(position);
         holder.setDetails(vaccine);
+        holder.setUId(uId);
     }
 }

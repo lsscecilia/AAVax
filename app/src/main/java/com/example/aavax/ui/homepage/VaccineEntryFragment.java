@@ -1,9 +1,8 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.homepage;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.icu.text.SymbolTable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,13 +22,14 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
-import com.google.firebase.database.DatabaseReference;
+import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.DatePickerFragment;
+import com.example.aavax.ui.FirebaseManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +44,7 @@ public class VaccineEntryFragment extends Fragment {
     public static final int REQUEST_CODE = 11;
     String selectedDate;
     private FirebaseManager firebaseManager;
-    private List<String> vaccines;
+    private List<Vaccine> vaccines;
     private Date date;
     private String vaccineChoosen;
     private String uId;
@@ -73,15 +73,38 @@ public class VaccineEntryFragment extends Fragment {
             }
         });
 
-        //get vaccines from database
+        //get vaccines from database  --> if got time then do lol
+        final List<String> data = new ArrayList<>();
         firebaseManager = new FirebaseManager();
-        //vaccines = firebaseManager.retrieveVaccinesName();
-        ListView listView = new ListView(this.getActivity());
-        List<String> data = new ArrayList<>();
+        firebaseManager.retrieveVaccines(new FirebaseManager.MyCallback() {
+             @Override
+             public void onCallback(ArrayList<Vaccine> value) {
+                 System.out.println(value.get(0).getName() + "value got value not");
+                 for (Vaccine v: value)
+                 {
+                     data.add(v.getName());
+                 }
+             }
+        });
+        for (String s: data)
+        {
+            System.out.println("add is sucessful" + s);
+        }
 
+                //vaccines = firebaseManager.retrieveVaccinesName();
+        ListView listView = new ListView(this.getActivity());
+
+
+        /*
+        System.out.println("is the vaccine array list empty" + vaccines.isEmpty());
+        for (Vaccine v: vaccines)
+        {
+            data.add(v.getName());
+        }*/
+        /*
         data.add("Hepatitis A");
         data.add("Influenza (Flu)");
-        data.add("Measles");
+        data.add("Measles");*/
 
         /*
         for (String s: vaccines)
@@ -119,10 +142,11 @@ public class VaccineEntryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //save data
+                System.out.println(date.toString() + "DATE TAKENNNNN");
                 firebaseManager.addVaccineLogEntry(uId, date, vaccineChoosen);
                 //go back to HomePageFragment
                 Fragment fragment = new HomePageFragment();
-                doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
+                doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
 
             }
         });

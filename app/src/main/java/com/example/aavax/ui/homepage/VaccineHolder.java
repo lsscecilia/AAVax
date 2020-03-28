@@ -1,10 +1,14 @@
 package com.example.aavax.ui.homepage;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
@@ -14,6 +18,7 @@ import model.Vaccine;
 public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView vaccineName;
+    private String uId;
 
     public VaccineHolder(View itemView) {
         super(itemView);
@@ -25,11 +30,22 @@ public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnCli
         vaccineName.setText(vaccine.getName());
     }
 
+    public void setUId(String uId){
+        this.uId = uId;
+    }
+
     @Override
     public void onClick(View itemView) {
         AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
         Fragment myFragment = new MyVaccInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("uId", uId);
+        System.out.println("vaccine name lolol" + vaccineName.getText());
+        bundle.putString("vaccineName", (String) vaccineName.getText());
+        myFragment.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
     }
+
+
 }
 
