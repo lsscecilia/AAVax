@@ -1,30 +1,30 @@
-package com.example.aavax.ui.homepage;
+package com.example.aavax.ui;
 
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
-import com.example.aavax.ui.AbsVaccineHolder;
+import com.example.aavax.ui.homepage.MyVaccInfoFragment;
 
 import model.Vaccine;
 
-public class VaccineHolder extends AbsVaccineHolder {
 
+public abstract class AbsVaccineHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     private TextView vaccineName;
+    private TextView vaccineDate;
 
-    public VaccineHolder(View itemView) {
+    public AbsVaccineHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
         vaccineName = itemView.findViewById(R.id.vaccine_name);
+        vaccineDate = itemView.findViewById(R.id.vaccine_date);
     }
 
-    @Override
-    public void setDetails(Vaccine vaccine) {
-        vaccineName.setText(vaccine.getName());
-    }
+    public abstract void setDetails(Vaccine vaccine);
 
     @Override
     public void onClick(View itemView) {
@@ -33,4 +33,3 @@ public class VaccineHolder extends AbsVaccineHolder {
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
     }
 }
-

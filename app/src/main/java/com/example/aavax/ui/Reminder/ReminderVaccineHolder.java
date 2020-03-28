@@ -1,4 +1,4 @@
-package com.example.aavax.ui.homepage;
+package com.example.aavax.ui.Reminder;
 
 import android.view.View;
 import android.widget.TextView;
@@ -8,22 +8,26 @@ import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.AbsVaccineHolder;
+import com.example.aavax.ui.homepage.MyVaccInfoFragment;
 
 import model.Vaccine;
 
-public class VaccineHolder extends AbsVaccineHolder {
+public class ReminderVaccineHolder extends AbsVaccineHolder {
 
     private TextView vaccineName;
+    private TextView vaccineDate;
 
-    public VaccineHolder(View itemView) {
+    public ReminderVaccineHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
         vaccineName = itemView.findViewById(R.id.vaccine_name);
+        vaccineDate = itemView.findViewById(R.id.vaccine_date);
     }
 
     @Override
     public void setDetails(Vaccine vaccine) {
         vaccineName.setText(vaccine.getName());
+        vaccineDate.setText(vaccine.getDate());
     }
 
     @Override
@@ -33,4 +37,3 @@ public class VaccineHolder extends AbsVaccineHolder {
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
     }
 }
-

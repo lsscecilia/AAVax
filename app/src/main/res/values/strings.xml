@@ -47,6 +47,6 @@
 
     <!-- Main home vaccine page -->
     <string name="taken">"Taken"</string>
-
+    <string name="Next_due">"Next due"</string>
 
 </resources>

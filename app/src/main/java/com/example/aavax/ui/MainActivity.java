@@ -6,14 +6,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.Reminder.RemindersPageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity {
+public class  MainActivity extends AppCompatActivity implements IMainActivity {
 
     private static final String TAG = "MainActivity";
 

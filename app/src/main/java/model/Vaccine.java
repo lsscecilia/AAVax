@@ -2,11 +2,11 @@ package model;
 
 public class Vaccine {
     private String name;
-    private String detail;
+    private String date;
 
-    public Vaccine(String name, String detail) {
+    public Vaccine(String name, String date) {
         this.name = name;
-        this.detail = detail;
+        this.date = date;
     }
 
     public String getName() {
@@ -17,11 +17,11 @@ public class Vaccine {
         this.name = name;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getDate() {
+        return date;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public void setDate(String date) {
+        this.date = date;
     }
 }
