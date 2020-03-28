@@ -1,4 +1,5 @@
 package model;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class VaccineLogEntry {
@@ -14,12 +15,21 @@ public class VaccineLogEntry {
         this.reminder = reminder;
     }
 
+    public VaccineLogEntry(Date dateTaken, Vaccine vaccine) {
+        this.dateTaken = dateTaken;
+        this.vaccine = vaccine;
+    }
+
     public Date getDateTaken() {
         return dateTaken;
     }
 
     public void setDateTaken(Date dateTaken) {
         this.dateTaken = dateTaken;
+    }
+
+    public void setNextDue(Date nextDue) {
+        this.nextDue = nextDue;
     }
 
     public Vaccine getVaccine() {
@@ -32,10 +42,6 @@ public class VaccineLogEntry {
 
     public Date getNextDue() {
         return nextDue;
-    }
-
-    public void setNextDue(Date nextDue) {
-        this.nextDue = nextDue;
     }
 
     public boolean isReminder() {

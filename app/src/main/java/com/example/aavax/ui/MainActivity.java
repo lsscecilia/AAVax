@@ -18,12 +18,18 @@ public class  MainActivity extends AppCompatActivity implements IMainActivity {
     private static final String TAG = "MainActivity";
 
     private TextView mToolbarTitle;
+    private FirebaseManager firebaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mToolbarTitle = findViewById(R.id.toolbar_title);
+
+        /*
+        firebaseManager =  new FirebaseManager();
+        firebaseManager.updateVaccine();*/
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
