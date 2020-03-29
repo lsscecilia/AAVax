@@ -1,5 +1,6 @@
 package com.example.aavax.ui.reminder;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -10,13 +11,18 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.ArrayList;
 
@@ -26,6 +32,7 @@ import model.VaccineLogEntry;
 public class RemindersPageFragment extends Fragment {
 
     private static final String TAG = "RemindersFragment";
+    private static final int ERROR_DIALOG_REQUEST = 9001;
 
     private IMainActivity mIMainActivity;
 
@@ -52,6 +59,17 @@ public class RemindersPageFragment extends Fragment {
         uId = bundle.getString("Intent");
         // initialise vaccines
        // createListData();
+
+        if(isServicesOK()){
+            Button viewClinicsBtn = (Button) view.findViewById(R.id.ViewClinicsBtnRemind);
+            viewClinicsBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mIMainActivity.inflateFragment("Nearby Clinics", "");
+                }
+            });
+        }
+
         return view;
     }
 
@@ -79,5 +97,26 @@ public class RemindersPageFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mIMainActivity = (IMainActivity) getActivity();
+    }
+    public boolean isServicesOK(){
+        Log.d(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
+
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and user can make map requests
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //error occurred but resolvable
+            Log.d(TAG, "isServicesOK: resolvable error");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }
+        else{
+            Toast.makeText(getContext(), "No map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 }

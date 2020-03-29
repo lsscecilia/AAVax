@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import model.Account;
+import model.Country;
 import model.Vaccine;
 import model.VaccineLog;
 import model.VaccineLogEntry;
@@ -29,7 +30,10 @@ public class FirebaseManager implements firebaseInterface {
     private FirebaseDatabase database;
     private DatabaseReference vaccinesRef;
     private DatabaseReference userRef;
+    private DatabaseReference countriesRef;
     private ArrayList<Vaccine> vaccines;
+
+    private static Vaccine bcg, cholera, hpv, hep_a, hep_b, flu, japanese_encephalitis, measles, polio, shingles, tdap, typhoid, varicella, yellow_fever;
 
     public FirebaseManager() {
     }
@@ -89,6 +93,22 @@ public class FirebaseManager implements firebaseInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 vaccinesRef.child(vaccine.getName()).setValue(vaccine);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void storeCountry(final Country country) {
+        database = FirebaseDatabase.getInstance();
+        //users = database.getReference("Users");
+        vaccinesRef = database.getReference("Countries");
+        vaccinesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                vaccinesRef.child(country.getName()).setValue(country);
             }
 
             @Override
@@ -329,6 +349,91 @@ public class FirebaseManager implements firebaseInterface {
         });
 
     }
+
+    public interface MyCallBackCountry {
+        void onCallback(Country value);
+    }
+
+    public void retrieveCountry(final MyCallBackCountry myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Country country;
+                country = dataSnapshot.child(countryName).getValue(Country.class);
+                myCallback.onCallback(country);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void initCountries() {
+        retrieveVaccines(new MyCallback() {
+
+            @Override
+            public void onCallback(ArrayList<Vaccine> value) {
+                vaccines = value;
+                for (Vaccine vaccine : vaccines) {
+                    if (vaccine.getName().equals("Bacille Calmette-Guerin")) {
+                        bcg = vaccine;
+                        System.out.println("Success bcg");
+                    }
+                    if (vaccine.getName().equals("Cholera")){
+                        cholera = vaccine;
+                        System.out.println("Success cholera");
+                    }
+                    if (vaccine.getName().equals("Hepatitis A")){
+                        hep_a = vaccine;
+                        System.out.println("Success hep a");
+                    }
+                    if (vaccine.getName().equals("Human Papillomavirus"))
+                        hpv = vaccine;
+                    if (vaccine.getName().equals("Hepatitis B"))
+                        hep_b = vaccine;
+                    if (vaccine.getName().equals("Influenza (Flu)"))
+                        flu = vaccine;
+                    if (vaccine.getName().equals("Japanese Encephalitis"))
+                        japanese_encephalitis = vaccine;
+                    if (vaccine.getName().equals("Measles"))
+                        measles = vaccine;
+                    if (vaccine.getName().equals("Polio"))
+                        polio = vaccine;
+                    if (vaccine.getName().equals("Shingles"))
+                        shingles = vaccine;
+                    if (vaccine.getName().equals("Tdap"))
+                        tdap = vaccine;
+                    if (vaccine.getName().equals("Typhoid"))
+                        typhoid = vaccine;
+                    if (vaccine.getName().equals("Varicella"))
+                        varicella = vaccine;
+                    if (vaccine.getName() == "Yellow Fever")
+                        yellow_fever = vaccine;
+                }
+            }
+        });
+
+        ArrayList<Vaccine> manVMalaysia = new ArrayList<>();
+        ArrayList<Vaccine> recVMaylaysia = new ArrayList<>();
+        manVMalaysia.add(flu);
+        manVMalaysia.add(measles);
+        manVMalaysia.add(polio);
+        manVMalaysia.add(varicella);
+
+        recVMaylaysia.add(hep_a);
+        recVMaylaysia.add(typhoid);
+
+        Country malaysia = new Country("Malaysia", manVMalaysia, recVMaylaysia);
+        storeCountry(malaysia);
+
+
+    }
+
 
     public void retrieveVaccinesName() {
         database = FirebaseDatabase.getInstance();

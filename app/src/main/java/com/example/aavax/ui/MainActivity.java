@@ -122,6 +122,10 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
             doFragmentTransaction(fragment, fragmentTag, true, message);
 
         }
+        else if (fragmentTag.equals("Nearby Clinics")){
+            MapViewFragment fragment = new MapViewFragment();
+            doFragmentTransaction(fragment, fragmentTag, true, message);
+        }
     }
 
     @Override
