@@ -1,7 +1,6 @@
 package com.example.aavax.ui;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.aavax.R;
 
@@ -21,7 +20,7 @@ public class TravelPageFragment extends Fragment implements View.OnClickListener
     private static final String TAG = "TravelFragment";
 
     //widgets
-    //private Button AsiaBtn, EuropeBtn, NorthAmericaBtn, SouthAmericaBtn, OceaniaBtn, AfricaBtn;
+    private ImageView AsiaImg, EuropeImg, NorthAmericaImg, SouthAmericaImg, OceaniaImg, AfricaImg;
     //vars
     private IMainActivity mIMainActivity;
 
@@ -35,19 +34,19 @@ public class TravelPageFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_travel_page, container, false);
 
-//        AsiaBtn = view.findViewById();
-//        EuropeBtn = view.findViewById();
-//        NorthAmericaBtn = view.findViewById();
-//        SouthAmericaBtn = view.findViewById();
-//        OceaniaBtn = view.findViewById();
-//        AfricaBtn = view.findViewById();
+        AsiaImg = view.findViewById(R.id.AsiaImg);
+        EuropeImg = view.findViewById(R.id.EuropeImg);
+        NorthAmericaImg = view.findViewById(R.id.NorthAmericaImg);
+        SouthAmericaImg = view.findViewById(R.id.SouthAmericaImg);
+        OceaniaImg = view.findViewById(R.id.OceaniaImg);
+        AfricaImg = view.findViewById(R.id.AfricaImg);
 
-//        AsiaBtn.setOnClickListener(this);
-//        EuropeBtn.setOnClickListener(this);
-//        NorthAmericaBtn.setOnClickListener(this);
-//        SouthAmericaBtn.setOnClickListener(this);
-//        OceaniaBtn.setOnClickListener(this);
-//        AfricaBtn.setOnClickListener(this);
+        AsiaImg.setOnClickListener(this);
+        EuropeImg.setOnClickListener(this);
+        NorthAmericaImg.setOnClickListener(this);
+        SouthAmericaImg.setOnClickListener(this);
+        OceaniaImg.setOnClickListener(this);
+        AfricaImg.setOnClickListener(this);
 
         return view;
     }
@@ -61,6 +60,7 @@ public class TravelPageFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
 
+        mIMainActivity.inflateFragment(String.valueOf(v.getContentDescription()), String.valueOf(v.getContentDescription()));
 //        switch (v.getId()){
 //            case R.id.btn_asia:{
 //                mIMainActivity.inflateFragment(getString(R.string.fragment_a), message);
