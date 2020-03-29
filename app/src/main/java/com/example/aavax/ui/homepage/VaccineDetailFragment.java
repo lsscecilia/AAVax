@@ -16,7 +16,6 @@ import com.example.aavax.ui.IMainActivity;
 import java.util.ArrayList;
 
 import model.Vaccine;
-import model.VaccineLog;
 
 public class VaccineDetailFragment extends Fragment {
 

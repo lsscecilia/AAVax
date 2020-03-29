@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,13 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.DatePickerFragment;
 import com.example.aavax.ui.FirebaseManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +57,10 @@ public class EditMyVaccInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
         firebaseManager = new FirebaseManager();
         View view = inflater.inflate(R.layout.fragment_edit_my_vacc_info, container, false);
         final TextView vaccine = view.findViewById(R.id.vaccineName2);
@@ -64,7 +74,7 @@ public class EditMyVaccInfoFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         vaccineName = bundle.getString("vaccineName");
-        uId = bundle.getString("uId");
+        //uId = bundle.getString("uId");
 
         vaccine.setText(vaccineName);
         //retrieve vaccine
@@ -122,13 +132,6 @@ public class EditMyVaccInfoFragment extends Fragment {
 
         data.add("true");
         data.add("false");
-        //data.add("Measles");
-
-        /*
-        for (String s: vaccines)
-        {
-            System.out.println(s);
-        }*/
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, data);
         listView.setAdapter(adapter);
@@ -237,5 +240,28 @@ public class EditMyVaccInfoFragment extends Fragment {
             transaction.addToBackStack(tag);
         }
         transaction.commit();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        //EventBus.getDefault().register(this);
+    }
+
+    /**
+     * On stop, it will stop getting updates from EventBus
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CustomMessageEvent event) {
+        Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
+        uId = event.getCustomMessage();
+        //DisplayName.setText(usernameImported);
+
     }
 }

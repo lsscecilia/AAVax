@@ -44,11 +44,11 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         //I added this if statement to keep the selected fragment when rotating the device
         //Bundle extras = intent.getExtras();
         //uId = savedInstanceState.getString("userId");
-        String uId = getIntent().getExtras().getString("userId");
+       // String uId = getIntent().getExtras().getString("userId");
         System.out.println("userid here is:  "+ uId);
         if (savedInstanceState == null) {
             Fragment fragment = new HomePageFragment();
-            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
+            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
         }
     }
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
                             title = getString(R.string.title_profile);
                             break;
                     }
-                    doFragmentTransaction(selectedFragment, title, true, uId);
+                    doFragmentTransaction(selectedFragment, title, true, "");
 
                     return true;
                 }

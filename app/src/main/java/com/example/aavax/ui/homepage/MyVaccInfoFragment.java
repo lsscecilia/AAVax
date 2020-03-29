@@ -1,23 +1,26 @@
 package com.example.aavax.ui.homepage;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import model.Vaccine;
-import model.VaccineLog;
 import model.VaccineLogEntry;
 
 //TODO: display correct vacc info
@@ -32,12 +35,15 @@ public class MyVaccInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         firebaseManager = new FirebaseManager();
         View view = inflater.inflate(R.layout.fragment_my_vacc_info, container, false);
         Bundle bundle = this.getArguments();
 
         vaccineName = bundle.getString("vaccineName");
-        uId = bundle.getString("uId");
+        //uId = bundle.getString("uId");
 
         System.out.println(vaccineName + "my vac info vaccine name");
 
@@ -107,5 +113,28 @@ public class MyVaccInfoFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        //EventBus.getDefault().register(this);
+    }
+
+    /**
+     * On stop, it will stop getting updates from EventBus
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CustomMessageEvent event) {
+        Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
+        uId = event.getCustomMessage();
+        //DisplayName.setText(usernameImported);
+
     }
 }

@@ -10,13 +10,19 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -43,13 +49,17 @@ public class RemindersPageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
         View view = inflater.inflate(R.layout.fragment_reminders_page, container, false);
         firebaseManager = new FirebaseManager();
         super.onCreateView(inflater, container, savedInstanceState);
         vaccineLogEntries = new ArrayList<>();
 
         Bundle bundle = this.getArguments();
-        uId = bundle.getString("Intent");
+        //uId = bundle.getString("Intent");
         // initialise vaccines
        // createListData();
         return view;
@@ -80,4 +90,28 @@ public class RemindersPageFragment extends Fragment {
         super.onAttach(context);
         mIMainActivity = (IMainActivity) getActivity();
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        //EventBus.getDefault().register(this);
+    }
+
+    /**
+     * On stop, it will stop getting updates from EventBus
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CustomMessageEvent event) {
+        Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
+        uId = event.getCustomMessage();
+        //DisplayName.setText(usernameImported);
+
+    }
+
 }
