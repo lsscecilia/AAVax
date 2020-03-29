@@ -20,24 +20,23 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.557"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.004" />
+        app:layout_constraintVertical_bias="0.009" />
 
     <Button
         android:id="@+id/chooseDateBtn"
         android:layout_width="198dp"
         android:layout_height="50dp"
-        android:layout_marginTop="158dp"
-        android:layout_marginBottom="432dp"
+        android:layout_marginTop="26dp"
         android:text="Choose date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.859"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.625" />
+        app:layout_constraintTop_toBottomOf="@+id/editVaccine"
+        app:layout_constraintVertical_bias="0.058" />
 
     <EditText
         android:id="@+id/editVaccine"
@@ -47,12 +46,12 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="vaccine"
-        app:layout_constraintBottom_toTopOf="@+id/chooseDateBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.843"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.81" />
+        app:layout_constraintVertical_bias="0.162" />
 
     <Button
         android:id="@+id/addVaccineBtn"
@@ -61,10 +60,9 @@
         android:text="Add Entry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.543" />
+        app:layout_constraintVertical_bias="0.54" />
 
     <TextView
         android:id="@+id/vaccineTakenText"
@@ -74,10 +72,10 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editVaccine"
-        app:layout_constraintHorizontal_bias="0.537"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.179" />
+        app:layout_constraintVertical_bias="0.176" />
 
     <TextView
         android:id="@+id/dateTakenText"
@@ -91,5 +89,5 @@
         app:layout_constraintHorizontal_bias="0.404"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vaccineTakenText"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.061" />
 </androidx.constraintlayout.widget.ConstraintLayout>

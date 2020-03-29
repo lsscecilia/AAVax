@@ -1,33 +1,36 @@
-package com.example.aavax.ui.homepage;
+package com.example.aavax.ui.reminder;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.homepage.MyVaccInfoFragment;
 
 import model.Vaccine;
+import model.VaccineLogEntry;
 
-public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+public class ReminderHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     private TextView vaccineName;
+    private TextView vaccineDate;
     private String uId;
 
-    public VaccineHolder(View itemView) {
+    public ReminderHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
         vaccineName = itemView.findViewById(R.id.vaccine_name);
+        vaccineDate = itemView.findViewById(R.id.vaccine_date);
     }
 
-    public void setDetails(Vaccine vaccine) {
-        vaccineName.setText(vaccine.getName());
+
+    public void setDetails(VaccineLogEntry vaccineLogEntry) {
+        vaccineName.setText(vaccineLogEntry.getVaccine().getName());
+        vaccineDate.setText(vaccineLogEntry.getNextDue().getMonth()+"/"+vaccineLogEntry.getNextDue().getDate()+"/"+vaccineLogEntry.getNextDue().getYear());
+
     }
 
     public void setUId(String uId){
@@ -35,7 +38,8 @@ public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnCli
     }
 
     @Override
-    public void onClick(View itemView) {
+    public void onClick(View v) {
+        //link to my vacc info
         AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
         Fragment myFragment = new MyVaccInfoFragment();
         Bundle bundle = new Bundle();
@@ -45,7 +49,4 @@ public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnCli
         myFragment.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
     }
-
-
 }
-

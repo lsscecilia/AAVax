@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.homepage;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,21 +18,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.aavax.R;
 import model.Vaccine;
-import com.example.aavax.ui.homepage.VaccineAdapter;
+
+import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.FirebaseManager;
+import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 public class HomePageFragment extends Fragment {
 
@@ -70,11 +69,9 @@ public class HomePageFragment extends Fragment {
             }
         });
         // initialise vaccines
+        FirebaseManager firebaseManager = new FirebaseManager();
+        //vaccineArrayList = firebaseManager.getVaccines();
         createListData();
-        //firebaseManager.retrieveVaccines();
-
-
-
 
         return view;
     }
@@ -87,12 +84,27 @@ public class HomePageFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        //uId = savedInstanceState.getString("Intent");
+        System.out.println("when is this executed? uid: "+uId);
         recyclerView = getView().findViewById(R.id.vaccine_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // add line after each vaccine row
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        adapter = new VaccineAdapter(getActivity(), vaccineArrayList);
-        recyclerView.setAdapter(adapter);
+        //vaccineArrayList = firebaseManager.getVaccines();
+        Bundle bundle = this.getArguments();
+        uId = bundle.getString("Intent");
+        System.out.println("user id in home page fragment: "+uId);
+
+        firebaseManager.retrieveUserVaccine(new FirebaseManager.MyCallback() {
+            @Override
+            public void onCallback(ArrayList<Vaccine> value) {
+                vaccineArrayList = value;
+                adapter = new VaccineAdapter(getActivity(), vaccineArrayList, uId);
+                System.out.println("FOR THE RECYCLER: is arraylist empty here? "+vaccineArrayList.isEmpty());
+                recyclerView.setAdapter(adapter);
+            }
+        }, uId);
+
     }
 
     //TODO: call profile method to get list of vaccine log entries
