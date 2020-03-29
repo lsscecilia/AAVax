@@ -1,15 +1,19 @@
 package com.example.aavax.ui;
 
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
+import java.util.*;
 import com.example.aavax.R;
 import com.example.aavax.ui.homepage.HomePageFragment;
 import com.example.aavax.ui.reminder.RemindersPageFragment;
@@ -27,10 +31,14 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
     private String uId;
     private FirebaseManager firebaseManager;
 
+    private String[] continents;
+    private String[] countries;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Resources res = getResources();
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
         /*
@@ -102,6 +110,21 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
     }
 
     @Override
+    public void inflateFragment(String fragmentTag, String message) {
+        continents = getResources().getStringArray(R.array.continents);
+        countries = getResources().getStringArray(R.array.all_countries);
+        if (Arrays.asList(continents).contains(fragmentTag)){
+            TravelCountriesFragment fragment = new TravelCountriesFragment();
+            doFragmentTransaction(fragment, fragmentTag, true, message);
+        }
+        else if (Arrays.asList(countries).contains(fragmentTag)){
+            TravelVaccinesFragment fragment = new TravelVaccinesFragment();
+            doFragmentTransaction(fragment, fragmentTag, true, message);
+
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         System.out.println(getSupportFragmentManager().getBackStackEntryCount());
@@ -110,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
             getSupportFragmentManager().beginTransaction().commit();
         }
     }
+
 
     /**
      * On fragment start, it will register for EventBus, a subscription Mechanism
