@@ -30,14 +30,6 @@ public class Profile {
         thisProfile = false;
     }
 
-    public boolean getThisProfile() {
-        return thisProfile;
-    }
-
-    public void setThisProfile(boolean thisProfile) {
-        this.thisProfile = thisProfile;
-    }
-
     public String getName() {
         return name;
     }
@@ -60,5 +52,13 @@ public class Profile {
 
     public void setVaccineLogEntries(List<VaccineLogEntry> vaccineLogEntries) {
         this.vaccineLogEntries = vaccineLogEntries;
+    }
+
+    public boolean getThisProfile() {
+        return thisProfile;
+    }
+
+    public void setThisProfile(boolean thisProfile) {
+        this.thisProfile = thisProfile;
     }
 }

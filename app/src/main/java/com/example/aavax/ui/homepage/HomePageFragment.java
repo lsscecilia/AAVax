@@ -94,7 +94,7 @@ public class HomePageFragment extends Fragment {
         //uId = bundle.getString("Intent");
         System.out.println("user id in home page fragment: "+uId);
 
-        //retrieve vaccine
+        //retrieve vaccine - here that got error
         firebaseManager.retrieveUserVaccine(new FirebaseManager.MyCallback() {
             @Override
             public void onCallback(ArrayList<Vaccine> value) {
