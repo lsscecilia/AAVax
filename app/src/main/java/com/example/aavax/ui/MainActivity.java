@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 TextView email = findViewById(R.id.emailaddress);
-                email.setText(dataSnapshot.child(uId).child("email").getValue(String.class));
+                //email.setText(dataSnapshot.child(uId).child("email").getValue(String.class));
                 if (dataSnapshot.child(uId).child("profiles").getChildrenCount()!=1)
                 {
                     for (DataSnapshot data: dataSnapshot.child(uId).child("profiles").getChildren())
