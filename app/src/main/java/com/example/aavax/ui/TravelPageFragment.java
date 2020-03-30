@@ -28,6 +28,7 @@ public class TravelPageFragment extends Fragment implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(getTag());
+
     }
     @Nullable
     @Override

@@ -16,24 +16,24 @@ import com.example.aavax.R;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class RecyclerViewClinicAdapter extends RecyclerView.Adapter<RecyclerViewClinicAdapter.ViewHolder>{
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<String> mVaccineNames = new ArrayList<>();
-    private ArrayList<Integer> mTakenImgs = new ArrayList<>();
+    private ArrayList<String> mClinicNames = new ArrayList<>();
+    private ArrayList<String> mDistances = new ArrayList<>();
     //private Context mContext;
     private IMainActivity mIMainActivity;
 
-    public RecyclerViewAdapter(ArrayList<String> mVaccineNames, ArrayList<Integer> mTakenImgs) {
-        this.mVaccineNames = mVaccineNames;
-        this.mTakenImgs = mTakenImgs;
+    public RecyclerViewClinicAdapter(ArrayList<String> mClinicNames, ArrayList<String> mDistances) {
+        this.mClinicNames = mClinicNames;
+        this.mDistances = mDistances;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recommended_vaccine_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.clinic_row, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -42,37 +42,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        holder.vaccineName.setText(mVaccineNames.get(position));
+        holder.clinicName.setText(mClinicNames.get(position));
 
-        holder.takenImg.setImageResource(mTakenImgs.get(position));
+        holder.distanceValue.setText(mDistances.get(position));
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on: " + mVaccineNames.get(position));
-                Context context = v.getContext();
-                mIMainActivity = (IMainActivity) context;
-                mIMainActivity.inflateFragment(mVaccineNames.get(position), mVaccineNames.get(position));
+                Log.d(TAG, "onClick: clicked on: " + mClinicNames.get(position));
+
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mVaccineNames.size();
+        return mClinicNames.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView takenImg;
-        TextView vaccineName;
+        TextView distanceValue;
+        TextView clinicName;
         RelativeLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            takenImg = itemView.findViewById(R.id.image_taken);
-            vaccineName = itemView.findViewById(R.id.vaccine_name_text);
-            parentLayout = itemView.findViewById(R.id.parent_layout);
+            distanceValue = itemView.findViewById(R.id.distance_value);
+            clinicName = itemView.findViewById(R.id.clinic_name_text);
+            parentLayout = itemView.findViewById(R.id.clinic_parent_layout);
         }
     }
 }
