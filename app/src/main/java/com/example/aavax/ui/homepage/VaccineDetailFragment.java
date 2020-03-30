@@ -29,12 +29,13 @@ public class VaccineDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragement_vaccine_detail, container, false);
+        //mIMainActivity.setToolbarTitle(getTag());
         firebaseManager = new FirebaseManager();
         final TextView vaccineNameText = view.findViewById(R.id.vaccineName3);
         final TextView vaccineDetailText = view.findViewById(R.id.vacccineDetailText);
         Bundle bundle = this.getArguments();
 
-        vaccineName = bundle.getString("vaccineName");
+        vaccineName = bundle.getString(getString(R.string.intent_message));
         vaccineNameText.setText(vaccineName);
 
         firebaseManager.retrieveVaccines(new FirebaseManager.MyCallback() {

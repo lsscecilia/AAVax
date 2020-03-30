@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import java.util.*;
 import com.example.aavax.R;
 import com.example.aavax.ui.homepage.HomePageFragment;
+import com.example.aavax.ui.homepage.VaccineDetailFragment;
 import com.example.aavax.ui.reminder.RemindersPageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
 
     private String[] continents;
     private String[] countries;
+    private String[] vaccines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
     public void inflateFragment(String fragmentTag, String message) {
         continents = getResources().getStringArray(R.array.continents);
         countries = getResources().getStringArray(R.array.all_countries);
+        vaccines = getResources().getStringArray(R.array.vaccines);
         if (Arrays.asList(continents).contains(fragmentTag)){
             TravelCountriesFragment fragment = new TravelCountriesFragment();
             doFragmentTransaction(fragment, fragmentTag, true, message);
@@ -126,6 +129,12 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
             MapViewFragment fragment = new MapViewFragment();
             doFragmentTransaction(fragment, fragmentTag, true, message);
         }
+
+        else if (Arrays.asList(vaccines).contains(fragmentTag)){
+            VaccineDetailFragment fragment = new VaccineDetailFragment();
+            doFragmentTransaction(fragment, fragmentTag, true, message);
+        }
+
     }
 
     @Override

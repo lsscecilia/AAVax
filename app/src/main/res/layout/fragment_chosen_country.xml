@@ -7,9 +7,9 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/CountryImg"
-        android:layout_width="411dp"
-        android:layout_height="192dp"
+        android:id="@+id/countryImg"
+        android:layout_width="404dp"
+        android:layout_height="105dp"
         android:contentDescription="CountryImg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,17 +27,17 @@
         android:text="CDC Travel Health Notice"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CountryImg" />
+        app:layout_constraintTop_toBottomOf="@+id/countryImg" />
 
-    <TableRow
-        android:id="@+id/tableRow"
-        android:layout_width="401dp"
-        android:layout_height="78dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+    <ExpandableListView
+        android:id="@+id/cdcLevelList"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+    </ExpandableListView>
+
 
     <TextView
         android:id="@+id/textView2"
@@ -49,12 +49,12 @@
         android:text="Mandatory Vaccines"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+        app:layout_constraintTop_toBottomOf="@+id/cdcLevelList" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMandatoryVaccines"
         android:layout_width="405dp"
-        android:layout_height="79dp"
+        android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -72,12 +72,14 @@
         android:text="Recommended Vaccines"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewMandatoryVaccines" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewMandatoryVaccines"
+        android:scaleType="fitXY"
+        android:tint="#80000000"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewRecommendedVaccines"
         android:layout_width="405dp"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"

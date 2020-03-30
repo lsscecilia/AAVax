@@ -24,8 +24,20 @@
     </string-array>
 
     <string-array name="vaccines">
-        <item>Vaccine1</item>
-        <item>Vaccine2</item>
+        <item>Bacille Calmette-Guerin</item>
+        <item>Cholera</item>
+        <item>Hepatitis A</item>
+        <item>Hepatitis B</item>
+        <item>Human Papillomavirus</item>
+        <item>Influenza (Flu)</item>
+        <item>Japanese Encephalitis</item>
+        <item>Measles</item>
+        <item>Polio</item>
+        <item>Shingles</item>
+        <item>Tdap</item>
+        <item>Typhoid</item>
+        <item>Varicella</item>
+        <item>Yellow Fever</item>
     </string-array>
 
 

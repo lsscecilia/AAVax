@@ -14,11 +14,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import model.Account;
+import model.CDCThreatLevel;
 import model.Country;
 import model.Vaccine;
 import model.VaccineLog;
@@ -350,19 +352,21 @@ public class FirebaseManager implements firebaseInterface {
 
     }
 
-    public interface MyCallBackCountry {
-        void onCallback(Country value);
+    public interface MyCallBackVaccines {
+        void onCallback(ArrayList<String> vaccines);
     }
 
-    public void retrieveCountry(final MyCallBackCountry myCallback, final String countryName){
+    public void retrieveMandatoryVaccines(final MyCallBackVaccines myCallback, final String countryName){
         database = FirebaseDatabase.getInstance();
         countriesRef = database.getReference("Countries");
         countriesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Country country;
-                country = dataSnapshot.child(countryName).getValue(Country.class);
-                myCallback.onCallback(country);
+                String manVacData;
+                manVacData = dataSnapshot.child(countryName).child("mandatoryVaccines").getValue(String.class);
+                System.out.println(manVacData);
+                ArrayList<String> mandatoryVaccines = new ArrayList<String>(Arrays.asList(manVacData.split("\\s*,\\s*")));
+                myCallback.onCallback(mandatoryVaccines);
 
             }
             @Override
@@ -373,64 +377,24 @@ public class FirebaseManager implements firebaseInterface {
 
     }
 
-    public void initCountries() {
-        retrieveVaccines(new MyCallback() {
-
+    public void retrieveRecommendedVaccines(final MyCallBackVaccines myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onCallback(ArrayList<Vaccine> value) {
-                vaccines = value;
-                for (Vaccine vaccine : vaccines) {
-                    if (vaccine.getName().equals("Bacille Calmette-Guerin")) {
-                        bcg = vaccine;
-                        System.out.println("Success bcg");
-                    }
-                    if (vaccine.getName().equals("Cholera")){
-                        cholera = vaccine;
-                        System.out.println("Success cholera");
-                    }
-                    if (vaccine.getName().equals("Hepatitis A")){
-                        hep_a = vaccine;
-                        System.out.println("Success hep a");
-                    }
-                    if (vaccine.getName().equals("Human Papillomavirus"))
-                        hpv = vaccine;
-                    if (vaccine.getName().equals("Hepatitis B"))
-                        hep_b = vaccine;
-                    if (vaccine.getName().equals("Influenza (Flu)"))
-                        flu = vaccine;
-                    if (vaccine.getName().equals("Japanese Encephalitis"))
-                        japanese_encephalitis = vaccine;
-                    if (vaccine.getName().equals("Measles"))
-                        measles = vaccine;
-                    if (vaccine.getName().equals("Polio"))
-                        polio = vaccine;
-                    if (vaccine.getName().equals("Shingles"))
-                        shingles = vaccine;
-                    if (vaccine.getName().equals("Tdap"))
-                        tdap = vaccine;
-                    if (vaccine.getName().equals("Typhoid"))
-                        typhoid = vaccine;
-                    if (vaccine.getName().equals("Varicella"))
-                        varicella = vaccine;
-                    if (vaccine.getName() == "Yellow Fever")
-                        yellow_fever = vaccine;
-                }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String recVacData;
+                recVacData = dataSnapshot.child(countryName).child("recommendedVaccines").getValue(String.class);
+                System.out.println(recVacData);
+                ArrayList<String> recommendedVaccines = new ArrayList<String>(Arrays.asList(recVacData.split("\\s*,\\s*")));
+                myCallback.onCallback(recommendedVaccines);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-
-        ArrayList<Vaccine> manVMalaysia = new ArrayList<>();
-        ArrayList<Vaccine> recVMaylaysia = new ArrayList<>();
-        manVMalaysia.add(flu);
-        manVMalaysia.add(measles);
-        manVMalaysia.add(polio);
-        manVMalaysia.add(varicella);
-
-        recVMaylaysia.add(hep_a);
-        recVMaylaysia.add(typhoid);
-
-        Country malaysia = new Country("Malaysia", manVMalaysia, recVMaylaysia);
-        storeCountry(malaysia);
-
 
     }
 
@@ -456,5 +420,31 @@ public class FirebaseManager implements firebaseInterface {
 
             }
         });
+    }
+
+    public interface MyCallBackCdcLevels {
+        void onCallback(ArrayList<CDCThreatLevel> levels);
+    }
+
+    public void retrieveCDCThreatLevels(final MyCallBackCdcLevels myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<CDCThreatLevel> cdcEntries = new ArrayList<>();
+                for (DataSnapshot data: dataSnapshot.child(countryName).child("cdcThreatLevels").getChildren())
+                {
+                    cdcEntries.add(data.getValue(CDCThreatLevel.class));
+                }
+                myCallback.onCallback(cdcEntries);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

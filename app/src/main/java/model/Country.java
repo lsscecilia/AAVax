@@ -14,6 +14,8 @@ public class Country {
         //this.cdcThreatLevel = cdcThreatLevel;
     }
 
+    public Country(){}
+
     public String getName() {
         return name;
     }

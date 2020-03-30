@@ -55,8 +55,8 @@ public class MyVaccInfoFragment extends Fragment {
                 Fragment myFragment = new VaccineDetailFragment();
                 Bundle bundle = new Bundle();
                 //bundle.putString("uId", uId);
-                System.out.println("vaccine name lolol2" + vaccineName);
-                bundle.putString("vaccineName",vaccineName);
+                System.out.println("vaccine name lolol" + vaccineName);
+                bundle.putString(getString(R.string.intent_message),vaccineName);
                 myFragment.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
             }
