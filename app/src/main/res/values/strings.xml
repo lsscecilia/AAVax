@@ -10,20 +10,23 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string-array name="countries">
-        <item>Malaysia</item>
-        <item>Thailand</item>
-        <item>Japan</item>
-    </string-array>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string-array name="vaccines">
-        <item>Vaccine1</item>
-        <item>Vaccine2</item>
+    <string name="destination">Destination</string>
+
+    <string-array name="continents">
+        <item>Europe</item>
+        <item>Oceania</item>
+        <item>Asia</item>
+        <item>Africa</item>
+        <item>North America</item>
+        <item>South America</item>
+        <item>Antarctica</item>
     </string-array>
 
 
     <string name="europe">Europe</string>
-    <string name="destination">Destination</string>
     <string name="oceania">Oceania</string>
     <string name="asia">Asia</string>
     <string name="africa">Africa</string>
@@ -53,5 +56,14 @@
 
     <!-- Main home vaccine page -->
     <string name="taken">"Taken"</string>
+    <string name="popular_search">Popular / Search</string>
+    <string name="recommended_vaccine">recommended vaccine</string>
+
+    <string-array name="vaccines">
+        <item>Influenza</item>
+        <item>MMR</item>
+        <item>Tdap</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

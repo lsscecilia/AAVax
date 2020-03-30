@@ -15,6 +15,9 @@ import android.widget.DatePicker;
 
 import com.example.aavax.R;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,9 +51,14 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 getTargetRequestCode(),
                 Activity.RESULT_OK,
                 new Intent().putExtra("selectedDate", selectedDate)
+
         );
+
+
         //TextView dateChosen = view.findViewById(R.id.dateChosen);
         //Button lastTakenDateBtn = view.findViewById(R.id.lastUpdatedBtn);
        // dateChosen.setText(currentDateString);
     }
+
+
 }

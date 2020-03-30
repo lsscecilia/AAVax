@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.homepage;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,21 +18,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.aavax.R;
 import model.Vaccine;
-import com.example.aavax.ui.homepage.VaccineAdapter;
+
+import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.FirebaseManager;
+import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 public class HomePageFragment extends Fragment {
 
@@ -69,12 +68,6 @@ public class HomePageFragment extends Fragment {
                 doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
             }
         });
-        // initialise vaccines
-        createListData();
-        //firebaseManager.retrieveVaccines();
-
-
-
 
         return view;
     }
@@ -87,35 +80,31 @@ public class HomePageFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        //uId = savedInstanceState.getString("Intent");
+        System.out.println("when is this executed? uid: "+uId);
         recyclerView = getView().findViewById(R.id.vaccine_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // add line after each vaccine row
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        adapter = new VaccineAdapter(getActivity(), vaccineArrayList);
-        recyclerView.setAdapter(adapter);
-    }
+        //vaccineArrayList = firebaseManager.getVaccines();
+        //Bundle bundle = this.getArguments();
+        //uId = bundle.getString("Intent");
+        System.out.println("user id in home page fragment: "+uId);
 
-    //TODO: call profile method to get list of vaccine log entries
-    private void createListData() {
-        //
+        //retrieve vaccine - here that got error
+        firebaseManager.retrieveUserVaccine(new FirebaseManager.MyCallback() {
+            @Override
+            public void onCallback(ArrayList<Vaccine> value) {
+                vaccineArrayList = value;
+                adapter = new VaccineAdapter(getActivity(), vaccineArrayList, uId);
+                System.out.println("FOR THE RECYCLER: is arraylist empty here? "+vaccineArrayList.isEmpty());
+                recyclerView.setAdapter(adapter);
+            }
+        }, uId);
 
-        /*
-        Vaccine vac1 = new Vaccine("Hepatitis A", "detail 1");
-        vaccineArrayList.add(vac1);
-        Vaccine vac2 = new Vaccine("Measles", "detail 1");
-        vaccineArrayList.add(vac2);
-        Vaccine vac3 = new Vaccine("Rubella", "detail 1");
-        vaccineArrayList.add(vac3);
-        Vaccine vac4 = new Vaccine("Td Booster", "detail 1");
-        vaccineArrayList.add(vac4);
-        Vaccine vac5 = new Vaccine("Varicella", "detail 1");
-        vaccineArrayList.add(vac5);
-        Vaccine vac6 = new Vaccine("Malaria", "detail 1");
-        vaccineArrayList.add(vac6);
-        Vaccine vac7 = new Vaccine("Vaccine", "detail 1");
-        vaccineArrayList.add(vac7);
-        vaccineArrayList.add(vac7);
-        vaccineArrayList.add(vac7);*/
     }
 
     private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
@@ -132,11 +121,6 @@ public class HomePageFragment extends Fragment {
         transaction.commit();
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     @Override
     public void onAttach(Activity activity) {
         myContext=(FragmentActivity) activity;
@@ -149,7 +133,7 @@ public class HomePageFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
     /**

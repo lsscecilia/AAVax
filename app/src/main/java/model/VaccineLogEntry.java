@@ -18,7 +18,13 @@ public class VaccineLogEntry {
     public VaccineLogEntry(Date dateTaken, Vaccine vaccine) {
         this.dateTaken = dateTaken;
         this.vaccine = vaccine;
+        this.nextDue = new Date(0,0,0);
+        this.reminder = false;
     }
+
+    public VaccineLogEntry() {
+    }
+
 
     public Date getDateTaken() {
         return dateTaken;
@@ -44,7 +50,7 @@ public class VaccineLogEntry {
         return nextDue;
     }
 
-    public boolean isReminder() {
+    public boolean getReminder() {
         return reminder;
     }
 
