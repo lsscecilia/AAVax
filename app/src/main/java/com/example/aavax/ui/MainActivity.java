@@ -1,36 +1,59 @@
 package com.example.aavax.ui;
 
+import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
+//import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import java.util.*;
+
 import com.example.aavax.R;
 import com.example.aavax.ui.homepage.HomePageFragment;
+import com.example.aavax.ui.login.LoginActivity;
 import com.example.aavax.ui.homepage.VaccineDetailFragment;
 import com.example.aavax.ui.reminder.RemindersPageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import androidx.appcompat.widget.Toolbar;
+//import 	androidx.appcompat.widget.Toolbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity {
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import model.Profile;
+
+public class MainActivity extends AppCompatActivity implements IMainActivity , NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "MainActivity";
 
+    private DrawerLayout drawer;
     private TextView mToolbarTitle;
     private String uId;
     private FirebaseManager firebaseManager;
+    private Menu menu;
+    private FirebaseDatabase database;
+    private DatabaseReference userRef;
 
     private String[] continents;
     private String[] countries;
@@ -40,12 +63,70 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        firebaseManager = new FirebaseManager();
         Resources res = getResources();
+
+        //top toolbar
         mToolbarTitle = findViewById(R.id.toolbar_title);
 
-        /*
-        firebaseManager =  new FirebaseManager();
-        firebaseManager.updateVaccine();*/
+        //side bar
+        Toolbar toolbar = findViewById(R.id.toolbar_side);
+        setSupportActionBar(toolbar);
+
+        //create menu dynamically
+        final NavigationView navView = findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
+        menu = navView.getMenu();
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                TextView email = findViewById(R.id.emailaddress);
+                email.setText(dataSnapshot.child(uId).child("email").getValue(String.class));
+                if (dataSnapshot.child(uId).child("profiles").getChildrenCount()!=1)
+                {
+                    for (DataSnapshot data: dataSnapshot.child(uId).child("profiles").getChildren())
+                    {
+                        if (!data.child("thisProfile").getValue(boolean.class))
+                        //if (!data.getValue(Profile.class).getThisProfile())
+                        {
+                            if (menu.findItem(Integer.parseInt(data.getKey()))==null)
+                            {
+                                menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
+
+
+                            }
+
+                        }
+                        if (data.child("thisProfile").getValue(boolean.class))
+                        {
+                            TextView name = findViewById(R.id.profilename);
+
+                            name.setText(data.child("name").getValue(String.class));
+                        }
+
+                    }
+                }
+                //menu.add("new profile");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        drawer = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
 
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -54,12 +135,47 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         //I added this if statement to keep the selected fragment when rotating the device
         //Bundle extras = intent.getExtras();
         //uId = savedInstanceState.getString("userId");
-        String uId = getIntent().getExtras().getString("userId");
+       // String uId = getIntent().getExtras().getString("userId");
         System.out.println("userid here is:  "+ uId);
         if (savedInstanceState == null) {
             Fragment fragment = new HomePageFragment();
-            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
+            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        NavigationView navView = findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
+        menu = navView.getMenu();
+        Fragment selectedFragment = null;
+        String title = "";
+        System.out.println("lol whats happening here");
+        if (item.getItemId()== R.id.setting)
+        {
+
+        }
+        else if (item.getItemId()==R.id.signout)
+        {
+            System.out.println("no activity change lol");
+
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }
+        else
+        {
+            menu.removeItem(item.getItemId());
+            System.out.println("item id " + item.getItemId());
+            firebaseManager.changeProfile(uId, Integer.toString(item.getItemId()));
+            selectedFragment = new HomePageFragment();
+            title = "switch profile";
+            drawer.closeDrawer(GravityCompat.START);
+            doFragmentTransaction(selectedFragment, title, true, "");
+        }
+
+
+
+        return true;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -86,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
                             title = getString(R.string.title_profile);
                             break;
                     }
-                    doFragmentTransaction(selectedFragment, title, true, uId);
+                    doFragmentTransaction(selectedFragment, title, true, "");
 
                     return true;
                 }
@@ -137,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
 
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -145,17 +262,14 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
             getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().beginTransaction().commit();
         }
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
 
-    /**
-     * On fragment start, it will register for EventBus, a subscription Mechanism
-     */
-    @Override
-    public void onStart(){
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
 
     /**
      * On stop, it will stop getting updates from EventBus
@@ -173,5 +287,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity {
         //DisplayName.setText(usernameImported);
 
     }
+
 
 }

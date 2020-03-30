@@ -19,10 +19,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -50,13 +55,17 @@ public class RemindersPageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
         View view = inflater.inflate(R.layout.fragment_reminders_page, container, false);
         firebaseManager = new FirebaseManager();
         super.onCreateView(inflater, container, savedInstanceState);
         vaccineLogEntries = new ArrayList<>();
 
         Bundle bundle = this.getArguments();
-        uId = bundle.getString("Intent");
+        //uId = bundle.getString("Intent");
         // initialise vaccines
        // createListData();
 
@@ -98,6 +107,30 @@ public class RemindersPageFragment extends Fragment {
         super.onAttach(context);
         mIMainActivity = (IMainActivity) getActivity();
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        //EventBus.getDefault().register(this);
+    }
+
+    /**
+     * On stop, it will stop getting updates from EventBus
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CustomMessageEvent event) {
+        Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
+        uId = event.getCustomMessage();
+        //DisplayName.setText(usernameImported);
+
+    }
+
     public boolean isServicesOK(){
         Log.d(TAG, "isServicesOK: checking google services version");
 

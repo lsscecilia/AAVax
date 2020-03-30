@@ -8,13 +8,18 @@ public class Profile {
     private String name;
     private String dateOfBirth;
     private List<VaccineLogEntry> vaccineLogEntries;
+    private boolean thisProfile;
    // private VaccineLog vaccineLog;
 
+
+    public Profile() {
+    }
 
     public Profile(String name, String dateOfBirth, ArrayList<VaccineLogEntry> vaccineLogEntries) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.vaccineLogEntries = vaccineLogEntries;
+        this.thisProfile = false;
     }
 
     public Profile(String name, String dateOfBirth)
@@ -22,6 +27,7 @@ public class Profile {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         vaccineLogEntries = new ArrayList<>();
+        thisProfile = false;
     }
 
     public String getName() {
@@ -46,5 +52,13 @@ public class Profile {
 
     public void setVaccineLogEntries(List<VaccineLogEntry> vaccineLogEntries) {
         this.vaccineLogEntries = vaccineLogEntries;
+    }
+
+    public boolean getThisProfile() {
+        return thisProfile;
+    }
+
+    public void setThisProfile(boolean thisProfile) {
+        this.thisProfile = thisProfile;
     }
 }

@@ -12,8 +12,6 @@ import com.example.aavax.R;
 
 import java.util.ArrayList;
 
-import model.Vaccine;
-import model.VaccineLog;
 import model.VaccineLogEntry;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderHolder>{

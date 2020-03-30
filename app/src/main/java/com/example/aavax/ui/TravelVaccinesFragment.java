@@ -2,6 +2,7 @@ package com.example.aavax.ui;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -135,6 +136,20 @@ public class TravelVaccinesFragment extends Fragment {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
 
 
+        RecyclerView recyclerViewRecVaccines = view.findViewById(R.id.recyclerViewRecommendedVaccines);
+        RecyclerViewAdapter adapterRec = new RecyclerViewAdapter(mRecommendedVaccines, mRecommendedTakenImgs);
+        recyclerViewRecVaccines.setAdapter(adapterRec);
+        recyclerViewRecVaccines.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        final Button viewClinicBtn = view.findViewById(R.id.ViewClinicsBtn);
+        viewClinicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),MapsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         firebaseManager.retrieveMandatoryVaccines(new FirebaseManager.MyCallBackVaccines() {
             @Override
@@ -211,7 +226,7 @@ public class TravelVaccinesFragment extends Fragment {
 
 
 
-
+/*
         if(isServicesOK()){
             Button viewClinicsBtn = (Button) view.findViewById(R.id.ViewClinicsBtn);
             viewClinicsBtn.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +236,8 @@ public class TravelVaccinesFragment extends Fragment {
                 }
             });
         }
+        */
+
 
         return view;
     }

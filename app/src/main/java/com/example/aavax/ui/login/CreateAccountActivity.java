@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,11 +29,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import model.Account;
 
@@ -111,26 +110,28 @@ public class CreateAccountActivity extends AppCompatActivity {
                 final String firstName = getInput(firstNameText);
                 final String lastName = getInput(lastNameText);
                 final String dob = getInput(dateOfBirthText);
-                //final ProgressBar progressBar = findViewById(R.id.loading);
-
-                        /*
-                        Log.d(TAG, "onClick: Attempting to submit to database: \n" +
-                                "name: " + name + "\n" +
-                                "email: " + email + "\n" +
-                                "phone number: " + phoneNum + "\n"
-                        );*/
 
                 //handle the exception if the EditText fields are null
                 if (!email.equals("") && !confirmPassword.equals("") && !firstName.equals("") && !lastName.equals("")) {
-                    Account user = new Account(email, confirmPassword, firstName, lastName, dob);
-                    //UserInformation userInformation = new UserInformation(email, name, phoneNum);
-                    myRef.child("users").child(userID).setValue(user);
-                    //toastMessage("New Information has been saved.");
-                    //mName.setText("");
-                    //mEmail.setText("");
-                    //mPhoneNum.setText("");
+                    mAuth.createUserWithEmailAndPassword(email,confirmPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(CreateAccountActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
+                                userID = mAuth.getCurrentUser().getUid();
+                                System.out.println("userid" + userID);
+                                Account user = new Account(email, confirmPassword, firstName, lastName, dob);
+                                myRef.child("users").child(userID).setValue(user);
+                                //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            }else {
+                                Toast.makeText(CreateAccountActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                //progressBar.setVisibility(View.GONE);
+                            }
+                        }
+                    });
 
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 } else {
                     //toastMessage("Fill out all the fields");
                 }
@@ -163,114 +164,23 @@ public class CreateAccountActivity extends AppCompatActivity {
         return editText.getText().toString().trim();
     }
 
-}
+    /**
+     * Based on Observer Pattern design.
+     * Offers a subscription mechanism for each class Activity/Fragment to subscribe to
+     * @param event Event to be sent through EventBus
+     */
+    @Subscribe
+    public void onEvent(CustomMessageEvent event){
+        Log.d("MAINACTIVITY EB SENDER","Username :\"" + event.getCustomMessage() + "\" Successfully Fired!");
 
-        /*
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String email = getInput(emailText);
-                //final String password = passwordText.getText().toString();
-                final String confirmPassword = getInput(confirmPasswordText);
-                final String firstName = getInput(firstNameText);
-                final String lastName = getInput(lastNameText);
-                final String dob = getInput(dateOfBirthText);
-                final ProgressBar progressBar = findViewById(R.id.loading);
+    }
 
-                /*
-                if(TextUtils.isEmpty(email)){
-                    emailText.setError("Email is Required.");
-                    return;
-                }
-
-                if(TextUtils.isEmpty(password)){
-                    passwordText.setError("Password is Required.");
-                    return;
-                }
-
-                if(password.length() < 6){
-                    passwordText.setError("Password Must be >= 6 Characters");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(confirmPassword)){
-                    confirmPasswordText.setError("password confirmation is Required.");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(firstName)){
-                    firstNameText.setError("first name is Required.");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(lastName)){
-                    lastNameText.setError("last name is Required.");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(dob)){
-                    dateOfBirthText.setError("Date of birth is Required.");
-                    return;
-                }*/
-
-
-                //progressBar.setVisibility(View.VISIBLE);
-
-                // register the user in firebase
-
-
-
-
-
-                /*
-                mAuth.createUserWithEmailAndPassword(email,confirmPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(CreateAccountActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
-                            userID = mAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("users").document(userID);
-                            Map<String,Object> user = new HashMap<>();
-                            user.put("email",email);
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: user Profile is created for "+ userID);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: " + e.toString());
-                                }
-                            });
-                            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-                        }else {
-                            Toast.makeText(CreateAccountActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            //progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                }); */
-
-/*
-        // back button
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Implemented by activity
-            }
-        });*/
-
-        // create account button
-        /*
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+    public void onEventBus(String username){
+        CustomMessageEvent event = new CustomMessageEvent(username);
+        EventBus.getDefault().postSticky(event);
     }
 
 
-}*/
 
+
+}
