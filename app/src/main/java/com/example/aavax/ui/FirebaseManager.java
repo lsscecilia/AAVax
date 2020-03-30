@@ -34,74 +34,7 @@ public class FirebaseManager implements firebaseInterface {
     public FirebaseManager() {
     }
 
-    /**
-     * delete vaccineLogEntry
-     * @param userId
-     * @param vaccineName
-     */
-    @Override
 
-    public DatabaseReference getCurrentUser(final String userId) {
-        database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("users");
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Account account = dataSnapshot.child(userId).getValue(Account.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        return null;
-    }
-
-    //temporary
-    public void updateVaccine()
-    {
-        Vaccine v1 = new Vaccine("Hepatitis A", "Hepatitis A is a viral infection that causes the liver to become enlarged, inflamed and tender. There is no chronic (long-term) infection. \n" +
-                "\n" +
-                "The virus is excreted in faeces and transmitted through contaminated food and water. Eating shellfish taken from sewage-contaminated water is a common means of contracting the Hepatitis A virus (HAV). It can also be acquired by close contact with individuals infected with the virus.\n" +
-                "\n" +
-                "A person is infectious for two to three weeks before he or she experiences symptoms, and during the first week of the illness.", 0, false);
-        Vaccine v2 = new Vaccine("Measles","Measles, also known as rubeola, is a highly contagious infection that affects the respiratory system and often results in a skin rash. The infection is more common among children. However, it can be contracted at any age. \n" +
-                "\n" +
-                "Most people with measles recover completely after treatment, but there are instances when a person can fall very ill and develop health complications. In 2003, there were over 30 million cases of measles worldwide. About half a million of these cases ended in death.  \n" +
-                "\n" +
-                "Read on to learn more about this potentially life-threatening viral disease.", 0, false );
-
-
-
-        Vaccine v3 = new Vaccine("Influenza (Flu)", "The flu vaccine is recommended every year for children 6 months and older:\n" +
-                "Kids younger than 9 who get the flu vaccine for the first time (or who have only had one dose before July 2019) will get it in 2 separate doses at least a month apart.\n" +
-                "Those younger than 9 who have had at least 2 doses of flu vaccine previously (in the same or different seasons) will only need 1 dose.\n" +
-                "Kids older than 9 need only 1 dose.\n" +
-                "The vaccine is given by injection with a needle (the flu shot) or by nasal spray. Both types of vaccine can be used this flu season (2019–2020) because they seem to work equally well. Your doctor will recommend which to use based on your child's age and general health. The nasal spray is only for healthy people ages 2–49. People with weak immune systems or some health conditions (such as asthma) and pregnant women should not get the nasal spray vaccine.",6, true );
-
-        storeVaccine(v1);
-        storeVaccine(v2);
-        storeVaccine(v3);
-    }
-
-    @Override
-    public void storeVaccine(final Vaccine vaccine) {
-        database = FirebaseDatabase.getInstance();
-        //users = database.getReference("Users");
-        vaccinesRef = database.getReference("Vaccines");
-        vaccinesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                vaccinesRef.child(vaccine.getName()).setValue(vaccine);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
     public void storeCountry(final Country country) {
         database = FirebaseDatabase.getInstance();
         //users = database.getReference("Users");
@@ -118,6 +51,12 @@ public class FirebaseManager implements firebaseInterface {
             }
         });
     }
+
+    /**
+     * delete vaccineLogEntry
+     * @param userId
+     * @param vaccineName
+     */
 
     public void deleteVaccineLogEntry(final String userId, final String vaccineName)
     {
@@ -239,7 +178,6 @@ public class FirebaseManager implements firebaseInterface {
             }
         });
     }
-
     /**
      * add vaccineLogEntry
      * @param userId
@@ -280,10 +218,36 @@ public class FirebaseManager implements firebaseInterface {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         System.out.println("final profile id to be added" + pId);
                         Vaccine vaccine = dataSnapshot.child(vaccineName).getValue(Vaccine.class);
-                        final VaccineLogEntry vaccineLogEntry = new VaccineLogEntry(date, vaccine);
-                        System.out.println(userId + "user IDDDDDD");
-                        final String key = userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").push().getKey();
-                        userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
+                        if (dataSnapshot.child(vaccineName).child("oneTime").getValue(boolean.class))
+                        {
+                            System.out.println("no got reminder");
+                            final VaccineLogEntry vaccineLogEntry = new VaccineLogEntry(date, vaccine);
+                            System.out.println(userId + "user IDDDDDD");
+                            final String key = userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").push().getKey();
+                            userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
+                        }
+                        else
+                        {
+                            System.out.println("got reminder");
+                            Date nextDue;
+                            if (date.getMonth()+vaccine.getNumMonths()<=12)
+                            {
+                                int mth = date.getMonth()+vaccine.getNumMonths();
+                                nextDue = new Date(date.getYear(), mth, date.getDate());
+                            }
+                            else
+                            {
+                                int mth = date.getMonth()+vaccine.getNumMonths()-12;
+                                int year = date.getYear()+1;
+                                nextDue = new Date(year, mth , date.getDate());
+                            }
+
+                            final VaccineLogEntry vaccineLogEntry= new VaccineLogEntry(date, vaccine, nextDue,true);
+                            System.out.println(userId + "user IDDDDDD");
+                            final String key = userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").push().getKey();
+                            userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
+                        }
+
                     }
 
                     @Override

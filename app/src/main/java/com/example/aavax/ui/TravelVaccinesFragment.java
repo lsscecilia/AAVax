@@ -137,7 +137,7 @@ public class TravelVaccinesFragment extends Fragment {
 
 
         RecyclerView recyclerViewRecVaccines = view.findViewById(R.id.recyclerViewRecommendedVaccines);
-        RecyclerViewAdapter adapterRec = new RecyclerViewAdapter(mRecommendedVaccines, mRecommendedTakenImgs);
+        RecyclerViewTravelVacAdapter adapterRec = new RecyclerViewTravelVacAdapter(mRecommendedVaccines, mRecommendedTakenImgs);
         recyclerViewRecVaccines.setAdapter(adapterRec);
         recyclerViewRecVaccines.setLayoutManager(new LinearLayoutManager(getContext()));
 

@@ -2,6 +2,7 @@ package com.example.aavax.ui.reminder;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
+import com.example.aavax.ui.MapsActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -74,7 +76,8 @@ public class RemindersPageFragment extends Fragment {
             viewClinicsBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mIMainActivity.inflateFragment("Nearby Clinics", "");
+                    Intent intent = new Intent(getActivity(), MapsActivity.class);
+                    startActivity(intent);
                 }
             });
         }
