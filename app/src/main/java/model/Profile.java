@@ -1,24 +1,33 @@
 package model;
 
-import android.annotation.SuppressLint;
-
-import java.text.SimpleDateFormat;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Profile {
     private String name;
-    private Date dateOfBirth;
+    private String dateOfBirth;
+    private List<VaccineLogEntry> vaccineLogEntries;
+    private boolean thisProfile;
+   // private VaccineLog vaccineLog;
 
-    @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat date = new SimpleDateFormat("DD-MM-YYYY");
 
-    public Profile(String name, Date dateOfBirth) {
+    public Profile() {
+    }
+
+    public Profile(String name, String dateOfBirth, ArrayList<VaccineLogEntry> vaccineLogEntries) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat dateFormat = new SimpleDateFormat("DD-MM-YYYY");
+        this.vaccineLogEntries = vaccineLogEntries;
+        this.thisProfile = false;
+    }
 
+    public Profile(String name, String dateOfBirth)
+    {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        vaccineLogEntries = new ArrayList<>();
+        thisProfile = false;
     }
 
     public String getName() {
@@ -29,15 +38,27 @@ public class Profile {
         this.name = name;
     }
 
-    public Date getDateOfBirth() {
-
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public List<VaccineLogEntry> getVaccineLogEntries() {
+        return vaccineLogEntries;
+    }
 
+    public void setVaccineLogEntries(List<VaccineLogEntry> vaccineLogEntries) {
+        this.vaccineLogEntries = vaccineLogEntries;
+    }
+
+    public boolean getThisProfile() {
+        return thisProfile;
+    }
+
+    public void setThisProfile(boolean thisProfile) {
+        this.thisProfile = thisProfile;
+    }
 }

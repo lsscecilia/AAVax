@@ -3,10 +3,14 @@ package com.example.aavax.ui;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -16,11 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.example.aavax.R;
 
 
-import java.util.ArrayList;
-
-import model.Country;
-
-
 public class TravelCountriesFragment extends Fragment {
 
     private static final String TAG = "TravelCountriesFragment";
@@ -28,15 +27,24 @@ public class TravelCountriesFragment extends Fragment {
     //widgets
     ListView countriesListView;
     //ArrayList<Country> countries;
-    String[] countries;
+    String[] popular_countries;
+    String[] all_countries;
 
     //vars
     private IMainActivity mIMainActivity;
+    private String mIncomingMessage = "";
+    private ArrayAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(getTag());
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null){
+            mIncomingMessage = bundle.getString((getString(R.string.intent_message)));
+        }
+
     }
     @Nullable
     @Override
@@ -55,9 +63,66 @@ public class TravelCountriesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         countriesListView = (ListView) getView().findViewById(R.id.countriesListView);
         Resources res = getResources();
-        countries = res.getStringArray(R.array.countries);
+        switch(mIncomingMessage){
+            case "Asia":
+                popular_countries = res.getStringArray(R.array.asia_popular_countries);
+                all_countries = res.getStringArray(R.array.asia_all_countries);
+                break;
+            case "Europe":
+                popular_countries = res.getStringArray(R.array.europe_popular_countries);
+                all_countries = res.getStringArray(R.array.europe_all_countries);
+                break;
+            case "North America":
+                popular_countries = res.getStringArray(R.array.north_america_popular_countries);
+                all_countries = res.getStringArray(R.array.north_america_all_countries);
+                break;
+            case "South America":
+                popular_countries = res.getStringArray(R.array.south_america_popular_countries);
+                all_countries = res.getStringArray(R.array.south_america_all_countries);
+                break;
+            case "Oceania":
+                popular_countries = res.getStringArray(R.array.oceania_popular_countries);
+                all_countries = res.getStringArray(R.array.oceania_popular_countries);
+                break;
+            case "Africa":
+                popular_countries = res.getStringArray(R.array.africa_popular_countries);
+                all_countries = res.getStringArray(R.array.africa_all_countries);
+                break;
+        }
 
-        countriesListView.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.countries_listview_detail, countries));
+        adapter = new ArrayAdapter(getActivity(), R.layout.country_row, popular_countries);
+        countriesListView.setAdapter(adapter);
+
+        EditText searchFilter = (EditText) getView().findViewById(R.id.searchFilter);
+        searchFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter = new ArrayAdapter(getActivity(), R.layout.country_row, all_countries);
+                countriesListView.setAdapter(adapter);
+                adapter.getFilter().filter(s);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        countriesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String country_chosen = (String) countriesListView.getItemAtPosition(position);
+                mIMainActivity.inflateFragment(country_chosen, country_chosen);
+            }
+        });
+
+
 
     }
 }

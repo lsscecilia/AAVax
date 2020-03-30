@@ -13,6 +13,14 @@ public class Account {
         this.profiles = profiles;
     }
 
+    public Account(String email, String password, String firstName, String lastName, String dob)
+    {
+        this.email = email;
+        this.password = password;
+        profiles = new ArrayList<>();
+        profiles.add(new Profile(firstName+lastName, dob));
+    }
+
     public String getEmail() {
         return email;
     }
