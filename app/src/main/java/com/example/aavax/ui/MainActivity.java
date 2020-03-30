@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
     private String[] continents;
     private String[] countries;
     private String[] vaccines;
+    private String[] otherprofiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         continents = getResources().getStringArray(R.array.continents);
         countries = getResources().getStringArray(R.array.all_countries);
         vaccines = getResources().getStringArray(R.array.vaccines);
+
         if (Arrays.asList(continents).contains(fragmentTag)){
             TravelCountriesFragment fragment = new TravelCountriesFragment();
             doFragmentTransaction(fragment, fragmentTag, true, message);
@@ -250,6 +252,15 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
             VaccineDetailFragment fragment = new VaccineDetailFragment();
             doFragmentTransaction(fragment, fragmentTag, true, message);
         }
+        else if (fragmentTag.equals("Other Profiles")){
+            OtherProfilesFragment fragment = new OtherProfilesFragment();
+            doFragmentTransaction(fragment, fragmentTag, true, message);
+        }
+        else if(fragmentTag.equals("About Us")){
+            AboutUsFragment fragment = new AboutUsFragment();
+            doFragmentTransaction(fragment,fragmentTag, true,message);
+        }
+
 
     }
 
