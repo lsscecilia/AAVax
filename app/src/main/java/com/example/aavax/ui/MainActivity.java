@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         //side bar
         Toolbar toolbar = findViewById(R.id.toolbar_side);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
 
         //create menu dynamically
         final NavigationView navView = findViewById(R.id.nav_view);

@@ -19,13 +19,14 @@
             android:background="@color/colorPrimary">
 
             <TextView
+                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textSize="28sp"
+                android:layout_marginStart="75dp"
                 android:fontFamily="@font/montserrat"
+                android:gravity="center_vertical"
                 android:textColor="#fff"
-                android:id="@+id/toolbar_title"/>
+                android:textSize="28sp" />
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
@@ -60,7 +61,7 @@
             android:id="@+id/toolbar_side"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@color/transparent"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />

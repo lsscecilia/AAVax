@@ -39,7 +39,6 @@ public class FirebaseManager implements firebaseInterface {
      * @param userId
      * @param vaccineName
      */
-    @Override
 
     public DatabaseReference getCurrentUser(final String userId) {
         database = FirebaseDatabase.getInstance();
@@ -85,7 +84,6 @@ public class FirebaseManager implements firebaseInterface {
         storeVaccine(v3);
     }
 
-    @Override
     public void storeVaccine(final Vaccine vaccine) {
         database = FirebaseDatabase.getInstance();
         //users = database.getReference("Users");
