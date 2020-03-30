@@ -63,19 +63,19 @@ public class HomePageFragment extends Fragment {
 
     //TODO: call profile method to get list of vaccine log entries
     private void createListData() {
-        Vaccine vac1 = new Vaccine("Hepatitis A", "detail 1");
+        Vaccine vac1 = new Vaccine("Hepatitis A", "detail 1",6,true);
         vaccineArrayList.add(vac1);
-        Vaccine vac2 = new Vaccine("Measles", "detail 1");
+        Vaccine vac2 = new Vaccine("Measles", "detail 1",6,true);
         vaccineArrayList.add(vac2);
-        Vaccine vac3 = new Vaccine("Rubella", "detail 1");
+        Vaccine vac3 = new Vaccine("Rubella", "detail 1",6,true);
         vaccineArrayList.add(vac3);
-        Vaccine vac4 = new Vaccine("Td Booster", "detail 1");
+        Vaccine vac4 = new Vaccine("Td Booster", "detail 1",6,true);
         vaccineArrayList.add(vac4);
-        Vaccine vac5 = new Vaccine("Varicella", "detail 1");
+        Vaccine vac5 = new Vaccine("Varicella", "detail 1",6,true);
         vaccineArrayList.add(vac5);
-        Vaccine vac6 = new Vaccine("Malaria", "detail 1");
+        Vaccine vac6 = new Vaccine("Malaria", "detail 1",6,true);
         vaccineArrayList.add(vac6);
-        Vaccine vac7 = new Vaccine("Vaccine", "detail 1");
+        Vaccine vac7 = new Vaccine("Vaccine", "detail 1",6,true);
         vaccineArrayList.add(vac7);
         vaccineArrayList.add(vac7);
         vaccineArrayList.add(vac7);

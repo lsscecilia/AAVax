@@ -13,36 +13,42 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.aavax.ui.OtherProfilesAdapter;
 import com.example.aavax.R;
-import com.example.aavax.ui.ProfileRVAdapter;
+
+
+import model.Profile;
+import model.VaccineLog;
+import model.VaccineLogEntry;
+
+
 import java.util.ArrayList;
+import java.util.Date;
 
-import model.ProfileRV;
+public class OtherProfilesFragment extends Fragment{
 
+    private static final String TAG = "Other_Profiles";
 
-public class ProfilePageFragment extends Fragment implements View.OnClickListener {
-
-    private static final String TAG = "ProfileFragment";
-    //widgets
-
-    //vars
     private IMainActivity mIMainActivity;
     private RecyclerView recyclerView;
-    private ProfileRVAdapter adapter;
-    private ArrayList<ProfileRV> profileRVArrayList;
+    private OtherProfilesAdapter adapter;
+    private ArrayList<Profile> profileArrayList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(getTag());
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
-        profileRVArrayList = new ArrayList<>();
-
+        View view = inflater.inflate(R.layout.other_profiles_fragment, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+        profileArrayList = new ArrayList<>();
+        // initialise profiles
         createListData();
+
         return view;
     }
 
@@ -51,28 +57,22 @@ public class ProfilePageFragment extends Fragment implements View.OnClickListene
         super.onAttach(context);
         mIMainActivity = (IMainActivity) getActivity();
     }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = getView().findViewById(R.id.profile_recycler);
+        recyclerView = getView().findViewById(R.id.profile_name_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // add line after each row
+        // add line after each vaccine row
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        adapter = new ProfileRVAdapter(getActivity(), profileRVArrayList);
+        adapter = new OtherProfilesAdapter(getActivity(), profileArrayList);
         recyclerView.setAdapter(adapter);
     }
+
     private void createListData() {
-        ProfileRV profileRV1 = new ProfileRV("Other Profiles");
-        profileRVArrayList.add(profileRV1);
-        ProfileRV profileRV2 = new ProfileRV("About Us");
-        profileRVArrayList.add(profileRV2);
-        ProfileRV profileRV3 = new ProfileRV("Sign Out");
-        profileRVArrayList.add(profileRV3);
+        Profile profile1 = new Profile("James cougar",23-4-1996);
+        profileArrayList.add(profile1);
+        Profile profile2 = new Profile("laura cougar", "03-05-2996");
+        profileArrayList.add(profile2);
 
     }
+
 }

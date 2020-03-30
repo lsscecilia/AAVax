@@ -48,5 +48,12 @@
     <!-- Main home vaccine page -->
     <string name="taken">"Taken"</string>
 
+    <!--profiles page-->
+    <string name="other_profiles">"Other Profiles()"</string>
+    <string name="about_us">"About Us"</string>
+    <string name="sign_out">"Sign Out"</string>
+    <string name="add_edit">"Add/Edit"</string>
+    <string name="new_profile">"New Profile"</string>
+    <string name="create_profile">"Create Profile"</string>
 
 </resources>
