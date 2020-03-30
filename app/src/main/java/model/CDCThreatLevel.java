@@ -9,6 +9,8 @@ public class CDCThreatLevel {
         this.detail = detail;
     }
 
+    public CDCThreatLevel() {}
+
     public int getLevel() {
         return level;
     }

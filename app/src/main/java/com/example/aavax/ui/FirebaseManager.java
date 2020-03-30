@@ -9,9 +9,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import model.Profile;
+import model.Account;
+import model.CDCThreatLevel;
+import model.Country;
 import model.Vaccine;
 import model.VaccineLogEntry;
 import model.firebaseInterface;
@@ -21,8 +25,11 @@ public class FirebaseManager implements firebaseInterface {
     private FirebaseDatabase database;
     private DatabaseReference vaccinesRef;
     private DatabaseReference userRef;
+    private DatabaseReference countriesRef;
     private ArrayList<Vaccine> vaccines;
     //private String profileId;
+
+    private static Vaccine bcg, cholera, hpv, hep_a, hep_b, flu, japanese_encephalitis, measles, polio, shingles, tdap, typhoid, varicella, yellow_fever;
 
     public FirebaseManager() {
     }
@@ -33,6 +40,85 @@ public class FirebaseManager implements firebaseInterface {
      * @param vaccineName
      */
     @Override
+
+    public DatabaseReference getCurrentUser(final String userId) {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Account account = dataSnapshot.child(userId).getValue(Account.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return null;
+    }
+
+    //temporary
+    public void updateVaccine()
+    {
+        Vaccine v1 = new Vaccine("Hepatitis A", "Hepatitis A is a viral infection that causes the liver to become enlarged, inflamed and tender. There is no chronic (long-term) infection. \n" +
+                "\n" +
+                "The virus is excreted in faeces and transmitted through contaminated food and water. Eating shellfish taken from sewage-contaminated water is a common means of contracting the Hepatitis A virus (HAV). It can also be acquired by close contact with individuals infected with the virus.\n" +
+                "\n" +
+                "A person is infectious for two to three weeks before he or she experiences symptoms, and during the first week of the illness.", 0, false);
+        Vaccine v2 = new Vaccine("Measles","Measles, also known as rubeola, is a highly contagious infection that affects the respiratory system and often results in a skin rash. The infection is more common among children. However, it can be contracted at any age. \n" +
+                "\n" +
+                "Most people with measles recover completely after treatment, but there are instances when a person can fall very ill and develop health complications. In 2003, there were over 30 million cases of measles worldwide. About half a million of these cases ended in death.  \n" +
+                "\n" +
+                "Read on to learn more about this potentially life-threatening viral disease.", 0, false );
+
+
+
+        Vaccine v3 = new Vaccine("Influenza (Flu)", "The flu vaccine is recommended every year for children 6 months and older:\n" +
+                "Kids younger than 9 who get the flu vaccine for the first time (or who have only had one dose before July 2019) will get it in 2 separate doses at least a month apart.\n" +
+                "Those younger than 9 who have had at least 2 doses of flu vaccine previously (in the same or different seasons) will only need 1 dose.\n" +
+                "Kids older than 9 need only 1 dose.\n" +
+                "The vaccine is given by injection with a needle (the flu shot) or by nasal spray. Both types of vaccine can be used this flu season (2019–2020) because they seem to work equally well. Your doctor will recommend which to use based on your child's age and general health. The nasal spray is only for healthy people ages 2–49. People with weak immune systems or some health conditions (such as asthma) and pregnant women should not get the nasal spray vaccine.",6, true );
+
+        storeVaccine(v1);
+        storeVaccine(v2);
+        storeVaccine(v3);
+    }
+
+    @Override
+    public void storeVaccine(final Vaccine vaccine) {
+        database = FirebaseDatabase.getInstance();
+        //users = database.getReference("Users");
+        vaccinesRef = database.getReference("Vaccines");
+        vaccinesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                vaccinesRef.child(vaccine.getName()).setValue(vaccine);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void storeCountry(final Country country) {
+        database = FirebaseDatabase.getInstance();
+        //users = database.getReference("Users");
+        vaccinesRef = database.getReference("Countries");
+        vaccinesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                vaccinesRef.child(country.getName()).setValue(country);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void deleteVaccineLogEntry(final String userId, final String vaccineName)
     {
         database = FirebaseDatabase.getInstance();
@@ -510,6 +596,53 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
+
+    public interface MyCallBackVaccines {
+        void onCallback(ArrayList<String> vaccines);
+    }
+
+    public void retrieveMandatoryVaccines(final MyCallBackVaccines myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String manVacData;
+                manVacData = dataSnapshot.child(countryName).child("mandatoryVaccines").getValue(String.class);
+                System.out.println(manVacData);
+                ArrayList<String> mandatoryVaccines = new ArrayList<String>(Arrays.asList(manVacData.split("\\s*,\\s*")));
+                myCallback.onCallback(mandatoryVaccines);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void retrieveRecommendedVaccines(final MyCallBackVaccines myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String recVacData;
+                recVacData = dataSnapshot.child(countryName).child("recommendedVaccines").getValue(String.class);
+                System.out.println(recVacData);
+                ArrayList<String> recommendedVaccines = new ArrayList<String>(Arrays.asList(recVacData.split("\\s*,\\s*")));
+                myCallback.onCallback(recommendedVaccines);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     /**
      * retrieve all vaccines in the database
      * @param myCallback
@@ -556,5 +689,31 @@ public class FirebaseManager implements firebaseInterface {
 
     public interface MyCallbackString {
         void onCallback(String value);
+    }
+
+    public interface MyCallBackCdcLevels {
+        void onCallback(ArrayList<CDCThreatLevel> levels);
+    }
+
+    public void retrieveCDCThreatLevels(final MyCallBackCdcLevels myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<CDCThreatLevel> cdcEntries = new ArrayList<>();
+                for (DataSnapshot data: dataSnapshot.child(countryName).child("cdcThreatLevels").getChildren())
+                {
+                    cdcEntries.add(data.getValue(CDCThreatLevel.class));
+                }
+                myCallback.onCallback(cdcEntries);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }
