@@ -9,9 +9,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import model.Profile;
+import model.Account;
+import model.CDCThreatLevel;
+import model.Country;
 import model.Vaccine;
 import model.VaccineLogEntry;
 import model.firebaseInterface;
@@ -21,10 +25,31 @@ public class FirebaseManager implements firebaseInterface {
     private FirebaseDatabase database;
     private DatabaseReference vaccinesRef;
     private DatabaseReference userRef;
+    private DatabaseReference countriesRef;
     private ArrayList<Vaccine> vaccines;
     //private String profileId;
 
+    private static Vaccine bcg, cholera, hpv, hep_a, hep_b, flu, japanese_encephalitis, measles, polio, shingles, tdap, typhoid, varicella, yellow_fever;
+
     public FirebaseManager() {
+    }
+
+
+    public void storeCountry(final Country country) {
+        database = FirebaseDatabase.getInstance();
+        //users = database.getReference("Users");
+        vaccinesRef = database.getReference("Countries");
+        vaccinesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                vaccinesRef.child(country.getName()).setValue(country);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**
@@ -32,7 +57,7 @@ public class FirebaseManager implements firebaseInterface {
      * @param userId
      * @param vaccineName
      */
-    @Override
+
     public void deleteVaccineLogEntry(final String userId, final String vaccineName)
     {
         database = FirebaseDatabase.getInstance();
@@ -153,7 +178,6 @@ public class FirebaseManager implements firebaseInterface {
             }
         });
     }
-
     /**
      * add vaccineLogEntry
      * @param userId
@@ -194,10 +218,36 @@ public class FirebaseManager implements firebaseInterface {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         System.out.println("final profile id to be added" + pId);
                         Vaccine vaccine = dataSnapshot.child(vaccineName).getValue(Vaccine.class);
-                        final VaccineLogEntry vaccineLogEntry = new VaccineLogEntry(date, vaccine);
-                        System.out.println(userId + "user IDDDDDD");
-                        final String key = userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").push().getKey();
-                        userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
+                        if (dataSnapshot.child(vaccineName).child("oneTime").getValue(boolean.class))
+                        {
+                            System.out.println("no got reminder");
+                            final VaccineLogEntry vaccineLogEntry = new VaccineLogEntry(date, vaccine);
+                            System.out.println(userId + "user IDDDDDD");
+                            final String key = userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").push().getKey();
+                            userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
+                        }
+                        else
+                        {
+                            System.out.println("got reminder");
+                            Date nextDue;
+                            if (date.getMonth()+vaccine.getNumMonths()<=12)
+                            {
+                                int mth = date.getMonth()+vaccine.getNumMonths();
+                                nextDue = new Date(date.getYear(), mth, date.getDate());
+                            }
+                            else
+                            {
+                                int mth = date.getMonth()+vaccine.getNumMonths()-12;
+                                int year = date.getYear()+1;
+                                nextDue = new Date(year, mth , date.getDate());
+                            }
+
+                            final VaccineLogEntry vaccineLogEntry= new VaccineLogEntry(date, vaccine, nextDue,true);
+                            System.out.println(userId + "user IDDDDDD");
+                            final String key = userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").push().getKey();
+                            userRef.child(userId).child("profiles").child(pId).child("vaccineLogEntries").child(key).setValue(vaccineLogEntry);
+                        }
+
                     }
 
                     @Override
@@ -510,6 +560,53 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
+
+    public interface MyCallBackVaccines {
+        void onCallback(ArrayList<String> vaccines);
+    }
+
+    public void retrieveMandatoryVaccines(final MyCallBackVaccines myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String manVacData;
+                manVacData = dataSnapshot.child(countryName).child("mandatoryVaccines").getValue(String.class);
+                System.out.println(manVacData);
+                ArrayList<String> mandatoryVaccines = new ArrayList<String>(Arrays.asList(manVacData.split("\\s*,\\s*")));
+                myCallback.onCallback(mandatoryVaccines);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void retrieveRecommendedVaccines(final MyCallBackVaccines myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String recVacData;
+                recVacData = dataSnapshot.child(countryName).child("recommendedVaccines").getValue(String.class);
+                System.out.println(recVacData);
+                ArrayList<String> recommendedVaccines = new ArrayList<String>(Arrays.asList(recVacData.split("\\s*,\\s*")));
+                myCallback.onCallback(recommendedVaccines);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     /**
      * retrieve all vaccines in the database
      * @param myCallback
@@ -556,5 +653,31 @@ public class FirebaseManager implements firebaseInterface {
 
     public interface MyCallbackString {
         void onCallback(String value);
+    }
+
+    public interface MyCallBackCdcLevels {
+        void onCallback(ArrayList<CDCThreatLevel> levels);
+    }
+
+    public void retrieveCDCThreatLevels(final MyCallBackCdcLevels myCallback, final String countryName){
+        database = FirebaseDatabase.getInstance();
+        countriesRef = database.getReference("Countries");
+        countriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<CDCThreatLevel> cdcEntries = new ArrayList<>();
+                for (DataSnapshot data: dataSnapshot.child(countryName).child("cdcThreatLevels").getChildren())
+                {
+                    cdcEntries.add(data.getValue(CDCThreatLevel.class));
+                }
+                myCallback.onCallback(cdcEntries);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

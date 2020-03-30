@@ -25,6 +25,23 @@
         <item>Antarctica</item>
     </string-array>
 
+    <string-array name="vaccines">
+        <item>Bacille Calmette-Guerin</item>
+        <item>Cholera</item>
+        <item>Hepatitis A</item>
+        <item>Hepatitis B</item>
+        <item>Human Papillomavirus</item>
+        <item>Influenza (Flu)</item>
+        <item>Japanese Encephalitis</item>
+        <item>Measles</item>
+        <item>Polio</item>
+        <item>Shingles</item>
+        <item>Tdap</item>
+        <item>Typhoid</item>
+        <item>Varicella</item>
+        <item>Yellow Fever</item>
+    </string-array>
+
 
     <string name="europe">Europe</string>
     <string name="oceania">Oceania</string>
@@ -58,12 +75,29 @@
     <string name="taken">"Taken"</string>
     <string name="popular_search">Popular / Search</string>
     <string name="recommended_vaccine">recommended vaccine</string>
-
-    <string-array name="vaccines">
-        <item>Influenza</item>
-        <item>MMR</item>
-        <item>Tdap</item>
+    <string name="clinic_name">Clinic name</string>
+    <string-array name="clinics">
+        <item>clinic 1</item>
+        <item>clinic 2</item>
+        <item>clinic 3</item>
+        <item>clinic 4</item>
+        <item>clinic 5</item>
     </string-array>
+    <string name="distance">Distance</string>
+    <string-array name="distances">
+        <item>distance 1</item>
+        <item>distance 2</item>
+        <item>distance 3</item>
+        <item>distance 4</item>
+        <item>distance 5</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+
+    <!--    <string-array name="vaccines">-->
+<!--        <item>Influenza</item>-->
+<!--        <item>MMR</item>-->
+<!--        <item>Tdap</item>-->
+<!--    </string-array>-->
 
     <!-- Profiles  -->
 
