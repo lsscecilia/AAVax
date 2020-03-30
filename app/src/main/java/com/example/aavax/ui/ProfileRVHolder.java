@@ -17,9 +17,10 @@ public class ProfileRVHolder extends RecyclerView.ViewHolder implements View.OnC
     public ProfileRVHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
-        profileRVName = itemView.findViewById(R.id.profile_recycler);
+        //profileRVName = itemView.findViewById(R.id.profile_recycler);
     }
-    public void setDetails(ProfileRV profile) { profileRVName.setText(profile.getName()); }
+   public void setDetails(ProfileRV profile) { profileRVName.setText(profile.getName()); }
+
 
     @Override
     public void onClick(View itemView) {

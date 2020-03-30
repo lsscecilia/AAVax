@@ -1,6 +1,6 @@
 package com.example.aavax.ui;
 
-import android.content.Context;
+/*import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,8 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVHolder> {
     private ArrayList<ProfileRV> profilesrv;
 
     public ProfileRVAdapter(Context context, ArrayList<ProfileRV> profiles){
-        this.context = context;
-        this.profilesrv = profiles;
+        //this.context = context;
+        //this.profilesrv = profiles;
 
     }
     @Override
@@ -30,13 +30,13 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVHolder> {
     @NonNull
     @Override
     public ProfileRVHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.profile_page_fragment_listview, parent, false);
-        return new ProfileRVHolder(view);
-    }
-    @Override
-    public void onBindViewHolder(ProfileRVHolder holder, int position) {
-        ProfileRV profilerv = profilesrv.get(position);
-        holder.setDetails(profilerv);
+        //View view = LayoutInflater.from(context).inflate(R.layout.profile_page_fragment_listview, parent, false);
+        //return new ProfileRVHolder(view);}
+
+        //public void onBindViewHolder(ProfileRVHolder holder, int position) {
+       // ProfileRV profilerv = profilesrv.get(position);
+        //holder.setDetails(profilerv);
+
     }
 
-}
+}*/

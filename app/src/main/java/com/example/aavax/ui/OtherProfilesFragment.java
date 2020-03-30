@@ -15,10 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.aavax.ui.OtherProfilesAdapter;
 import com.example.aavax.R;
-
-
 import model.Profile;
-import model.VaccineLog;
 import model.VaccineLogEntry;
 
 
@@ -68,7 +65,7 @@ public class OtherProfilesFragment extends Fragment{
     }
 
     private void createListData() {
-        Profile profile1 = new Profile("James cougar",23-4-1996);
+        Profile profile1 = new Profile("James cougar","23-4-1996");
         profileArrayList.add(profile1);
         Profile profile2 = new Profile("laura cougar", "03-05-2996");
         profileArrayList.add(profile2);

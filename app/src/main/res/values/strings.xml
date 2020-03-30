@@ -65,4 +65,10 @@
         <item>Tdap</item>
     </string-array>
 
+    <!-- Profiles  -->
+
+    <string name="new_profile">New Profile</string>
+    <string name="create_profile">Create Profile</string>
+    <string name="add_edit">add/edit</string>
+
 </resources>
