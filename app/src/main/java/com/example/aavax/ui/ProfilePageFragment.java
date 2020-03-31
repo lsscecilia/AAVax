@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,9 @@ import com.example.aavax.R;
 import com.example.aavax.ui.login.LoginActivity;
 //import com.example.aavax.ui.ProfileRVAdapter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -49,20 +53,35 @@ public class ProfilePageFragment extends Fragment  {
     private TextView otherProfiles;
     private TextView aboutUs;
     private TextView sign_out;
+    private FirebaseManager firebaseManager;
+    private String uId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //mIMainActivity.setToolbarTitle(getTag());
+        firebaseManager = new FirebaseManager();
     }
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         //profileRVArrayList = new ArrayList<>();
 
         //createListData();
         usersName = view.findViewById(R.id.users_name);
+        //transfer username
+        firebaseManager.retrieveCurrentProfileName(new FirebaseManager.MyCallbackString() {
+            @Override
+            public void onCallback(String value) {
+                usersName.setText(value);
+            }
+        }, uId);
+
+
         dialog = new AlertDialog.Builder(getActivity()).create();
         editText = new EditText(getActivity());
 
@@ -76,6 +95,7 @@ public class ProfilePageFragment extends Fragment  {
             }
         });
 
+        //not linked to database
         editNameButton = view.findViewById(R.id.editNameButton);
         editNameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,20 +104,14 @@ public class ProfilePageFragment extends Fragment  {
                 dialog.show();
             }
         });
+
+        
         otherProfiles = view.findViewById(R.id.other_profiles_button);
-        otherProfiles.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                mIMainActivity.inflateFragment(otherProfiles.getText().toString(), otherProfiles.getText().toString());
-            }
-        });
+        //onClickListener for other profiles
+
         aboutUs = view.findViewById(R.id.about_us_button);
-        aboutUs.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIMainActivity.inflateFragment(aboutUs.getText().toString(), aboutUs.getText().toString());
-            }
-        }));
+        //onClickListen for about us
+
         sign_out = view.findViewById(R.id.sign_out_button);
         sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,35 +123,20 @@ public class ProfilePageFragment extends Fragment  {
         return view;
     }
 
-    //@Override
-    //public void onAttach(@NonNull Context context) {
-    // super.onAttach(context);
-    // mIMainActivity = (IMainActivity) getActivity();
-    // }
+    /**
+     * On stop, it will stop getting updates from EventBus
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
-    //@Override
-    //public void onClick(View v) {
-    // mIMainActivity.inflateFragment(String.valueOf(v.get));
-    //}
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CustomMessageEvent event) {
+        Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
+        uId = event.getCustomMessage();
+        //DisplayName.setText(usernameImported);
 
-    //@Override
-    //public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    //recyclerView = getView().findViewById(R.id.profile_recycler);
-    //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    // add line after each row
-    //recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-    //adapter = new ProfileRVAdapter(getActivity(), profileRVArrayList);
-    //recyclerView.setAdapter(adapter);
-
-
-    //}
-    //private void createListData() {
-    //ProfileRV profileRV1 = new ProfileRV("Other Profiles");
-    //profileRVArrayList.add(profileRV1);
-    //ProfileRV profileRV2 = new ProfileRV("About Us");
-    //profileRVArrayList.add(profileRV2);
-    //ProfileRV profileRV3 = new ProfileRV("Sign Out");
-    //profileRVArrayList.add(profileRV3);
-
-    //}
+    }
 }
