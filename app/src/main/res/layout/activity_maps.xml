@@ -20,7 +20,7 @@
             android:fontFamily="@font/montserrat"
             android:textColor="#fff"
             android:text="Clinics Nearby"
-            android:id="@+id/toolbar_title"/>
+            android:id="@+id/toolbar_title1"/>
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout

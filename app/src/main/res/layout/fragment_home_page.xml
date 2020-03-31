@@ -29,21 +29,13 @@
         android:id="@+id/add_vaccine_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="320dp"
+        android:layout_marginLeft="320dp"
         android:layout_marginTop="0dp"
+        android:layout_marginEnd="10dp"
         app:srcCompat="@drawable/ic_add_black_24dp"
-        tools:ignore="VectorDrawableCompat"
-        android:layout_marginLeft="320dp" />
-
-    <ImageButton
-        android:id="@+id/delete_vaccine_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="360dp"
-        android:layout_marginTop="0dp"
-        app:srcCompat="@drawable/ic_delete_black_24dp"
-        tools:ignore="VectorDrawableCompat"
-        android:layout_marginLeft="360dp" />
+        tools:ignore="VectorDrawableCompat" />
 
     <TextView
         android:id="@+id/taken"

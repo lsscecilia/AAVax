@@ -62,10 +62,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.create_account_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
         mAuth = FirebaseAuth.getInstance();
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
+        /*
         FirebaseUser user = mAuth.getCurrentUser();
-        userID = user.getUid();
+        userID = user.getUid();*/
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -83,22 +85,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                 // ...
             }
         };
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Log.d(TAG, "onDataChange: Added information to database: \n" +
-                        dataSnapshot.getValue());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
 
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override

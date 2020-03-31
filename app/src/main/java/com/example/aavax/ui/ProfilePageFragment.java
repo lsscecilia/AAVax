@@ -4,6 +4,7 @@ package com.example.aavax.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.login.LoginActivity;
 //import com.example.aavax.ui.ProfileRVAdapter;
 
 import org.w3c.dom.Text;
@@ -100,7 +102,7 @@ public class ProfilePageFragment extends Fragment  {
         sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIMainActivity.inflateFragment(sign_out.getText().toString(), sign_out.getText().toString());
+                startActivity(new Intent(getActivity(), LoginActivity.class));
             }
         });
 

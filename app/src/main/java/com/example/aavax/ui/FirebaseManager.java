@@ -178,6 +178,7 @@ public class FirebaseManager implements firebaseInterface {
             }
         });
     }
+
     /**
      * add vaccineLogEntry
      * @param userId
@@ -329,7 +330,7 @@ public class FirebaseManager implements firebaseInterface {
     public void retrieveVaccineLog(final MyCallbackVaccineLog myCallback, final String Uid){
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
-        userRef.addValueEventListener(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String profileId="";
@@ -370,6 +371,51 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
+    public void retrieveCurrentProfileName(final MyCallbackString myCallback, final String Uid)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String profileName;
+                if (dataSnapshot.child(Uid).child("profiles").getChildrenCount()!=1) {
+                    for (DataSnapshot data : dataSnapshot.child(Uid).child("profiles").getChildren()) {
+                        if (data.child("thisProfile").getValue(boolean.class)) {
+                            profileName = data.child("name").getValue(String.class);
+                            myCallback.onCallback(profileName);
+                        }
+                    }
+                }
+                else{
+                    myCallback.onCallback(dataSnapshot.child(Uid).child("profiles").child("0").child("name").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void retrieveEmailAdress(final MyCallbackString myCallback, String Uid)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String email = dataSnapshot.child(Uid).child("email").getValue(String.class);
+                myCallback.onCallback(email);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     public void retrieveProfiles(final MyCallbackProfiles myCallback, final String Uid)
     {

@@ -7,6 +7,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 //import android.widget.Toolbar;
 
@@ -75,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         //side bar
         Toolbar toolbar = findViewById(R.id.toolbar_side);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
 
         //create menu dynamically
         final NavigationView navView = findViewById(R.id.nav_view);
@@ -83,48 +87,89 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
 
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                TextView email = findViewById(R.id.emailaddress);
-                //email.setText(dataSnapshot.child(uId).child("email").getValue(String.class));
-                if (dataSnapshot.child(uId).child("profiles").getChildrenCount()!=1)
-                {
-                    for (DataSnapshot data: dataSnapshot.child(uId).child("profiles").getChildren())
-                    {
-                        if (!data.child("thisProfile").getValue(boolean.class))
-                        //if (!data.getValue(Profile.class).getThisProfile())
-                        {
-                            if (menu.findItem(Integer.parseInt(data.getKey()))==null)
-                            {
-                                menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
 
-
-                            }
-
-                        }
-                        if (data.child("thisProfile").getValue(boolean.class))
-                        {
-                            TextView name = findViewById(R.id.profilename);
-
-                            name.setText(data.child("name").getValue(String.class));
-                        }
-
-                    }
-                }
-                //menu.add("new profile");
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         drawer = findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                userRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        TextView email = findViewById(R.id.emailaddress);
+                        email.setText(dataSnapshot.child(uId).child("email").getValue(String.class));
+                        if (dataSnapshot.child(uId).child("profiles").getChildrenCount()!=1)
+                        {
+                            for (DataSnapshot data: dataSnapshot.child(uId).child("profiles").getChildren())
+                            {
+                                if (!data.child("thisProfile").getValue(boolean.class))
+                                //if (!data.getValue(Profile.class).getThisProfile())
+                                {
+                                    if (menu.findItem(Integer.parseInt(data.getKey()))==null)
+                                    {
+                                        menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
+
+
+                                    }
+                                    TextView name = findViewById(R.id.profilename);
+                                    name.setText(data.child("name").getValue(String.class));
+
+                                }
+                                if (data.child("thisProfile").getValue(boolean.class))
+                                {
+                                    TextView name = findViewById(R.id.profilename);
+                                    name.setText(data.child("name").getValue(String.class));
+                                }
+
+                            }
+                        }
+
+                        //menu.add("new profile");
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                //get name that are for this profile
+                firebaseManager.retrieveCurrentProfileName(new FirebaseManager.MyCallbackString() {
+                    @Override
+                    public void onCallback(String value) {
+                        TextView name = findViewById(R.id.profilename);
+                        name.setText(value);
+                    }
+                }, uId);
+
+                //get email that is for this acount
+                firebaseManager.retrieveEmailAdress(new FirebaseManager.MyCallbackString() {
+                    @Override
+                    public void onCallback(String value) {
+                        TextView email = findViewById(R.id.emailaddress);
+                        email.setText(value);
+                    }
+                }, uId);
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         toggle.syncState();
 
 

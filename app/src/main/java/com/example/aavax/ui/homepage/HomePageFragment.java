@@ -49,7 +49,7 @@ public class HomePageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mIMainActivity.setToolbarTitle(getTag());
+        mIMainActivity.setToolbarTitle(TAG);
         firebaseManager  = new FirebaseManager();
 
     }
@@ -151,6 +151,11 @@ public class HomePageFragment extends Fragment {
         uId = event.getCustomMessage();
         //DisplayName.setText(usernameImported);
 
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 
 }
