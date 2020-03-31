@@ -446,6 +446,7 @@ public class FirebaseManager implements firebaseInterface {
     }
 
 
+    /*
     public void retrieveProfiles(final MyCallbackProfiles myCallback, final String Uid)
     {
         database = FirebaseDatabase.getInstance();
@@ -472,8 +473,28 @@ public class FirebaseManager implements firebaseInterface {
 
             }
         });
-    }
+    }*/
 
+
+    public void retrieveProfile(MyCallbackProfile myCallback, String uId, String pId)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child(uId).child("profiles").child(pId).child("name").getValue(String.class);
+                String dob = dataSnapshot.child(uId).child("profiles").child(pId).child("dateOfBirth").getValue(String.class);
+
+                myCallback.onCallback(name, dob);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     @Override
     public void deleteProfile(String Uid, String profileId){
@@ -482,6 +503,15 @@ public class FirebaseManager implements firebaseInterface {
         userRef.child(Uid).child("profiles").child(profileId).removeValue();
         //change back to default profile
         setDefaultProfile(Uid);
+    }
+
+    public void editProfile(final String uId,String pId ,String name, String dob)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        //Profile profile = new Profile(name,dob);
+        userRef.child(uId).child("profiles").child(pId).child("name").setValue(name);
+        userRef.child(uId).child("profiles").child(pId).child("dateOfBirth").setValue(dob);
     }
 
     /**
@@ -524,7 +554,7 @@ public class FirebaseManager implements firebaseInterface {
         userRef = database.getReference("users");
         System.out.println("change profile to " + profileId);
         userRef.child(Uid).child("profiles").child(profileId).child("thisProfile").setValue(true);
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int numProfiles = (int) dataSnapshot.child(Uid).child("profiles").getChildrenCount();
@@ -738,6 +768,10 @@ public class FirebaseManager implements firebaseInterface {
 
     public interface MyCallbackHashMap{
         void onCallback(HashMap<String,String> value);
+    }
+
+    public interface MyCallbackProfile{
+        void onCallback(String name, String dob);
     }
 
     public void retrieveCDCThreatLevels(final MyCallBackCdcLevels myCallback, final String countryName){

@@ -32,11 +32,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
+    private FirebaseManager firebaseManager;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        firebaseManager = new FirebaseManager();
 
         final EditText emailEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -113,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                             clearInput(passwordEditText);
 
                             //updateUI(user);
+                            firebaseManager.setDefaultProfile(user.getUid());
                             updateUi();
 
                         } else {
@@ -129,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Update UI when login is successful
     private void updateUi() {
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         //TODO: how to link user to the next shit?

@@ -1,5 +1,6 @@
 package com.example.aavax.ui.profile;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -67,6 +68,14 @@ public class OtherProfilesHolder extends RecyclerView.ViewHolder implements View
     @Override
     public void onClick(View itemView) {
         AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("pId", pId);
+
+        Fragment myFragment = new EditProfileFragment();
+        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
+
+        myFragment.setArguments(bundle);
 
 
         /*

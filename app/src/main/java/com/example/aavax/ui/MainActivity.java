@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
                                 if (!data.child("thisProfile").getValue(boolean.class))
                                 //if (!data.getValue(Profile.class).getThisProfile())
                                 {
+
                                     if (menu.findItem(Integer.parseInt(data.getKey()))==null)
                                     {
                                         menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
