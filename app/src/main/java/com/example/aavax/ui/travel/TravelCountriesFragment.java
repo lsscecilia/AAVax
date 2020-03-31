@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.travel;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.IMainActivity;
 
 
 public class TravelCountriesFragment extends Fragment {

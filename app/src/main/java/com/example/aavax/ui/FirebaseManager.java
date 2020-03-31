@@ -11,14 +11,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
-import model.Profile;
-import model.Account;
-import model.CDCThreatLevel;
-import model.Country;
-import model.Vaccine;
-import model.VaccineLogEntry;
-import model.firebaseInterface;
+import entity.Profile;
+import entity.CDCThreatLevel;
+import entity.Country;
+import entity.Vaccine;
+import entity.VaccineLogEntry;
+import entity.firebaseInterface;
 
 public class FirebaseManager implements firebaseInterface {
 
@@ -417,6 +417,35 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
+
+    public void retrieveSubprofileNameAndID(final MyCallbackHashMap myCallback, final String Uid)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, String> profileName = new HashMap<>();
+                if (dataSnapshot.child(Uid).child("profiles").getChildrenCount()!=1) {
+                    for (DataSnapshot data : dataSnapshot.child(Uid).child("profiles").getChildren()) {
+                        if (!data.child("thisProfile").getValue(boolean.class)) {
+                            profileName.put(data.child("name").getValue(String.class), data.getKey());
+                        }
+                    }
+                    myCallback.onCallback(profileName);
+                }
+                else
+                    myCallback.onCallback(profileName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     public void retrieveProfiles(final MyCallbackProfiles myCallback, final String Uid)
     {
         database = FirebaseDatabase.getInstance();
@@ -471,6 +500,7 @@ public class FirebaseManager implements firebaseInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int numProfile = (int) dataSnapshot.child(Uid).child("profiles").getChildrenCount();
+                System.out.println("num of profile in add profile method" + numProfile);
                 userRef.child(Uid).child("profiles").child(Integer.toString(numProfile)).setValue(profile);
             }
 
@@ -479,6 +509,7 @@ public class FirebaseManager implements firebaseInterface {
 
             }
         });
+
     }
 
     /**
@@ -703,6 +734,10 @@ public class FirebaseManager implements firebaseInterface {
 
     public interface MyCallBackCdcLevels {
         void onCallback(ArrayList<CDCThreatLevel> levels);
+    }
+
+    public interface MyCallbackHashMap{
+        void onCallback(HashMap<String,String> value);
     }
 
     public void retrieveCDCThreatLevels(final MyCallBackCdcLevels myCallback, final String countryName){

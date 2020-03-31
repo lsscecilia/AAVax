@@ -1,6 +1,7 @@
 
-package com.example.aavax.ui;
+package com.example.aavax.ui.profile;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +10,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +27,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.FirebaseManager;
+import com.example.aavax.ui.IMainActivity;
+import com.example.aavax.ui.homepage.EditMyVaccInfoFragment;
 import com.example.aavax.ui.login.LoginActivity;
 //import com.example.aavax.ui.ProfileRVAdapter;
 
@@ -32,6 +40,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 //import model.ProfileRV;
 
@@ -44,8 +55,6 @@ public class ProfilePageFragment extends Fragment  {
     //vars
     private IMainActivity mIMainActivity;
     private RecyclerView recyclerView;
-    //private ProfileRVAdapter adapter;
-    //private ArrayList<ProfileRV> profileRVArrayList;
     private ImageView editNameButton;
     private AlertDialog dialog;
     private EditText editText;
@@ -55,6 +64,7 @@ public class ProfilePageFragment extends Fragment  {
     private TextView sign_out;
     private FirebaseManager firebaseManager;
     private String uId;
+    private FragmentActivity myContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,9 +115,33 @@ public class ProfilePageFragment extends Fragment  {
             }
         });
 
-        
+
         otherProfiles = view.findViewById(R.id.other_profiles_button);
         //onClickListener for other profiles
+        otherProfiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //pass the hashmap here?
+
+                firebaseManager.retrieveSubprofileNameAndID(new FirebaseManager.MyCallbackHashMap() {
+                    @Override
+                    public void onCallback(HashMap<String, String> value) {
+
+                        System.out.println("HIIIII HASHHAMP PUT INTO BUNDLE ALR YOHZ");
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("hashMap", value);
+                        //bundle.putInt("hashMap", value);
+                        Fragment myFragment = new OtherProfilesFragment();
+                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
+                        myFragment.setArguments(bundle);
+                    }
+                }, uId);
+
+
+
+            }
+        });
 
         aboutUs = view.findViewById(R.id.about_us_button);
         //onClickListen for about us
@@ -121,6 +155,26 @@ public class ProfilePageFragment extends Fragment  {
         });
 
         return view;
+    }
+
+    private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
+        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+        if(!message.equals("")){
+            Bundle bundle = new Bundle();
+            bundle.putString(getString(R.string.intent_message), message);
+            fragment.setArguments(bundle);
+        }
+        transaction.replace(R.id.fragment_container, fragment, tag);
+        if(addToBackStack) {
+            transaction.addToBackStack(tag);
+        }
+        transaction.commit();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
     }
 
     /**

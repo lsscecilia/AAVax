@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.travel;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.IMainActivity;
 
 
 public class TravelPageFragment extends Fragment implements View.OnClickListener {

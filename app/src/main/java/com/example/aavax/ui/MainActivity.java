@@ -3,7 +3,6 @@ package com.example.aavax.ui;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +22,12 @@ import com.example.aavax.R;
 import com.example.aavax.ui.homepage.HomePageFragment;
 import com.example.aavax.ui.login.LoginActivity;
 import com.example.aavax.ui.homepage.VaccineDetailFragment;
+import com.example.aavax.ui.maps.MapViewFragment;
+import com.example.aavax.ui.profile.ProfilePageFragment;
 import com.example.aavax.ui.reminder.RemindersPageFragment;
+import com.example.aavax.ui.travel.TravelCountriesFragment;
+import com.example.aavax.ui.travel.TravelPageFragment;
+import com.example.aavax.ui.travel.TravelVaccinesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -39,10 +43,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import model.Profile;
 
 public class MainActivity extends AppCompatActivity implements IMainActivity , NavigationView.OnNavigationItemSelectedListener{
 
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         {
             menu.removeItem(item.getItemId());
             System.out.println("item id " + item.getItemId());
-            firebaseManager.changeProfile(uId, Integer.toString(item.getItemId()));
+            firebaseManager.changeProfile(uId, Integer.toString(item.getItemId())); //change here
             selectedFragment = new HomePageFragment();
             title = "switch profile";
             drawer.closeDrawer(GravityCompat.START);

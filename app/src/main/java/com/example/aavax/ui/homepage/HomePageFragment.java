@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.aavax.R;
-import model.Vaccine;
+import entity.Vaccine;
 
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;

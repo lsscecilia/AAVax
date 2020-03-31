@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.travel;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.IMainActivity;
 
 import java.util.ArrayList;
 
