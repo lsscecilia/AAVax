@@ -1,9 +1,7 @@
-package model;
+package entity;
 
 import com.example.aavax.ui.FirebaseManager;
-import com.google.firebase.database.DatabaseReference;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public interface firebaseInterface {

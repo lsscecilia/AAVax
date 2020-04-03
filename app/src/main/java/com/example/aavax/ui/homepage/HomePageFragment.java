@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.aavax.R;
-import model.Vaccine;
+import entity.Vaccine;
 
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
@@ -43,7 +43,6 @@ public class HomePageFragment extends Fragment {
     private ArrayList<Vaccine> vaccineArrayList;
     private String uId;
     private ImageButton addEntry;
-    private FragmentActivity myContext;
     private FirebaseManager firebaseManager;
 
     @Override
@@ -51,6 +50,7 @@ public class HomePageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(TAG);
         firebaseManager  = new FirebaseManager();
+        System.out.println("new home page fragment" );
 
     }
 
@@ -61,12 +61,12 @@ public class HomePageFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         vaccineArrayList = new ArrayList<>();
         final ImageButton addVaccineButton = view.findViewById(R.id.add_vaccine_button);
-        addVaccineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = new VaccineEntryFragment();
-                doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
-            }
+
+
+        //when add vaccine button is clicked
+        addVaccineButton.setOnClickListener(v -> {
+            Fragment fragment = new VaccineEntryFragment();
+            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
         });
 
         return view;
@@ -80,35 +80,30 @@ public class HomePageFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        //subscribe to eventBus
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        //uId = savedInstanceState.getString("Intent");
-        System.out.println("when is this executed? uid: "+uId);
+
+        //initialise recycler view
         recyclerView = getView().findViewById(R.id.vaccine_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // add line after each vaccine row
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        //vaccineArrayList = firebaseManager.getVaccines();
-        //Bundle bundle = this.getArguments();
-        //uId = bundle.getString("Intent");
-        System.out.println("user id in home page fragment: "+uId);
 
-        //retrieve vaccine - here that got error
-        firebaseManager.retrieveUserVaccine(new FirebaseManager.MyCallback() {
-            @Override
-            public void onCallback(ArrayList<Vaccine> value) {
-                vaccineArrayList = value;
-                adapter = new VaccineAdapter(getActivity(), vaccineArrayList, uId);
-                System.out.println("FOR THE RECYCLER: is arraylist empty here? "+vaccineArrayList.isEmpty());
-                recyclerView.setAdapter(adapter);
-            }
+        //retrieve user vaccine log
+        firebaseManager.retrieveUserVaccine(value -> {
+            vaccineArrayList = value;
+            adapter = new VaccineAdapter(getActivity(), vaccineArrayList, uId);
+            System.out.println("retrieve user vaccine......");
+            recyclerView.setAdapter(adapter);
         }, uId);
 
     }
 
     private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         if(!message.equals("")){
             Bundle bundle = new Bundle();
             bundle.putString(getString(R.string.intent_message), message);
@@ -119,12 +114,6 @@ public class HomePageFragment extends Fragment {
             transaction.addToBackStack(tag);
         }
         transaction.commit();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
-        super.onAttach(activity);
     }
 
     /**

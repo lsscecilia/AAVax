@@ -1,4 +1,4 @@
-package model;
+package entity;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Location {

@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import model.VaccineLogEntry;
+import entity.VaccineLogEntry;
 
 //TODO: display correct vacc info
 //might have to pass the vaccine log entry in vaccineholder when instantiating new fragment

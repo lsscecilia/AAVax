@@ -1,6 +1,4 @@
-package model;
-
-import java.time.Duration;
+package entity;
 
 public class Vaccine {
     private String name;

@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.travel;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -21,6 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.FirebaseManager;
+import com.example.aavax.ui.IMainActivity;
+import com.example.aavax.ui.maps.MapsActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -34,10 +38,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import model.CDCThreatLevel;
-import model.Country;
-import model.Vaccine;
-import model.VaccineLogEntry;
+import entity.CDCThreatLevel;
+import entity.VaccineLogEntry;
 
 
 public class TravelVaccinesFragment extends Fragment {
@@ -145,7 +147,7 @@ public class TravelVaccinesFragment extends Fragment {
         viewClinicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),MapsActivity.class);
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
                 startActivity(intent);
             }
         });

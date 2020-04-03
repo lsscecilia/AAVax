@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import model.VaccineLogEntry;
+import entity.VaccineLogEntry;
 
 public class EditMyVaccInfoFragment extends Fragment {
     private String vaccineName;

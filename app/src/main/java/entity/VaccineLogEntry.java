@@ -1,5 +1,4 @@
-package model;
-import java.time.LocalDate;
+package entity;
 import java.util.Date;
 
 public class VaccineLogEntry {

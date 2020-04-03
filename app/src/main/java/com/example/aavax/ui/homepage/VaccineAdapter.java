@@ -12,7 +12,7 @@ import com.example.aavax.R;
 
 import java.util.ArrayList;
 
-import model.Vaccine;
+import entity.Vaccine;
 
 public class VaccineAdapter extends RecyclerView.Adapter<VaccineHolder> {
 
