@@ -102,18 +102,28 @@ public class ProfilePageFragment extends Fragment  {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 usersName.setText(editText.getText());
+                String name = getInput(editText);
+                System.out.println("name change to" + name);
+                firebaseManager.editProfile(uId, name);
             }
         });
 
+
+
         //not linked to database
         editNameButton = view.findViewById(R.id.editNameButton);
+
         editNameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editText.setText(editText.getText());
+
+                //firebaseManager.editProfile(uId,ed));
                 dialog.show();
             }
         });
+
+
 
 
         otherProfiles = view.findViewById(R.id.other_profiles_button);
@@ -192,5 +202,9 @@ public class ProfilePageFragment extends Fragment  {
         uId = event.getCustomMessage();
         //DisplayName.setText(usernameImported);
 
+    }
+
+    public String getInput(EditText editText) {
+        return editText.getText().toString().trim();
     }
 }

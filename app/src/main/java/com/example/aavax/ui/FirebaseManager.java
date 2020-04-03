@@ -379,16 +379,11 @@ public class FirebaseManager implements firebaseInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String profileName;
-                if (dataSnapshot.child(Uid).child("profiles").getChildrenCount()!=1) {
-                    for (DataSnapshot data : dataSnapshot.child(Uid).child("profiles").getChildren()) {
-                        if (data.child("thisProfile").getValue(boolean.class)) {
-                            profileName = data.child("name").getValue(String.class);
-                            myCallback.onCallback(profileName);
-                        }
+                for (DataSnapshot data : dataSnapshot.child(Uid).child("profiles").getChildren()) {
+                    if (data.child("thisProfile").getValue(boolean.class)) {
+                        profileName = data.child("name").getValue(String.class);
+                        myCallback.onCallback(profileName);
                     }
-                }
-                else{
-                    myCallback.onCallback(dataSnapshot.child(Uid).child("profiles").child("0").child("name").getValue(String.class));
                 }
             }
 
@@ -500,10 +495,38 @@ public class FirebaseManager implements firebaseInterface {
     public void deleteProfile(String Uid, String profileId){
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
+
+        //delete profile
         userRef.child(Uid).child("profiles").child(profileId).removeValue();
+
         //change back to default profile
         setDefaultProfile(Uid);
     }
+
+    public void editProfile(final String uId,String name)
+    {
+        database = FirebaseDatabase.getInstance();
+        userRef = database.getReference("users");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.child(uId).child("profiles").getChildren()) {
+                    if (data.child("thisProfile").getValue(boolean.class)) {
+                        userRef.child(uId).child("profiles").child(data.getKey()).child("name").setValue(name);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //Profile profile = new Profile(name,dob);
+
+    }
+
 
     public void editProfile(final String uId,String pId ,String name, String dob)
     {
@@ -523,15 +546,24 @@ public class FirebaseManager implements firebaseInterface {
     @Override
     public void addProfile(final String Uid, String name, String dob)
     {
+
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
         final Profile profile = new Profile(name, dob);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int maxProfileId=0;
                 int numProfile = (int) dataSnapshot.child(Uid).child("profiles").getChildrenCount();
-                System.out.println("num of profile in add profile method" + numProfile);
-                userRef.child(Uid).child("profiles").child(Integer.toString(numProfile)).setValue(profile);
+                for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").getChildren())
+                {
+                    if (Integer.parseInt(data.getKey())>maxProfileId)
+                        maxProfileId = Integer.parseInt(data.getKey());
+                }
+
+               // System.out.println("num of profile in add profile method" + numProfile);
+                userRef.child(Uid).child("profiles").child(Integer.toString(maxProfileId+1)).setValue(profile);
+                changeProfile(Uid,Integer.toString(maxProfileId+1 ));
             }
 
             @Override
@@ -539,6 +571,7 @@ public class FirebaseManager implements firebaseInterface {
 
             }
         });
+
 
     }
 
@@ -589,18 +622,34 @@ public class FirebaseManager implements firebaseInterface {
     {
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
-        userRef.child(Uid).child("profiles").child("0").child("thisProfile").setValue(true);
+        //userRef.child(Uid).child("profiles").child("0").child("thisProfile").setValue(true);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean flag=false;
+                String profileId;
                 int numProfiles = (int) dataSnapshot.child(Uid).child("profiles").getChildrenCount();
-                if (numProfiles!=1)
+
+                for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").getChildren())
                 {
-                    for (int i=1; i<numProfiles;i++)
+                    if (!flag)
                     {
-                        userRef.child(Uid).child("profiles").child(Integer.toString(i)).child("thisProfile").setValue(false);
+                        userRef.child(Uid).child("profiles").child(data.getKey()).child("thisProfile").setValue(true);
+                        flag = true;
+                        continue;
+                    }
+                    else
+                    {
+                        profileId = data.getKey();
+                        userRef.child(Uid).child("profiles").child(profileId).child("thisProfile").setValue(false);
                     }
                 }
+                /*
+                for (int i=1; i<numProfiles;i++)
+                {
+                    userRef.child(Uid).child("profiles").child(Integer.toString(i)).child("thisProfile").setValue(false);
+                }*/
+
             }
 
             @Override

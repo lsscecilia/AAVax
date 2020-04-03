@@ -78,7 +78,7 @@ public class NewProfileEntry extends AppCompatActivity {
 
 
                 //switch account
-                firebaseManager.changeProfile(uId,pId);
+                //firebaseManager.changeProfile(uId,pId);
 
                 //go to home page fragment
 
