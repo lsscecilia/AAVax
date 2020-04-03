@@ -18,7 +18,7 @@ public class Account {
         this.email = email;
         this.password = password;
         profiles = new ArrayList<>();
-        profiles.add(new Profile(firstName+lastName, dob));
+        profiles.add(new Profile(firstName+" "+lastName, dob));
     }
 
     public String getEmail() {

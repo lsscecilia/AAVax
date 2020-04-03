@@ -93,16 +93,26 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onCallback(String name, String dob) {
 
-                int index = name.indexOf(" ");
-                int lastIndex = name.length();
-                if (name!=null)
+                if (name.indexOf(" ")!=-1)
                 {
-                    String firstName = name.substring(0,index);
-                    String lastName = name.substring(index+1, lastIndex);
-                    editFirstNameText.setText(firstName);
-                    editLastNameText.setText(lastName);
+                    int index = name.indexOf(" ");
+                    int lastIndex = name.length();
+                    if (name!=null)
+                    {
+                        String firstName = name.substring(0,index);
+                        String lastName = name.substring(index+1, lastIndex);
+                        editFirstNameText.setText(firstName);
+                        editLastNameText.setText(lastName);
+                        editDateOfBirthText.setText(dob);
+                    }
+                }
+                else
+                {
+                    editFirstNameText.setText(name);
+                    editLastNameText.setText("");
                     editDateOfBirthText.setText(dob);
                 }
+
             }
         }, uId, pId);
 
@@ -140,9 +150,30 @@ public class EditProfileFragment extends Fragment {
         2. switch to default profile
         3. go back to profile page fragment
 
+
         PROBLEMS --> THE PID WILL NOT BE IN ORDER AFTER DELETION HOW
 
          */
+
+        deleteProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavigationView navView = getActivity().findViewById(R.id.nav_view);
+                menu = navView.getMenu();
+
+
+                //delete from database
+                firebaseManager.deleteProfile(uId,pId);
+
+                //remove from menu
+                menu.removeItem(Integer.parseInt(pId));
+
+                //go back to profile page fragment --> try
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                Fragment myFragment = new ProfilePageFragment();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
+            }
+        });
 
 
         return view;

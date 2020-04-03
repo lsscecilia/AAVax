@@ -51,7 +51,6 @@ public class EditMyVaccInfoFragment extends Fragment {
     public static final int REQUEST_CODE = 22;
     public static final int REQUEST_CODE2 = 3;
     private String reminder=null;
-    private String vaccineLogEntryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

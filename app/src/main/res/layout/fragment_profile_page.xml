@@ -82,7 +82,7 @@
         android:layout_marginTop="155dp"
         app:srcCompat="@drawable/ic_edit_black_24dp" />
 
-    <TextView
+    <Button
         android:id="@+id/other_profiles_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
         android:textStyle="bold"
         android:textSize="17dp"/>
 
-    <TextView
+    <Button
         android:id="@+id/about_us_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
         android:textStyle="bold"
         android:textSize="17dp"/>
 
-    <TextView
+    <Button
         android:id="@+id/sign_out_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -3,19 +3,15 @@ package com.example.aavax.ui.profile;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -30,22 +26,11 @@ import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
-import com.example.aavax.ui.homepage.EditMyVaccInfoFragment;
 import com.example.aavax.ui.login.LoginActivity;
-//import com.example.aavax.ui.ProfileRVAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-//import model.ProfileRV;
-
 
 public class ProfilePageFragment extends Fragment  {
 
@@ -79,11 +64,11 @@ public class ProfilePageFragment extends Fragment  {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        //profileRVArrayList = new ArrayList<>();
 
-        //createListData();
+
         usersName = view.findViewById(R.id.users_name);
-        //transfer username
+
+        //set username
         firebaseManager.retrieveCurrentProfileName(new FirebaseManager.MyCallbackString() {
             @Override
             public void onCallback(String value) {
@@ -92,6 +77,7 @@ public class ProfilePageFragment extends Fragment  {
         }, uId);
 
 
+        //edit name with dialog
         dialog = new AlertDialog.Builder(getActivity()).create();
         editText = new EditText(getActivity());
 
@@ -102,48 +88,45 @@ public class ProfilePageFragment extends Fragment  {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 usersName.setText(editText.getText());
+                String name = getInput(editText);
+                System.out.println("name change to" + name);
+                firebaseManager.editProfile(uId, name);
             }
         });
 
-        //not linked to database
+
         editNameButton = view.findViewById(R.id.editNameButton);
-        editNameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editText.setText(editText.getText());
-                dialog.show();
-            }
+
+        editNameButton.setOnClickListener(v -> {
+            editText.setText(editText.getText());
+            dialog.show();
         });
 
 
-        otherProfiles = view.findViewById(R.id.other_profiles_button);
         //onClickListener for other profiles
-        otherProfiles.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //pass the hashmap here?
+        otherProfiles = view.findViewById(R.id.other_profiles_button);
+        otherProfiles.setOnClickListener(v -> {
 
-                firebaseManager.retrieveSubprofileNameAndID(new FirebaseManager.MyCallbackHashMap() {
-                    @Override
-                    public void onCallback(HashMap<String, String> value) {
+            firebaseManager.retrieveSubprofileNameAndID(value -> {
 
-                        System.out.println("HIIIII HASHHAMP PUT INTO BUNDLE ALR YOHZ");
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("hashMap", value);
-                        //bundle.putInt("hashMap", value);
-                        Fragment myFragment = new OtherProfilesFragment();
-                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
-                        myFragment.setArguments(bundle);
-                    }
-                }, uId);
-
-
-
-            }
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("hashMap", value);
+                Fragment myFragment = new OtherProfilesFragment();
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
+                myFragment.setArguments(bundle);
+            }, uId);
         });
 
         aboutUs = view.findViewById(R.id.about_us_button);
+        aboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment myFragment = new AboutUsFragment();
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
+            }
+        });
         //onClickListen for about us
 
         sign_out = view.findViewById(R.id.sign_out_button);
@@ -192,5 +175,9 @@ public class ProfilePageFragment extends Fragment  {
         uId = event.getCustomMessage();
         //DisplayName.setText(usernameImported);
 
+    }
+
+    public String getInput(EditText editText) {
+        return editText.getText().toString().trim();
     }
 }
