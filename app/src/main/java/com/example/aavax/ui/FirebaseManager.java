@@ -554,17 +554,19 @@ public class FirebaseManager implements firebaseInterface {
         userRef = database.getReference("users");
         System.out.println("change profile to " + profileId);
         userRef.child(Uid).child("profiles").child(profileId).child("thisProfile").setValue(true);
-        userRef.addValueEventListener(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int numProfiles = (int) dataSnapshot.child(Uid).child("profiles").getChildrenCount();
                 if (numProfiles!=1)
                 {
-                    for (int i=0; i<numProfiles;i++)
+                    for (DataSnapshot data:dataSnapshot.child(Uid).child("profiles").getChildren() )
                     {
-                        if (i==Integer.parseInt(profileId))
-                            continue;
-                        userRef.child(Uid).child("profiles").child(Integer.toString(i)).child("thisProfile").setValue(false);
+                        if (data.getKey()!=profileId)
+                        {
+                            System.out.println("profiles that are set to false" + data.getKey());
+                            userRef.child(Uid).child("profiles").child(data.getKey()).child("thisProfile").setValue(false);
+                        }
                     }
                 }
             }

@@ -92,9 +92,10 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
 
         drawer = findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+
+        //set the current profile and email when drawer is open
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -113,15 +114,19 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
                             for (DataSnapshot data: dataSnapshot.child(uId).child("profiles").getChildren())
                             {
                                 if (!data.child("thisProfile").getValue(boolean.class))
-                                //if (!data.getValue(Profile.class).getThisProfile())
                                 {
 
                                     if (menu.findItem(Integer.parseInt(data.getKey()))==null)
                                     {
                                         menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
 
-
                                     }
+                                    else
+                                    {
+                                        menu.removeItem(Integer.parseInt(data.getKey()));
+                                        menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
+                                    }
+
                                     TextView name = findViewById(R.id.profilename);
                                     name.setText(data.child("name").getValue(String.class));
 
@@ -180,10 +185,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         //I added this if statement to keep the selected fragment when rotating the device
-        //Bundle extras = intent.getExtras();
-        //uId = savedInstanceState.getString("userId");
-       // String uId = getIntent().getExtras().getString("userId");
-        System.out.println("userid here is:  "+ uId);
+
+
         if (savedInstanceState == null) {
             Fragment fragment = new HomePageFragment();
             doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
@@ -211,13 +214,20 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         }
         else
         {
+            System.out.println("remove what itemId" + item.getItemId());
             menu.removeItem(item.getItemId());
-            System.out.println("item id " + item.getItemId());
+
+            System.out.println("CHANGE PROFILE HEREEEEEE");
             firebaseManager.changeProfile(uId, Integer.toString(item.getItemId())); //change here
+
+            drawer.closeDrawer(GravityCompat.START);
+            /*
             selectedFragment = new HomePageFragment();
             title = "switch profile";
             drawer.closeDrawer(GravityCompat.START);
-            doFragmentTransaction(selectedFragment, title, true, "");
+            doFragmentTransaction(selectedFragment, title, false, "");*/
+
+
         }
 
 

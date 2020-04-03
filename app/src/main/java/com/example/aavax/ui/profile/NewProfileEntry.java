@@ -80,7 +80,11 @@ public class NewProfileEntry extends AppCompatActivity {
                 //switch account
                 firebaseManager.changeProfile(uId,pId);
 
+                //go to home page fragment
+
+
                 //go to profilePageFragment
+
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
