@@ -1,7 +1,6 @@
-package model;
+package entity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Profile {
@@ -19,7 +18,7 @@ public class Profile {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.vaccineLogEntries = vaccineLogEntries;
-        this.thisProfile = false;
+        this.thisProfile = true;
     }
 
     public Profile(String name, String dateOfBirth)
@@ -27,8 +26,10 @@ public class Profile {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         vaccineLogEntries = new ArrayList<>();
-        thisProfile = false;
+        thisProfile = true;
     }
+
+
 
     public String getName() {
         return name;

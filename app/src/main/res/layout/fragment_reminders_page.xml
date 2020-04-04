@@ -35,7 +35,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vaccine_recycler2"
         android:layout_width="match_parent"
-        android:layout_height="524dp"
+        android:layout_height="498dp"
         android:layout_below="@+id/Taken"
         android:background="@color/appBackground" />
 

@@ -23,7 +23,7 @@ import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
-import com.example.aavax.ui.MapsActivity;
+import com.example.aavax.ui.maps.MapsActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import model.VaccineLogEntry;
+import entity.VaccineLogEntry;
 
 
 public class RemindersPageFragment extends Fragment {

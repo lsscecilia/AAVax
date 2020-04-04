@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.travel;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -21,6 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.FirebaseManager;
+import com.example.aavax.ui.IMainActivity;
+import com.example.aavax.ui.maps.MapsActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -34,15 +38,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import model.CDCThreatLevel;
-import model.Country;
-import model.Vaccine;
-import model.VaccineLogEntry;
+import entity.CDCThreatLevel;
+import entity.VaccineLogEntry;
 
 
 public class TravelVaccinesFragment extends Fragment {
 
-    private static final String TAG = "RemindersFragment";
+    //private static final String TAG = "RemindersFragment";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
     private IMainActivity mIMainActivity;
@@ -69,16 +71,18 @@ public class TravelVaccinesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println(getTag() + " IS THE TAG");
         mIMainActivity.setToolbarTitle(getTag());
         Bundle bundle = this.getArguments();
         if (bundle != null){
             mIncomingMessage = bundle.getString((getString(R.string.intent_message)));
+            System.out.println(mIncomingMessage + "IS THE INCOMING MSG");
         }
     }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chosen_country, container, false);
+        final View view = inflater.inflate(R.layout.fragment_chosen_country, container, false);
 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -92,7 +96,6 @@ public class TravelVaccinesFragment extends Fragment {
         firebaseManager = new FirebaseManager();
 
 
-        Log.d(TAG, "onCreateView: init expandablelistview");
 
         firebaseManager.retrieveCDCThreatLevels(new FirebaseManager.MyCallBackCdcLevels() {
             @Override
@@ -133,8 +136,6 @@ public class TravelVaccinesFragment extends Fragment {
 
 
 
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
-
 
         RecyclerView recyclerViewRecVaccines = view.findViewById(R.id.recyclerViewRecommendedVaccines);
         RecyclerViewTravelVacAdapter adapterRec = new RecyclerViewTravelVacAdapter(mRecommendedVaccines, mRecommendedTakenImgs);
@@ -146,7 +147,7 @@ public class TravelVaccinesFragment extends Fragment {
         viewClinicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),MapsActivity.class);
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
                 startActivity(intent);
             }
         });
@@ -176,7 +177,7 @@ public class TravelVaccinesFragment extends Fragment {
                             else
                                 mMandatoryTakenImgs.add(R.drawable.ic_warning_yellow_16dp);
 
-                            RecyclerView recyclerViewManVaccines = getView().findViewById(R.id.recyclerViewMandatoryVaccines);
+                            RecyclerView recyclerViewManVaccines = view.findViewById(R.id.recyclerViewMandatoryVaccines);
                             RecyclerViewTravelVacAdapter adapterMan = new RecyclerViewTravelVacAdapter(mMandatoryVaccines, mMandatoryTakenImgs);
                             recyclerViewManVaccines.setAdapter(adapterMan);
                             recyclerViewManVaccines.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -196,16 +197,55 @@ public class TravelVaccinesFragment extends Fragment {
                     @Override
                     public void onCallback(ArrayList<VaccineLogEntry> value) {
                         ArrayList<VaccineLogEntry> userEntries = value;
+                        int day,year, mth;
                         for (String vaccineName : mRecommendedVaccines){
                             boolean valid = false;
                             for (VaccineLogEntry entry : userEntries){
                                 if (vaccineName.equals(entry.getVaccine().getName())){
-                                    LocalDate dateTaken = entry.getDateTaken().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                                    LocalDate dateExpired = dateTaken.plusMonths(entry.getVaccine().getNumMonths());
-                                    if (LocalDate.now().compareTo(dateExpired) < 0) {
+                                    Date date = entry.getDateTaken();
+                                    day = date.getDay();
+                                    mth = date.getMonth();
+                                    year = date.getYear();
+
+
+                                    System.out.println("DATE TAKEN !!! " + day+"/"+mth+"/"+year);
+                                    Date nextDue;
+                                    int numMths = entry.getVaccine().getNumMonths();
+                                    int newMth = numMths+mth;
+                                    if (newMth<=12)
+                                    {
+                                        newMth = numMths+mth;
+                                        nextDue = new Date(year, newMth, day);
+                                    }
+                                    else
+                                    {
+                                        while (newMth>12)
+                                        {
+                                            newMth = newMth-12;
+                                            year++;
+                                        }
+                                        nextDue = new Date(year, newMth, day);
+                                        System.out.println("NEXT DUE DATE!!!! day"+nextDue.getDay()+"/"+nextDue.getMonth()+"/"+nextDue.getYear());
+                                    }
+                                    LocalDate currentDate = LocalDate.now();
+                                    LocalDate expireDate = LocalDate.of(year+2000,newMth, day);
+
+                                    //Date currentDate = new Date();
+                                    /*
+                                    int day1,year1, mth1;
+                                    day1 = currentDate.getDayOfMonth();
+                                    mth1 = currentDate.getMonthValue();
+                                    year1 = currentDate.getYear();
+                                    System.out.println("CURRENT DATE "+day1+"/"+mth1+"/"+year1);*/
+                                    System.out.println(currentDate.toString());
+                                    System.out.println(expireDate.toString());
+                                    if (expireDate.compareTo(currentDate)>0)
+                                    {
                                         valid = true;
                                         break;
+
                                     }
+
                                 }
                             }
                             if (valid)
@@ -213,7 +253,7 @@ public class TravelVaccinesFragment extends Fragment {
                             else
                                 mRecommendedTakenImgs.add(R.drawable.ic_warning_yellow_16dp);
 
-                            RecyclerView recyclerViewRecVaccines = getView().findViewById(R.id.recyclerViewRecommendedVaccines);
+                            RecyclerView recyclerViewRecVaccines = view.findViewById(R.id.recyclerViewRecommendedVaccines);
                             RecyclerViewTravelVacAdapter adapterRec = new RecyclerViewTravelVacAdapter(mRecommendedVaccines, mRecommendedTakenImgs);
                             recyclerViewRecVaccines.setAdapter(adapterRec);
                             recyclerViewRecVaccines.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -273,18 +313,17 @@ public class TravelVaccinesFragment extends Fragment {
 
 
     public boolean isServicesOK(){
-            Log.d(TAG, "isServicesOK: checking google services version");
+
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
 
         if(available == ConnectionResult.SUCCESS){
             //everything is fine and user can make map requests
-            Log.d(TAG, "isServicesOK: Google Play Services is working");
+
             return true;
         }
         else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            //error occurred but resolvable
-            Log.d(TAG, "isServicesOK: resolvable error");
+
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
             dialog.show();
         }

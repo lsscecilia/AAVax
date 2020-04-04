@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date Taken:"
+        android:textAlignment="viewEnd"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Remind Me:"
+        android:textAlignment="viewEnd"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,10 +53,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next Due: "
+        android:textAlignment="viewEnd"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.24"
+        app:layout_constraintHorizontal_bias="0.276"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTakenText2"
         app:layout_constraintVertical_bias="0.111" />
@@ -76,12 +79,12 @@
         android:id="@+id/nextDueBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="36dp"
         android:text="choose date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/nextDueText2"
         app:layout_constraintTop_toBottomOf="@+id/dateTakenBtn"
         app:layout_constraintVertical_bias="0.0" />
@@ -92,7 +95,9 @@
         android:layout_height="40dp"
         android:layout_marginTop="28dp"
         android:focusable="false"
+        android:gravity="center_horizontal|center_vertical"
         android:text="yes/no"
+        android:textAlignment="gravity"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,10 +113,10 @@
         android:text="confirm changes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.805"
+        app:layout_constraintHorizontal_bias="0.828"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vaccineName2"
-        app:layout_constraintVertical_bias="0.649" />
+        app:layout_constraintVertical_bias="0.559" />
 
     <Button
         android:id="@+id/deleteEntryBtn"
@@ -120,8 +125,8 @@
         android:text="Delete Entry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/confirmChangesBtn"
-        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintHorizontal_bias="0.747"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vaccineName2"
-        app:layout_constraintVertical_bias="0.65" />
+        app:layout_constraintVertical_bias="0.559" />
 </androidx.constraintlayout.widget.ConstraintLayout>

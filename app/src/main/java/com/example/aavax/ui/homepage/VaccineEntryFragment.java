@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import model.Vaccine;
+import entity.Vaccine;
 
 public class VaccineEntryFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.maps;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,11 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
-import com.example.aavax.ui.homepage.VaccineHolder;
 
 import java.util.ArrayList;
-
-import model.Vaccine;
 
 public class ClinicAdapter extends RecyclerView.Adapter<ClinicHolder> {
     private Context context;

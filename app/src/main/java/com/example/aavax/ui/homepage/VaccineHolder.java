@@ -1,19 +1,16 @@
 package com.example.aavax.ui.homepage;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
 
-import model.Vaccine;
+import entity.Vaccine;
 
 public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

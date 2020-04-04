@@ -12,7 +12,7 @@ import com.example.aavax.R;
 
 import java.util.ArrayList;
 
-import model.VaccineLogEntry;
+import entity.VaccineLogEntry;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderHolder>{
     private Context context;

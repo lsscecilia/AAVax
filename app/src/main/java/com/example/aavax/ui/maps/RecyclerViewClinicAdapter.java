@@ -1,11 +1,9 @@
-package com.example.aavax.ui;
+package com.example.aavax.ui.maps;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.IMainActivity;
 
 import java.util.ArrayList;
 

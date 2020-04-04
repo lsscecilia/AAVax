@@ -1,4 +1,4 @@
-package model;
+package entity;
 
 public class CHASClinic {
     private String name;

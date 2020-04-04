@@ -2,12 +2,10 @@ package com.example.aavax.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,24 +14,18 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import model.Account;
+import entity.Account;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -62,10 +54,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.create_account_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
         mAuth = FirebaseAuth.getInstance();
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
+        /*
         FirebaseUser user = mAuth.getCurrentUser();
-        userID = user.getUid();
+        userID = user.getUid();*/
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -83,22 +77,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                 // ...
             }
         };
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Log.d(TAG, "onDataChange: Added information to database: \n" +
-                        dataSnapshot.getValue());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
 
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override

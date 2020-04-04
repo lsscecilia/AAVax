@@ -3,10 +3,10 @@ package com.example.aavax.ui;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 //import android.widget.Toolbar;
 
@@ -22,7 +22,12 @@ import com.example.aavax.R;
 import com.example.aavax.ui.homepage.HomePageFragment;
 import com.example.aavax.ui.login.LoginActivity;
 import com.example.aavax.ui.homepage.VaccineDetailFragment;
+import com.example.aavax.ui.maps.MapViewFragment;
+import com.example.aavax.ui.profile.ProfilePageFragment;
 import com.example.aavax.ui.reminder.RemindersPageFragment;
+import com.example.aavax.ui.travel.TravelCountriesFragment;
+import com.example.aavax.ui.travel.TravelPageFragment;
+import com.example.aavax.ui.travel.TravelVaccinesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -38,10 +43,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import model.Profile;
 
 public class MainActivity extends AppCompatActivity implements IMainActivity , NavigationView.OnNavigationItemSelectedListener{
 
@@ -75,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         //side bar
         Toolbar toolbar = findViewById(R.id.toolbar_side);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
 
         //create menu dynamically
         final NavigationView navView = findViewById(R.id.nav_view);
@@ -83,48 +88,95 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
 
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                TextView email = findViewById(R.id.emailaddress);
-                //email.setText(dataSnapshot.child(uId).child("email").getValue(String.class));
-                if (dataSnapshot.child(uId).child("profiles").getChildrenCount()!=1)
-                {
-                    for (DataSnapshot data: dataSnapshot.child(uId).child("profiles").getChildren())
-                    {
-                        if (!data.child("thisProfile").getValue(boolean.class))
-                        //if (!data.getValue(Profile.class).getThisProfile())
-                        {
-                            if (menu.findItem(Integer.parseInt(data.getKey()))==null)
-                            {
-                                menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
 
-
-                            }
-
-                        }
-                        if (data.child("thisProfile").getValue(boolean.class))
-                        {
-                            TextView name = findViewById(R.id.profilename);
-
-                            name.setText(data.child("name").getValue(String.class));
-                        }
-
-                    }
-                }
-                //menu.add("new profile");
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         drawer = findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+
+        //set the current profile and email when drawer is open
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                userRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        TextView email = findViewById(R.id.emailaddress);
+                        email.setText(dataSnapshot.child(uId).child("email").getValue(String.class));
+                        if (dataSnapshot.child(uId).child("profiles").getChildrenCount()!=1)
+                        {
+                            for (DataSnapshot data: dataSnapshot.child(uId).child("profiles").getChildren())
+                            {
+                                if (!data.child("thisProfile").getValue(boolean.class))
+                                {
+
+                                    if (menu.findItem(Integer.parseInt(data.getKey()))==null)
+                                    {
+                                        menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
+
+                                    }
+                                    else
+                                    {
+                                        menu.removeItem(Integer.parseInt(data.getKey()));
+                                        menu.add(R.id.profile_group,Integer.parseInt(data.getKey()), 0, data.child("name").getValue(String.class));
+                                    }
+
+                                    TextView name = findViewById(R.id.profilename);
+                                    name.setText(data.child("name").getValue(String.class));
+
+                                }
+                                if (data.child("thisProfile").getValue(boolean.class))
+                                {
+                                    TextView name = findViewById(R.id.profilename);
+                                    name.setText(data.child("name").getValue(String.class));
+                                }
+
+                            }
+                        }
+
+                        //menu.add("new profile");
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                //get name that are for this profile
+                firebaseManager.retrieveCurrentProfileName(new FirebaseManager.MyCallbackString() {
+                    @Override
+                    public void onCallback(String value) {
+                        TextView name = findViewById(R.id.profilename);
+                        name.setText(value);
+                    }
+                }, uId);
+
+                //get email that is for this acount
+                firebaseManager.retrieveEmailAdress(new FirebaseManager.MyCallbackString() {
+                    @Override
+                    public void onCallback(String value) {
+                        TextView email = findViewById(R.id.emailaddress);
+                        email.setText(value);
+                    }
+                }, uId);
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         toggle.syncState();
 
 
@@ -133,10 +185,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         //I added this if statement to keep the selected fragment when rotating the device
-        //Bundle extras = intent.getExtras();
-        //uId = savedInstanceState.getString("userId");
-       // String uId = getIntent().getExtras().getString("userId");
-        System.out.println("userid here is:  "+ uId);
+
+
         if (savedInstanceState == null) {
             Fragment fragment = new HomePageFragment();
             doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
@@ -164,13 +214,20 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         }
         else
         {
+            System.out.println("remove what itemId" + item.getItemId());
             menu.removeItem(item.getItemId());
-            System.out.println("item id " + item.getItemId());
-            firebaseManager.changeProfile(uId, Integer.toString(item.getItemId()));
+
+            System.out.println("CHANGE PROFILE HEREEEEEE");
+            firebaseManager.changeProfile(uId, Integer.toString(item.getItemId())); //change here
+
+            drawer.closeDrawer(GravityCompat.START);
+            /*
             selectedFragment = new HomePageFragment();
             title = "switch profile";
             drawer.closeDrawer(GravityCompat.START);
-            doFragmentTransaction(selectedFragment, title, true, "");
+            doFragmentTransaction(selectedFragment, title, false, "");*/
+
+
         }
 
 
