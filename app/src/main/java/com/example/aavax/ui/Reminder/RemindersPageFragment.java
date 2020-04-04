@@ -1,7 +1,8 @@
-package com.example.aavax.ui.Reminder;
+package com.example.aavax.ui.reminder;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,26 +12,42 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
+import com.example.aavax.ui.maps.MapsActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import model.Vaccine;
+import entity.VaccineLogEntry;
 
 
 public class RemindersPageFragment extends Fragment {
 
     private static final String TAG = "RemindersFragment";
+    private static final int ERROR_DIALOG_REQUEST = 9001;
 
     private IMainActivity mIMainActivity;
+
     private RecyclerView recyclerView;
-    private ReminderVaccineAdapter adapter;
-    private ArrayList<Vaccine> RemvaccineArrayList;
+    private ReminderAdapter adapter;
+    private ArrayList<VaccineLogEntry> vaccineLogEntries;
+    private String uId;
+    private FirebaseManager firebaseManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,18 +57,34 @@ public class RemindersPageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
         View view = inflater.inflate(R.layout.fragment_reminders_page, container, false);
+        firebaseManager = new FirebaseManager();
         super.onCreateView(inflater, container, savedInstanceState);
-        RemvaccineArrayList = new ArrayList<>();
+        vaccineLogEntries = new ArrayList<>();
+
+        Bundle bundle = this.getArguments();
+        //uId = bundle.getString("Intent");
         // initialise vaccines
-        createListData();
+       // createListData();
+
+        if(isServicesOK()){
+            Button viewClinicsBtn = (Button) view.findViewById(R.id.ViewClinicsBtnRemind);
+            viewClinicsBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MapsActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
         return view;
     }
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        mIMainActivity = (IMainActivity) getActivity();
-    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -59,25 +92,67 @@ public class RemindersPageFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // add line after each vaccine row
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        adapter = new ReminderVaccineAdapter(getActivity(), RemvaccineArrayList);
+        firebaseManager.retrieveVaccineLogWithReminder(new FirebaseManager.MyCallbackVaccineLog() {
+            @Override
+            public void onCallback(ArrayList<VaccineLogEntry> value) {
+                vaccineLogEntries = value;
+                adapter = new ReminderAdapter(getActivity(), vaccineLogEntries, uId);
+                recyclerView.setAdapter(adapter);
+            }
+        }, uId);
+
         recyclerView.setAdapter(adapter);
     }
-    private void createListData() {
-        Vaccine vac1 = new Vaccine("Hepatitis A", "detail 1");
-        RemvaccineArrayList.add(vac1);
-        Vaccine vac2 = new Vaccine("Measles", "detail 1");
-        RemvaccineArrayList.add(vac2);
-        Vaccine vac3 = new Vaccine("Rubella", "detail 1");
-        RemvaccineArrayList.add(vac3);
-        Vaccine vac4 = new Vaccine("Td Booster", "detail 1");
-        RemvaccineArrayList.add(vac4);
-        Vaccine vac5 = new Vaccine("Varicella", "detail 1");
-        RemvaccineArrayList.add(vac5);
-        Vaccine vac6 = new Vaccine("Malaria", "detail 1");
-        RemvaccineArrayList.add(vac6);
-        Vaccine vac7 = new Vaccine("Vaccine", "detail 1");
-        RemvaccineArrayList.add(vac7);
-        RemvaccineArrayList.add(vac7);
-        RemvaccineArrayList.add(vac7);
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mIMainActivity = (IMainActivity) getActivity();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        //EventBus.getDefault().register(this);
+    }
+
+    /**
+     * On stop, it will stop getting updates from EventBus
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CustomMessageEvent event) {
+        Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
+        uId = event.getCustomMessage();
+        //DisplayName.setText(usernameImported);
+
+    }
+
+    public boolean isServicesOK(){
+        Log.d(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
+
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and user can make map requests
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //error occurred but resolvable
+            Log.d(TAG, "isServicesOK: resolvable error");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }
+        else{
+            Toast.makeText(getContext(), "No map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 }
