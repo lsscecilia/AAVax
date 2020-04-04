@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 import entity.Vaccine;
 
+/**
+ * adapter to show the list of vaccines
+ */
 public class VaccineAdapter extends RecyclerView.Adapter<VaccineHolder> {
 
     private Context context;

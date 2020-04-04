@@ -5,18 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
-import com.example.aavax.ui.homepage.VaccineEntryFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,8 +30,6 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
 
@@ -53,24 +47,12 @@ public class SettingFragment extends Fragment {
         //initialise recycler view
         recyclerView = view.findViewById(R.id.settings_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // add line after each vaccine row
-        //recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         settingsArrayList = new ArrayList<>();
         settingsArrayList.add("Change password");
         settingsArrayList.add("Delete account");
         adapter = new SettingsAdapter(getActivity(), uId, settingsArrayList);
-        System.out.println("retrieve user vaccine......");
         recyclerView.setAdapter(adapter);
 
-
-        /*
-        Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Implemented by activity
-            }
-        });*/
 
         return view;
     }
@@ -82,7 +64,6 @@ public class SettingFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        //EventBus.getDefault().register(this);
     }
 
     /**
@@ -98,7 +79,6 @@ public class SettingFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
 
     }
 }

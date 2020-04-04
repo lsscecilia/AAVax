@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+import entity.FirebaseInterface;
 import entity.VaccineLogEntry;
 
 
@@ -47,7 +48,7 @@ public class RemindersPageFragment extends Fragment {
     private ReminderAdapter adapter;
     private ArrayList<VaccineLogEntry> vaccineLogEntries;
     private String uId;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,9 +68,6 @@ public class RemindersPageFragment extends Fragment {
         vaccineLogEntries = new ArrayList<>();
 
         Bundle bundle = this.getArguments();
-        //uId = bundle.getString("Intent");
-        // initialise vaccines
-       // createListData();
 
         if(isServicesOK()){
             Button viewClinicsBtn = (Button) view.findViewById(R.id.ViewClinicsBtnRemind);
@@ -90,7 +88,7 @@ public class RemindersPageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = getView().findViewById(R.id.vaccine_recycler2);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // add line after each vaccine row
+
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         firebaseManager.retrieveVaccineLogWithReminder(new FirebaseManager.MyCallbackVaccineLog() {
             @Override
@@ -114,7 +112,7 @@ public class RemindersPageFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        //EventBus.getDefault().register(this);
+
     }
 
     /**
@@ -130,7 +128,7 @@ public class RemindersPageFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
+
 
     }
 

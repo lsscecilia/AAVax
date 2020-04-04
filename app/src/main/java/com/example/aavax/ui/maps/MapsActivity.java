@@ -55,8 +55,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //vars
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private Location currentLocation=null;
-    private Location lastLocation=null;
+    private Location currentLocation = null;
+    private Location lastLocation = null;
     private GeoJsonLayer layer;
     private HashMap<GeoJsonFeature, Float> distance;
     boolean flag = false;
@@ -93,10 +93,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         try {
             layer = new GeoJsonLayer(mMap, R.raw.chas_clinics, getApplicationContext());
-            //layer.addLayerToMap();
-            //LatLngBounds bounds = getPolygonBounds();
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
-            // mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(1.3384, 103.8454)));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -115,8 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 System.out.println("last location: " + lastLocation.getLatitude() + "lol " + lastLocation.getLongitude());
                 for (GeoJsonFeature feature : layer.getFeatures()) {
                     GeoJsonPoint point = (GeoJsonPoint) feature.getGeometry();
-                    Location l = new Location(""); // i hav no idea how to constructor empty
-                    //point.getCoordinates().latitude
+                    Location l = new Location("");
                     l.setLatitude(point.getCoordinates().latitude);
                     l.setLongitude(point.getCoordinates().longitude);
 
@@ -126,22 +121,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 sortByValue(distance);
-                //System.out.println(distance);
 
-
-                //
                 Iterator hmIterator1 = distance.entrySet().iterator();
 
                 // Iterate through the hashmap
-                // and add some bonus marks for every student
-                System.out.println("HashMap for ascending");
-
 
                 while (hmIterator1.hasNext()) {
-                    Map.Entry mapElement = (Map.Entry)hmIterator1.next();
+                    Map.Entry mapElement = (Map.Entry) hmIterator1.next();
                     GeoJsonFeature feature = (GeoJsonFeature) mapElement.getKey();
                     Float marks = ((Float) mapElement.getValue());
-                    System.out.println(feature.getProperty("Name") + " : " + marks);
                 }
 
                 GeoJsonFeature g;
@@ -154,29 +142,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 while (hmIterator.hasNext()) {
                     Map.Entry mapElement = (Map.Entry) hmIterator.next();
                     Float marks = ((Float) mapElement.getValue());
-                    System.out.println(mapElement.getKey() + " : " + marks);
-
                     g = (GeoJsonFeature) mapElement.getKey();
                     desc = g.getProperty("Description");
                     index = desc.indexOf("<th>HCI_NAME</th>");
-                    clinicIndex = index+22;
+                    clinicIndex = index + 22;
                     details = desc.substring(clinicIndex);
                     endIndex = details.indexOf("<");
-                    clinicName = details.substring(0,endIndex);
-                    System.out.println("clinic name YOH" + clinicName);
+                    clinicName = details.substring(0, endIndex);
                     clinicArrayList.add(clinicName);
 
                     p = (GeoJsonPoint) g.getGeometry();
-                    //Marker maker= new MarkerOptions().position(new LatLng(p.getCoordinates().latitude,p.getCoordinates().longitude));
-
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(p.getCoordinates().latitude,p.getCoordinates().longitude)).title(clinicName));
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(p.getCoordinates().latitude, p.getCoordinates().longitude)).title(clinicName));
                 }
 
                 recyclerView = findViewById(R.id.clinic_recycler);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 // add line after each vaccine row
                 recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-                adapter = new ClinicAdapter(this,clinicArrayList );//string array list
+                adapter = new ClinicAdapter(this, clinicArrayList);//string array list
                 recyclerView.setAdapter(adapter);
             }
 
@@ -184,7 +167,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getDeviceLocation();
 
 
-            System.out.println("how many times is this running");
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -194,21 +176,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         }
-        //moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
-
-        //find nearest clinic
 
     }
 
 
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-        try{
-            if(mLocationPermissionsGranted){
+        try {
+            if (mLocationPermissionsGranted) {
 
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 final Task lastLocationTask = mFusedLocationProviderClient.getLastLocation();
@@ -221,9 +200,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.d(TAG, "onComplete: found location!");
                             currentLocation = (Location) task.getResult();
 
-                            if (currentLocation!=null)
+                            if (currentLocation != null)
                                 moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    13f);
+                                        13f);
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -232,53 +211,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
             }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+    private void moveCamera(LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
-    private void initMap(){
+    private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(MapsActivity.this);
     }
 
-    private void offLocation(){
-        mLocationPermissionsGranted = false;
-    }
+    private void getLocationPermission() {
 
-    private void getLocationPermission(){
-
-        if (!flag){
+        if (!flag) {
             Log.d(TAG, "getLocationPermission: getting location permissions");
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION};
 
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                        COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                    FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                        COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionsGranted = true;
                     initMap();
-                }else{
+                } else {
                     ActivityCompat.requestPermissions(this,
                             permissions,
                             LOCATION_PERMISSION_REQUEST_CODE);
                 }
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
         }
-
-
 
 
     }
@@ -288,11 +261,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onRequestPermissionsResult: called.");
         mLocationPermissionsGranted = false;
 
-        switch(requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                if(grantResults.length > 0){
-                    for(int i = 0; i < grantResults.length; i++){
-                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionsGranted = false;
                             Log.d(TAG, "onRequestPermissionsResult: permission failed");
                             return;
@@ -316,25 +289,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
         return sorted;
     }
-        /*
-        // Create a list from elements of HashMap
-        List<Map.Entry<GeoJsonFeature, Float> > list = new LinkedList<>(hm.entrySet());
 
-        // Sort the list
-        Collections.sort(list, new Comparator<Map.Entry<GeoJsonFeature, Float> >() {
-            public int compare(Map.Entry<GeoJsonFeature, Float> o1,
-                               Map.Entry<GeoJsonFeature, Float> o2)
-            {
-                return (o1.getValue()).compareTo(o2.getValue());
-            }
-        });
 
-        // put data from sorted list to hashmap
-        HashMap<GeoJsonFeature, Float> temp = new LinkedHashMap<GeoJsonFeature, Float>();
-        for (Map.Entry<GeoJsonFeature, Float> aa : list) {
-            temp.put(aa.getKey(), aa.getValue());
-        }
-        return temp;*/
 }
-
-

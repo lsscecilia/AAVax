@@ -28,11 +28,13 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.example.aavax.ui.CustomMessageEvent;
 
+import entity.FirebaseInterface;
+
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
 
 
     @Override

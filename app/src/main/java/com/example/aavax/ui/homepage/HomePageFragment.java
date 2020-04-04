@@ -1,14 +1,12 @@
 package com.example.aavax.ui.homepage;
 
-import android.app.Activity;
+
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.aavax.R;
+
+import entity.FirebaseInterface;
 import entity.Vaccine;
 
 import com.example.aavax.ui.CustomMessageEvent;
@@ -42,15 +42,18 @@ public class HomePageFragment extends Fragment {
     private VaccineAdapter adapter;
     private ArrayList<Vaccine> vaccineArrayList;
     private String uId;
-    private ImageButton addEntry;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(TAG);
         firebaseManager  = new FirebaseManager();
-        System.out.println("new home page fragment" );
+
+        //subscribe to eventBus
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
     }
 
@@ -80,15 +83,10 @@ public class HomePageFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        //subscribe to eventBus
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-
         //initialise recycler view
         recyclerView = getView().findViewById(R.id.vaccine_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         // add line after each vaccine row
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
@@ -96,7 +94,6 @@ public class HomePageFragment extends Fragment {
         firebaseManager.retrieveUserVaccine(value -> {
             vaccineArrayList = value;
             adapter = new VaccineAdapter(getActivity(), vaccineArrayList, uId);
-            System.out.println("retrieve user vaccine......");
             recyclerView.setAdapter(adapter);
         }, uId);
 
@@ -116,13 +113,10 @@ public class HomePageFragment extends Fragment {
         transaction.commit();
     }
 
-    /**
-     * On fragment start, it will register for EventBus, a subscription Mechanism
-     */
+
     @Override
     public void onStart(){
         super.onStart();
-        //EventBus.getDefault().register(this);
     }
 
     /**
@@ -138,8 +132,6 @@ public class HomePageFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
 
 }

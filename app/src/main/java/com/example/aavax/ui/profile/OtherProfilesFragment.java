@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +20,6 @@ import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
-import com.example.aavax.ui.login.CreateAccountActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -29,9 +27,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
+
+import entity.FirebaseInterface;
 import entity.Profile;
 
 public class OtherProfilesFragment extends Fragment {
@@ -42,7 +40,7 @@ public class OtherProfilesFragment extends Fragment {
     private OtherProfilesAdapter adapter;
     private ArrayList<Profile> profileArrayList;
     private String uId;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,13 +51,10 @@ public class OtherProfilesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.other_profiles_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_other_profiles, container, false);
         super.onCreateView(inflater, container, savedInstanceState);
         profileArrayList = new ArrayList<>();
         firebaseManager = new FirebaseManager();
-        // initialise profiles
-
-
 
         return view;
     }
@@ -122,9 +117,6 @@ public class OtherProfilesFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
-
 
 }

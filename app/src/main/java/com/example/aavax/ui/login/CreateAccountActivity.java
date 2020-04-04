@@ -57,9 +57,6 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
-        /*
-        FirebaseUser user = mAuth.getCurrentUser();
-        userID = user.getUid();*/
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -68,13 +65,10 @@ public class CreateAccountActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    //toastMessage("Successfully signed in with: " + user.getEmail());
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    //toastMessage("Successfully signed out.");
                 }
-                // ...
             }
         };
 
@@ -83,7 +77,6 @@ public class CreateAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "onClick: Submit pressed.");
                 final String email = getInput(emailText);
-                //final String password = passwordText.getText().toString();
                 final String confirmPassword = getInput(confirmPasswordText);
                 final String firstName = getInput(firstNameText);
                 final String lastName = getInput(lastNameText);
@@ -100,34 +93,25 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 System.out.println("userid" + userID);
                                 Account user = new Account(email, confirmPassword, firstName, lastName, dob);
                                 myRef.child("users").child(userID).setValue(user);
-                                //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
                             }else {
                                 Toast.makeText(CreateAccountActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                //progressBar.setVisibility(View.GONE);
                             }
                         }
                     });
 
 
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                } else {
-                    //toastMessage("Fill out all the fields");
                 }
             }
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Implemented by activity
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed(); // Implemented by activity
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Implemented by activity
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed(); // Implemented by activity
         });
 
     }

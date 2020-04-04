@@ -10,7 +10,6 @@ import android.widget.EditText;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
@@ -21,8 +20,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import entity.FirebaseInterface;
+
 public class NewProfileEntry extends AppCompatActivity {
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private String uId;
     private String pId;
 
@@ -77,14 +78,7 @@ public class NewProfileEntry extends AppCompatActivity {
                 firebaseManager.addProfile(uId, firstName + " " + lastName, dob);
 
 
-                //switch account
-                //firebaseManager.changeProfile(uId,pId);
-
                 //go to home page fragment
-
-
-                //go to profilePageFragment
-
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -114,8 +108,6 @@ public class NewProfileEntry extends AppCompatActivity {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
 
 

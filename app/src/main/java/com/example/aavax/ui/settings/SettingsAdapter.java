@@ -9,11 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
-import com.example.aavax.ui.homepage.VaccineHolder;
 
 import java.util.ArrayList;
 
-import entity.Vaccine;
 
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsHolder> {
     private Context context;

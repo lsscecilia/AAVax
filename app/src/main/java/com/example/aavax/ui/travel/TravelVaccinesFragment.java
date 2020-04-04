@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import entity.CDCThreatLevel;
+import entity.FirebaseInterface;
 import entity.VaccineLogEntry;
 
 
@@ -56,7 +57,7 @@ public class TravelVaccinesFragment extends Fragment {
     private ArrayList<String> mCdcHeaders = new ArrayList<>();
     ArrayList<ArrayList<String>> mCdcDetails = new ArrayList<>();
     private String[][] mCdcDetailsArray;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private String mIncomingMessage = "";
     private String uId;
     private ExpandableListView expandableTextView;

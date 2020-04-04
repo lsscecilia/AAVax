@@ -26,12 +26,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import entity.FirebaseInterface;
+
 
 public class ChangePasswordFragment extends Fragment {
 
     private static final String TAG = "Change password";
     private IMainActivity mIMainActivity;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private String uId;
     private String email;
 
@@ -53,8 +55,6 @@ public class ChangePasswordFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_change_password, container, false);
         super.onCreateView(inflater, container, savedInstanceState);
 
-        //final Toolbar toolbarTitile = view.findViewById(R.id.settings_toolbar);
-        //toolbarTitile.setTitle("Change password");
 
         final Button changePasswordBtn = view.findViewById(R.id.changePasswordBtn);
         final EditText oldPwEditText = view.findViewById(R.id.oldPassword);
@@ -62,44 +62,41 @@ public class ChangePasswordFragment extends Fragment {
         final EditText cfmNewPwEditText = view.findViewById(R.id.confirmNewPassword);
 
 
-        changePasswordBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //read input
-                final String oldPassword = getInput(oldPwEditText);
-                final String newPassword = getInput(newPwEditText);
-                final String cfmNewPassword = getInput(cfmNewPwEditText);
+        changePasswordBtn.setOnClickListener(v -> {
+            //read input
+            final String oldPassword = getInput(oldPwEditText);
+            final String newPassword = getInput(newPwEditText);
+            final String cfmNewPassword = getInput(cfmNewPwEditText);
 
-                if(TextUtils.isEmpty(oldPassword)){
-                    oldPwEditText.setError("Old password is Required.");
-                    return;
-                }
-
-                if(TextUtils.isEmpty(newPassword)){
-                    newPwEditText.setError("New password is required");
-                    return;
-                }
-
-                if(TextUtils.isEmpty(cfmNewPassword)){
-                    cfmNewPwEditText.setError("Confirm new password");
-                    return;
-                }
-
-                if(newPassword.length() < 6){
-                    newPwEditText.setError("Password Must be >= 6 Characters");
-                    return;
-                }
-
-                if (newPassword.compareTo(cfmNewPassword)!=0)
-                {
-                    newPwEditText.setError("Password does not match");
-                    return;
-                }
-
-                //change password
-                changePassword(oldPassword, newPassword);
-
+            if(TextUtils.isEmpty(oldPassword)){
+                oldPwEditText.setError("Old password is Required.");
+                return;
             }
+
+            if(TextUtils.isEmpty(newPassword)){
+                newPwEditText.setError("New password is required");
+                return;
+            }
+
+            if(TextUtils.isEmpty(cfmNewPassword)){
+                cfmNewPwEditText.setError("Confirm new password");
+                return;
+            }
+
+            if(newPassword.length() < 6){
+                newPwEditText.setError("Password Must be >= 6 Characters");
+                return;
+            }
+
+            if (newPassword.compareTo(cfmNewPassword)!=0)
+            {
+                newPwEditText.setError("Password does not match");
+                return;
+            }
+
+            //change password
+            changePassword(oldPassword, newPassword);
+
         });
 
 
@@ -117,28 +114,24 @@ public class ChangePasswordFragment extends Fragment {
         // Get auth credentials from the user for re-authentication. The example below shows
         // email and password credentials but there are multiple possible providers,
         // such as GoogleAuthProvider or FacebookAuthProvider.
-        firebaseManager.retrieveEmailAdress(new FirebaseManager.MyCallbackString() {
-            @Override
-            public void onCallback(String value) {
-                email = value;
-                AuthCredential credential = EmailAuthProvider.getCredential(email, oldPw);
-                user.reauthenticate(credential)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                user.updatePassword(newPw);
-                                firebaseManager.changePassword(newPw,uId);
+        firebaseManager.retrieveEmailAdress(value -> {
+            email = value;
+            AuthCredential credential = EmailAuthProvider.getCredential(email, oldPw);
+            user.reauthenticate(credential)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            user.updatePassword(newPw);
+                            firebaseManager.changePassword(newPw,uId);
 
-                                Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                                startActivity(intent);
-                            } else {
-                                Log.d(TAG, "old password is incorrect");
-                                oldPwEditText.setError("Old password is incorrect.");
+                            Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Log.d(TAG, "old password is incorrect");
+                            oldPwEditText.setError("Old password is incorrect.");
 
 
-                            }
-                        });
-            }
-
+                        }
+                    });
         }, uId);
 
 
@@ -169,8 +162,6 @@ public class ChangePasswordFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
 
 

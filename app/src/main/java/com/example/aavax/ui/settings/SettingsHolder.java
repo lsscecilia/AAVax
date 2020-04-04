@@ -9,9 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
-import com.example.aavax.ui.profile.OtherProfilesFragment;
-
-import entity.Vaccine;
 
 public class SettingsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -46,6 +43,7 @@ public class SettingsHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         if (settingChoice.compareTo("Delete account")==0)
         {
+            //go to delete account fragment
             Fragment myFragment = new DeleteAccountFragment();
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_settings, myFragment).addToBackStack("delete account").commit();

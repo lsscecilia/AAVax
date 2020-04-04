@@ -12,15 +12,14 @@ import com.example.aavax.R;
 import com.example.aavax.ui.FirebaseManager;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-import entity.Profile;
+import entity.FirebaseInterface;
+
 
 public class OtherProfilesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private TextView profileName;
     private String pId;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private HashMap<String, String> profiles;
     private String uId;
 
@@ -37,27 +36,6 @@ public class OtherProfilesHolder extends RecyclerView.ViewHolder implements View
         profileName.setText(profile);
         this.uId = uId;
 
-        /*
-        firebaseManager.retrieveSubprofileNameAndID(new FirebaseManager.MyCallbackHashMap() {
-            @Override
-            public void onCallback(HashMap<String, String> value) {
-                profiles = value;
-                Iterator hm = profiles.entrySet().iterator();
-                String profile="", profileId="";
-                for (int i=0; i<position+1; i++)
-                {
-                    Map.Entry mapElement = (Map.Entry)hm.next();
-                    if (i==position)
-                    {
-                        profile = (String) mapElement.getKey();
-                        pId = ((String) mapElement.getValue());
-                    }
-
-
-                }
-                profileName.setText(profile);
-            }
-        }, uId);*/
 
     }
 
@@ -76,17 +54,5 @@ public class OtherProfilesHolder extends RecyclerView.ViewHolder implements View
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
 
         myFragment.setArguments(bundle);
-
-
-        /*
-        //click to switch profile then go back to profilepagefragment
-        firebaseManager.changeProfile(uId, pId);
-        Fragment myFragment = new ProfilePageFragment();
-        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
-         */
-
-        //edit profile fragment
-
-
     }
 }

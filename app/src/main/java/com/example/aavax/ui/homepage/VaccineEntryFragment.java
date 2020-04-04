@@ -2,6 +2,7 @@ package com.example.aavax.ui.homepage;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,13 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.DatePickerFragment;
 import com.example.aavax.ui.FirebaseManager;
+import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,25 +35,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import entity.FirebaseInterface;
 import entity.Vaccine;
 
 public class VaccineEntryFragment extends Fragment {
 
-    //private IMainActivity mIMainActivity;
-    private static final String TAG = "addVaccine";
-    private FragmentActivity myContext;
-    public static final int REQUEST_CODE = 11;
-    String selectedDate;
-    private FirebaseManager firebaseManager;
+    private IMainActivity mIMainActivity;
+    private static final String TAG = "Add Vaccine";
+    private String selectedDate;
+    private FirebaseInterface firebaseManager;
     private List<Vaccine> vaccines;
     private Date date;
     private String vaccineChoosen;
     private String uId;
 
+    public static final int REQUEST_CODE = 11;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       //mIMainActivity.setToolbarTitle(getTag());
+       mIMainActivity.setToolbarTitle(getTag());
 
     }
 
@@ -60,58 +62,27 @@ public class VaccineEntryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.vaccine_entry, container, false);
+        View view = inflater.inflate(R.layout.fragment_vaccine_entry, container, false);
 
         final Button lastTakenDateBtn = view.findViewById(R.id.chooseDateBtn);
-        lastTakenDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.setTargetFragment(VaccineEntryFragment.this, REQUEST_CODE);
-                datePicker.show(myContext.getSupportFragmentManager(), "date picker");
-                //lastTakenDateBtn.setText(selectedDate);
+        lastTakenDateBtn.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.setTargetFragment(VaccineEntryFragment.this, REQUEST_CODE);
+            datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
+        });
+
+        //get vaccines from database
+        final List<String> data = new ArrayList<>();
+        firebaseManager = new FirebaseManager();
+        firebaseManager.retrieveVaccines(value -> {
+            for (Vaccine v: value)
+            {
+                data.add(v.getName());
             }
         });
 
-        //get vaccines from database  --> if got time then do lol
-        final List<String> data = new ArrayList<>();
-        firebaseManager = new FirebaseManager();
-        firebaseManager.retrieveVaccines(new FirebaseManager.MyCallback() {
-             @Override
-             public void onCallback(ArrayList<Vaccine> value) {
-                 System.out.println(value.get(0).getName() + "value got value not");
-                 for (Vaccine v: value)
-                 {
-                     data.add(v.getName());
-                 }
-             }
-        });
-        for (String s: data)
-        {
-            System.out.println("add is sucessful" + s);
-        }
-
-                //vaccines = firebaseManager.retrieveVaccinesName();
+        //put vaccine in adapter
         ListView listView = new ListView(this.getActivity());
-
-
-        /*
-        System.out.println("is the vaccine array list empty" + vaccines.isEmpty());
-        for (Vaccine v: vaccines)
-        {
-            data.add(v.getName());
-        }*/
-        /*
-        data.add("Hepatitis A");
-        data.add("Influenza (Flu)");
-        data.add("Measles");*/
-
-        /*
-        for (String s: vaccines)
-        {
-            System.out.println(s);
-        }*/
-
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, data);
         listView.setAdapter(adapter);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -119,13 +90,7 @@ public class VaccineEntryFragment extends Fragment {
         builder.setView(listView);
         final AlertDialog dialog = builder.create();
         final EditText editVaccine = view.findViewById(R.id.editVaccine);
-        editVaccine.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
+        editVaccine.setOnClickListener(v -> dialog.show());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -142,7 +107,6 @@ public class VaccineEntryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //save data
-                System.out.println(date.toString() + "DATE TAKENNNNN");
                 firebaseManager.addVaccineLogEntry(uId, date, vaccineChoosen);
                 //go back to HomePageFragment
                 Fragment fragment = new HomePageFragment();
@@ -154,31 +118,21 @@ public class VaccineEntryFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
-        super.onAttach(activity);
-    }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        final Button lastTakenDateBtn = myContext.findViewById(R.id.chooseDateBtn);
+        final Button lastTakenDateBtn = getActivity().findViewById(R.id.chooseDateBtn);
         // check for the results
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             // get date from string
             selectedDate = data.getStringExtra("selectedDate");
             lastTakenDateBtn.setText(selectedDate);
-            //dateChosen = selectedDate;
-            //System.out.println(dateChosen);
             String[] dateSplit = selectedDate.split("/");
-            //String dateString = dateSplit[2]+'-'+dateSplit[0]+'-'+dateSplit[1];
             date = new Date(Integer.parseInt(dateSplit[2]),Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1]));
-            // set the value of the editText
-            //dateOfBirthET.setText(selectedDate);
         }
     }
 
     private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         if(!message.equals("")){
             Bundle bundle = new Bundle();
             bundle.putString(getString(R.string.intent_message), message);
@@ -189,6 +143,12 @@ public class VaccineEntryFragment extends Fragment {
             transaction.addToBackStack(tag);
         }
         transaction.commit();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mIMainActivity = (IMainActivity) getActivity();
     }
 
     /**
@@ -214,8 +174,6 @@ public class VaccineEntryFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
 
 }

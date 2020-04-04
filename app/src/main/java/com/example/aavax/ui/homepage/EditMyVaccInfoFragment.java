@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
@@ -33,34 +32,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import entity.FirebaseInterface;
 import entity.VaccineLogEntry;
 
 public class EditMyVaccInfoFragment extends Fragment {
     private String vaccineName;
     private String uId;
-    private FirebaseManager firebaseManager;
-    private FragmentActivity myContext;
-    String selectedDateTaken;
-    String selectedNextDue;
+    private FirebaseInterface firebaseManager;
+    private String selectedDateTaken;
+    private String selectedNextDue;
     private  Date dateTakenOriginal;
     private Date nextDueOriginal;
     private String reminderOriginal;
-
     private Date dateTaken=null;
     private Date nextDue=null;
+    private String reminder=null;
+
     public static final int REQUEST_CODE = 22;
     public static final int REQUEST_CODE2 = 3;
-    private String reminder=null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-
-        firebaseManager = new FirebaseManager();
         View view = inflater.inflate(R.layout.fragment_edit_my_vacc_info, container, false);
         final TextView vaccine = view.findViewById(R.id.vaccineName2);
         final Button dateTakenBtn = view.findViewById(R.id.dateTakenBtn);
@@ -69,69 +62,65 @@ public class EditMyVaccInfoFragment extends Fragment {
         final Button confirmChanges = view.findViewById(R.id.confirmChangesBtn);
         final Button deleteEntry = view.findViewById(R.id.deleteEntryBtn);
 
+        firebaseManager = new FirebaseManager();
 
+        //subscribe to event bus
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
+        //get vaccine name from bundle
         Bundle bundle = this.getArguments();
         vaccineName = bundle.getString("vaccineName");
-        //uId = bundle.getString("uId");
 
+        //set vaccine text
         vaccine.setText(vaccineName);
-        //retrieve vaccine
-        firebaseManager.retrieveVaccineLog(new FirebaseManager.MyCallbackVaccineLog() {
-            @Override
-            public void onCallback(ArrayList<VaccineLogEntry> value) {
-                for (VaccineLogEntry v: value)
-                {
-                    System.out.println(v.getVaccine() + "taken on: " + v.getDateTaken());
-                    if (v.getVaccine().getName().compareTo(vaccineName)==0)
-                    {
-                        System.out.println(v.getVaccine().getName() + "taken on: " + v.getDateTaken());
-                        dateTakenBtn.setText(v.getDateTaken().getMonth()+"/"+v.getDateTaken().getDate()+"/"+v.getDateTaken().getYear());
-                        dateTakenOriginal = v.getDateTaken();
-                        nextDueOriginal = v.getNextDue();
-                        if (v.getReminder()) {
-                            nextDueBtn.setText(v.getNextDue().getMonth()+"/"+v.getDateTaken().getDate()+"/"+v.getDateTaken().getYear());
-                            reminderBtn.setText("true");
-                            reminderOriginal = "true";
-                        }
-                        else
-                        {
-                            nextDueBtn.setText("NA");
-                            reminderBtn.setText("false");
-                            reminderOriginal = "false";
-                        }
 
+        //retrieve vaccine
+        firebaseManager.retrieveVaccineLog(value -> {
+            for (VaccineLogEntry v: value)
+            {
+                System.out.println(v.getVaccine() + "taken on: " + v.getDateTaken());
+                if (v.getVaccine().getName().compareTo(vaccineName)==0)
+                {
+                    System.out.println(v.getVaccine().getName() + "taken on: " + v.getDateTaken());
+                    dateTakenBtn.setText(v.getDateTaken().getMonth()+"/"+v.getDateTaken().getDate()+"/"+v.getDateTaken().getYear());
+                    dateTakenOriginal = v.getDateTaken();
+                    nextDueOriginal = v.getNextDue();
+                    if (v.getReminder()) {
+                        nextDueBtn.setText(v.getNextDue().getMonth()+"/"+v.getDateTaken().getDate()+"/"+v.getDateTaken().getYear());
+                        reminderBtn.setText("true");
+                        reminderOriginal = "true";
                     }
+                    else
+                    {
+                        nextDueBtn.setText("NA");
+                        reminderBtn.setText("false");
+                        reminderOriginal = "false";
+                    }
+
                 }
             }
         },uId );
 
-        dateTakenBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.setTargetFragment(EditMyVaccInfoFragment.this, REQUEST_CODE);
-                datePicker.show(myContext.getSupportFragmentManager(), "date picker");
-                //lastTakenDateBtn.setText(selectedDate);
-            }
+        dateTakenBtn.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.setTargetFragment(EditMyVaccInfoFragment.this, REQUEST_CODE);
+            datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
         });
 
-        nextDueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.setTargetFragment(EditMyVaccInfoFragment.this, REQUEST_CODE2);
-                datePicker.show(myContext.getSupportFragmentManager(), "date picker");
-                //lastTakenDateBtn.setText(selectedDate);
-            }
+        nextDueBtn.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.setTargetFragment(EditMyVaccInfoFragment.this, REQUEST_CODE2);
+            datePicker.show(getActivity().getSupportFragmentManager(), "date picker");
         });
 
+
+        //dialog for reminder
         ListView listView = new ListView(this.getActivity());
         List<String> data = new ArrayList<>();
-
         data.add("true");
         data.add("false");
-
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, data);
         listView.setAdapter(adapter);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -146,6 +135,7 @@ public class EditMyVaccInfoFragment extends Fragment {
             }
         });
 
+        //get input from user from dialog
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -192,17 +182,14 @@ public class EditMyVaccInfoFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        final Button dateTakenBtn = myContext.findViewById(R.id.dateTakenBtn);
-        final Button nextDueBtn = myContext.findViewById(R.id.nextDueBtn);
+        final Button dateTakenBtn = getActivity().findViewById(R.id.dateTakenBtn);
+        final Button nextDueBtn = getActivity().findViewById(R.id.nextDueBtn);
         // check for the results
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             // get date from string
             selectedDateTaken = data.getStringExtra("selectedDate");
             dateTakenBtn.setText(selectedDateTaken);
-            //dateChosen = selectedDate;
-            //System.out.println(dateChosen);
             String[] dateSplit = selectedDateTaken.split("/");
-            //String dateString = dateSplit[2]+'-'+dateSplit[0]+'-'+dateSplit[1];
             dateTaken = new Date(Integer.parseInt(dateSplit[2]),Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1]));
         }
         if (requestCode == REQUEST_CODE2 && resultCode == Activity.RESULT_OK)
@@ -210,25 +197,15 @@ public class EditMyVaccInfoFragment extends Fragment {
                 selectedNextDue = data.getStringExtra("selectedDate");
                 System.out.println(selectedNextDue + "next due selected date");
                 nextDueBtn.setText(selectedNextDue);
-                //dateChosen = selectedDate;
-                //System.out.println(dateChosen);
                 String[] dateSplit = selectedNextDue.split("/");
-                //String dateString = dateSplit[2]+'-'+dateSplit[0]+'-'+dateSplit[1];
                 nextDue = new Date(Integer.parseInt(dateSplit[2]),Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1]));
 
-            // set the value of the editText
-            //dateOfBirthET.setText(selectedDate);
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
-        super.onAttach(activity);
-    }
 
     private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         if(!message.equals("")){
             Bundle bundle = new Bundle();
             bundle.putString(getString(R.string.intent_message), message);
@@ -244,7 +221,6 @@ public class EditMyVaccInfoFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        //EventBus.getDefault().register(this);
     }
 
     /**
@@ -260,7 +236,5 @@ public class EditMyVaccInfoFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
 }

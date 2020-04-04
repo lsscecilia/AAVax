@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-//import android.widget.Toolbar;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -46,6 +46,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 
+import entity.FirebaseInterface;
+
 public class MainActivity extends AppCompatActivity implements IMainActivity , NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "MainActivity";
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
     private DrawerLayout drawer;
     private TextView mToolbarTitle;
     private String uId;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private Menu menu;
     private FirebaseDatabase database;
     private DatabaseReference userRef;

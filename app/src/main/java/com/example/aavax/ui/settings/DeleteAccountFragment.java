@@ -26,10 +26,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import entity.FirebaseInterface;
+
 public class DeleteAccountFragment extends Fragment {
     private static final String TAG = "Change password";
     private IMainActivity mIMainActivity;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private String uId;
     private String email;
 
@@ -51,32 +53,21 @@ public class DeleteAccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_delete_account, container, false);
         super.onCreateView(inflater, container, savedInstanceState);
 
-        //final Toolbar toolbarTitile = view.findViewById(R.id.settings_toolbar);
-        //toolbarTitile.setTitle("Change password");
-
         final Button cancelBtn = view.findViewById(R.id.cancelDeleteAccBtn);
         final Button deleteAccBtn = view.findViewById(R.id.confirmDeleteAccBtn);
         final EditText passwordEditText = view.findViewById(R.id.passwordDeleteAcc);
 
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent);
-            }
+        cancelBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(intent);
         });
 
-        deleteAccBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //read input
-                String password = getInput(passwordEditText);
-                deleteAcc(password);
+        deleteAccBtn.setOnClickListener(v -> {
+            //read input
+            String password = getInput(passwordEditText);
+            deleteAcc(password);
 
-            }
         });
-
-
 
         return view;
     }
@@ -89,26 +80,22 @@ public class DeleteAccountFragment extends Fragment {
         View view = getView();
         final EditText passwordEditText =  view.findViewById(R.id.passwordDeleteAcc);
 
-        firebaseManager.retrieveEmailAdress(new FirebaseManager.MyCallbackString() {
-            @Override
-            public void onCallback(String value) {
-                email = value;
-                AuthCredential credential = EmailAuthProvider.getCredential(email, pw);
-                user.reauthenticate(credential)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                user.delete();
+        firebaseManager.retrieveEmailAdress(value -> {
+            email = value;
+            AuthCredential credential = EmailAuthProvider.getCredential(email, pw);
+            user.reauthenticate(credential)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            user.delete();
 
-                                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                startActivity(intent);
-                            } else {
-                                Log.d(TAG, "old password is incorrect");
-                                passwordEditText.setError("incorrect password entered");
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Log.d(TAG, "old password is incorrect");
+                            passwordEditText.setError("incorrect password entered");
 
-                            }
-                        });
-            }
-
+                        }
+                    });
         }, uId);
     }
 
@@ -137,8 +124,6 @@ public class DeleteAccountFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
 
 }

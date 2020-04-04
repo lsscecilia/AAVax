@@ -34,6 +34,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import entity.FirebaseInterface;
+
 public class ProfilePageFragment extends Fragment  {
 
     private static final String TAG = "ProfileFragment";
@@ -49,7 +51,7 @@ public class ProfilePageFragment extends Fragment  {
     private TextView otherProfiles;
     private TextView aboutUs;
     private TextView sign_out;
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private String uId;
     private FragmentActivity myContext;
 
@@ -91,7 +93,6 @@ public class ProfilePageFragment extends Fragment  {
             public void onClick(DialogInterface dialog, int which) {
                 usersName.setText(editText.getText());
                 String name = getInput(editText);
-                System.out.println("name change to" + name);
                 firebaseManager.editProfile(uId, name);
             }
         });
@@ -132,12 +133,7 @@ public class ProfilePageFragment extends Fragment  {
         //onClickListen for about us
 
         sign_out = view.findViewById(R.id.sign_out_button);
-        sign_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            }
-        });
+        sign_out.setOnClickListener(v -> startActivity(new Intent(getActivity(), LoginActivity.class)));
 
         return view;
     }

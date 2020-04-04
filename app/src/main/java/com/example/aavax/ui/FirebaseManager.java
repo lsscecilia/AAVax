@@ -15,12 +15,11 @@ import java.util.HashMap;
 
 import entity.Profile;
 import entity.CDCThreatLevel;
-import entity.Country;
 import entity.Vaccine;
 import entity.VaccineLogEntry;
-import entity.firebaseInterface;
+import entity.FirebaseInterface;
 
-public class FirebaseManager implements firebaseInterface {
+public class FirebaseManager implements FirebaseInterface {
 
     private FirebaseDatabase database;
     private DatabaseReference vaccinesRef;
@@ -35,6 +34,7 @@ public class FirebaseManager implements firebaseInterface {
     }
 
 
+    @Override
     public void changePassword(String password, String uId)
     {
         database = FirebaseDatabase.getInstance();
@@ -48,7 +48,7 @@ public class FirebaseManager implements firebaseInterface {
      * @param userId
      * @param vaccineName
      */
-
+    @Override
     public void deleteVaccineLogEntry(final String userId, final String vaccineName)
     {
         database = FirebaseDatabase.getInstance();
@@ -362,6 +362,7 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
+    @Override
     public void retrieveCurrentProfileName(final MyCallbackString myCallback, final String Uid)
     {
         database = FirebaseDatabase.getInstance();
@@ -385,6 +386,7 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
+    @Override
     public void retrieveEmailAdress(final MyCallbackString myCallback, String Uid)
     {
         database = FirebaseDatabase.getInstance();
@@ -403,7 +405,7 @@ public class FirebaseManager implements firebaseInterface {
         });
     }
 
-
+    @Override
     public void retrieveSubprofileNameAndID(final MyCallbackHashMap myCallback, final String Uid)
     {
         database = FirebaseDatabase.getInstance();
@@ -432,36 +434,7 @@ public class FirebaseManager implements firebaseInterface {
     }
 
 
-    /*
-    public void retrieveProfiles(final MyCallbackProfiles myCallback, final String Uid)
-    {
-        database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("users");
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Profile> profiles = new ArrayList<>();
-                if (dataSnapshot.child(Uid).child("profiles").getChildrenCount()==1)
-                    myCallback.onCallback(null);
-                else
-                {
-                    for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").getChildren())
-                    {
-                        if (!data.getValue(Profile.class).getThisProfile())
-                            profiles.add(data.getValue(Profile.class));
-                    }
-                    myCallback.onCallback(profiles);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }*/
-
-
+    @Override
     public void retrieveProfile(MyCallbackProfile myCallback, String uId, String pId)
     {
         database = FirebaseDatabase.getInstance();
@@ -494,6 +467,7 @@ public class FirebaseManager implements firebaseInterface {
         setDefaultProfile(Uid);
     }
 
+    @Override
     public void editProfile(final String uId,String name)
     {
         database = FirebaseDatabase.getInstance();
@@ -514,16 +488,13 @@ public class FirebaseManager implements firebaseInterface {
             }
         });
 
-        //Profile profile = new Profile(name,dob);
-
     }
 
-
+    @Override
     public void editProfile(final String uId,String pId ,String name, String dob)
     {
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
-        //Profile profile = new Profile(name,dob);
         userRef.child(uId).child("profiles").child(pId).child("name").setValue(name);
         userRef.child(uId).child("profiles").child(pId).child("dateOfBirth").setValue(dob);
     }
@@ -714,6 +685,7 @@ public class FirebaseManager implements firebaseInterface {
         void onCallback(ArrayList<String> vaccines);
     }
 
+    @Override
     public void retrieveMandatoryVaccines(final MyCallBackVaccines myCallback, final String countryName){
         database = FirebaseDatabase.getInstance();
         countriesRef = database.getReference("Countries");
@@ -735,6 +707,7 @@ public class FirebaseManager implements firebaseInterface {
 
     }
 
+    @Override
     public void retrieveRecommendedVaccines(final MyCallBackVaccines myCallback, final String countryName){
         database = FirebaseDatabase.getInstance();
         countriesRef = database.getReference("Countries");
@@ -780,42 +753,11 @@ public class FirebaseManager implements firebaseInterface {
 
             }
         });
-        //System.out.println("Trail" + vaccines.get(0).getName());
     }
 
-    //interface to faciliate return of value TODO: consider to create another class for these
-    public interface MyCallback {
-        void onCallback(ArrayList<Vaccine> value);
-    }
 
-    public interface MyCallBackVaccine {
-        void onCallback(Vaccine value);
-    }
 
-    public interface MyCallbackVaccineLog {
-        void onCallback(ArrayList<VaccineLogEntry> value);
-    }
-
-    public interface MyCallbackProfiles{
-        void onCallback(ArrayList<Profile> value);
-    }
-
-    public interface MyCallbackString {
-        void onCallback(String value);
-    }
-
-    public interface MyCallBackCdcLevels {
-        void onCallback(ArrayList<CDCThreatLevel> levels);
-    }
-
-    public interface MyCallbackHashMap{
-        void onCallback(HashMap<String,String> value);
-    }
-
-    public interface MyCallbackProfile{
-        void onCallback(String name, String dob);
-    }
-
+    @Override
     public void retrieveCDCThreatLevels(final MyCallBackCdcLevels myCallback, final String countryName){
         database = FirebaseDatabase.getInstance();
         countriesRef = database.getReference("Countries");
@@ -836,5 +778,29 @@ public class FirebaseManager implements firebaseInterface {
             }
         });
 
+    }
+
+    public interface MyCallback {
+        void onCallback(ArrayList<Vaccine> value);
+    }
+
+    public interface MyCallbackVaccineLog {
+        void onCallback(ArrayList<VaccineLogEntry> value);
+    }
+
+    public interface MyCallbackString {
+        void onCallback(String value);
+    }
+
+    public interface MyCallBackCdcLevels {
+        void onCallback(ArrayList<CDCThreatLevel> levels);
+    }
+
+    public interface MyCallbackHashMap{
+        void onCallback(HashMap<String,String> value);
+    }
+
+    public interface MyCallbackProfile{
+        void onCallback(String name, String dob);
     }
 }

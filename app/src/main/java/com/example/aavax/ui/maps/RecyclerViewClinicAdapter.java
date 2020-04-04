@@ -21,7 +21,6 @@ public class RecyclerViewClinicAdapter extends RecyclerView.Adapter<RecyclerView
 
     private ArrayList<String> mClinicNames = new ArrayList<>();
     private ArrayList<String> mDistances = new ArrayList<>();
-    //private Context mContext;
     private IMainActivity mIMainActivity;
 
     public RecyclerViewClinicAdapter(ArrayList<String> mClinicNames, ArrayList<String> mDistances) {

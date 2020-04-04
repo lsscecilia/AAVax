@@ -38,7 +38,6 @@ public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnCli
         Fragment myFragment = new MyVaccInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putString("uId", uId);
-        System.out.println("vaccine name lolol" + vaccineName.getText());
         bundle.putString("vaccineName", (String) vaccineName.getText());
         myFragment.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();

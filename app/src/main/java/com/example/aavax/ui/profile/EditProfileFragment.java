@@ -1,7 +1,6 @@
 package com.example.aavax.ui.profile;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,39 +9,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
-import com.example.aavax.ui.MainActivity;
 import com.example.aavax.ui.homepage.HomePageFragment;
-import com.example.aavax.ui.homepage.VaccineAdapter;
-import com.example.aavax.ui.homepage.VaccineEntryFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
+import entity.FirebaseInterface;
 
-import entity.Profile;
-import entity.Vaccine;
 
 public class EditProfileFragment extends Fragment {
 
     private static final String TAG = "Edit Profile";
-    private FirebaseManager firebaseManager;
+    private FirebaseInterface firebaseManager;
     private String uId;
     private String pId;
     private Menu menu;
@@ -144,16 +135,6 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        //delete profile
-        /*
-        1. delete from database if its not default profile
-        2. switch to default profile
-        3. go back to profile page fragment
-
-
-        PROBLEMS --> THE PID WILL NOT BE IN ORDER AFTER DELETION HOW
-
-         */
 
         deleteProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,8 +163,6 @@ public class EditProfileFragment extends Fragment {
 
 
 
-
-
     public String getInput(EditText editText) {
         return editText.getText().toString().trim();
     }
@@ -201,8 +180,6 @@ public class EditProfileFragment extends Fragment {
     public void onEvent(CustomMessageEvent event) {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
-        //DisplayName.setText(usernameImported);
-
     }
 
 }
