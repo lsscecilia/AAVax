@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         final TextView forgotPassword = findViewById(R.id.forgot_password);
 
 
-        // TODO: need to update condition for successful login
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,9 +74,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
                 signIn(email, password);
-                //progressBar.setVisibility(View.GONE);
-                // TODO: how to make the progress bar? preferably not to join method but if bobian
-
             }
         });
 
@@ -91,6 +87,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method is called when user sign in. Will go to HomePageFragment in MainActivity if authentication is successful
+     * @param email
+     * @param password
+     */
     private void signIn(String email, String password)
     {
         final ProgressBar progressBar = findViewById(R.id.loading);
@@ -133,12 +134,12 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    // Update UI when login is successful
+    /**
+     * Update UI when login is successful
+     */
     private void updateUi() {
-
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        //TODO: how to link user to the next shit?
     }
 
     /**

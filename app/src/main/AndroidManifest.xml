@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.aavax">
 
     <!--
@@ -24,7 +25,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -58,6 +60,7 @@
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.login.CreateAccountActivity" />
         <activity android:name=".ui.profile.NewProfileEntry" />
+        <activity android:name=".ui.settings.SettingsActivity" />
     </application>
 
 </manifest>

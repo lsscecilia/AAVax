@@ -23,8 +23,6 @@ import java.util.ArrayList;
 
 import entity.VaccineLogEntry;
 
-//TODO: display correct vacc info
-//might have to pass the vaccine log entry in vaccineholder when instantiating new fragment
 public class MyVaccInfoFragment extends Fragment {
 
     private FirebaseManager firebaseManager;
@@ -33,14 +31,15 @@ public class MyVaccInfoFragment extends Fragment {
     private String uId;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         firebaseManager = new FirebaseManager();
         View view = inflater.inflate(R.layout.fragment_my_vacc_info, container, false);
         Bundle bundle = this.getArguments();
+
+
 
         vaccineName = bundle.getString("vaccineName");
         //uId = bundle.getString("uId");
@@ -114,6 +113,8 @@ public class MyVaccInfoFragment extends Fragment {
 
         return view;
     }
+
+
 
     @Override
     public void onStart(){
