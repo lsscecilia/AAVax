@@ -25,6 +25,7 @@ import com.example.aavax.ui.homepage.VaccineDetailFragment;
 import com.example.aavax.ui.maps.MapViewFragment;
 import com.example.aavax.ui.profile.ProfilePageFragment;
 import com.example.aavax.ui.reminder.RemindersPageFragment;
+import com.example.aavax.ui.settings.SettingsActivity;
 import com.example.aavax.ui.travel.TravelCountriesFragment;
 import com.example.aavax.ui.travel.TravelPageFragment;
 import com.example.aavax.ui.travel.TravelVaccinesFragment;
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
 
         if (savedInstanceState == null) {
             Fragment fragment = new HomePageFragment();
-            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
+            doFragmentTransaction(fragment, getString(R.string.my_vaccines), true, "");
         }
     }
 
@@ -203,7 +204,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         System.out.println("lol whats happening here");
         if (item.getItemId()== R.id.setting)
         {
-
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, SettingsActivity.class));
         }
         else if (item.getItemId()==R.id.signout)
         {
@@ -314,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        System.out.println(getSupportFragmentManager().getBackStackEntryCount());
+        System.out.println(getSupportFragmentManager().getBackStackEntryCount() + "back stack count");
         if (getSupportFragmentManager().getBackStackEntryCount() > 0){
             getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().beginTransaction().commit();

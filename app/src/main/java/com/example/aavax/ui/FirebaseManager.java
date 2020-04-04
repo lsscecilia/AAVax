@@ -35,21 +35,12 @@ public class FirebaseManager implements firebaseInterface {
     }
 
 
-    public void storeCountry(final Country country) {
+    public void changePassword(String password, String uId)
+    {
         database = FirebaseDatabase.getInstance();
-        //users = database.getReference("Users");
-        vaccinesRef = database.getReference("Countries");
-        vaccinesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                vaccinesRef.child(country.getName()).setValue(country);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        userRef = database.getReference("users");
+        System.out.println("uid in change password"+uId);
+        userRef.child(uId).child("password").setValue(password);
     }
 
     /**
@@ -398,7 +389,7 @@ public class FirebaseManager implements firebaseInterface {
     {
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
-        userRef.addValueEventListener(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String email = dataSnapshot.child(Uid).child("email").getValue(String.class);

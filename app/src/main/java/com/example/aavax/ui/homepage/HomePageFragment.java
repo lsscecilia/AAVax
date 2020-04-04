@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 public class HomePageFragment extends Fragment {
 
-    private static final String TAG = "MyVaccinations";
+    private static final String TAG = "My Vaccinations";
 
     private IMainActivity mIMainActivity;
     private RecyclerView recyclerView;
@@ -66,7 +66,7 @@ public class HomePageFragment extends Fragment {
         //when add vaccine button is clicked
         addVaccineButton.setOnClickListener(v -> {
             Fragment fragment = new VaccineEntryFragment();
-            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, "");
+            doFragmentTransaction(fragment, getString(R.string.my_vaccines), true, "");
         });
 
         return view;
@@ -140,11 +140,6 @@ public class HomePageFragment extends Fragment {
         uId = event.getCustomMessage();
         //DisplayName.setText(usernameImported);
 
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 }

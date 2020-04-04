@@ -16,6 +16,7 @@ public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnCli
 
     private TextView vaccineName;
     private String uId;
+    private static final String TAG = "My Vaccinations";
 
     public VaccineHolder(View itemView) {
         super(itemView);
