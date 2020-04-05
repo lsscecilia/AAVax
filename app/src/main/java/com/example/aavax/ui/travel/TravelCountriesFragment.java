@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
+import com.example.aavax.ui.DestinationMgr;
 import com.example.aavax.ui.IMainActivity;
 
 
@@ -26,10 +27,11 @@ public class TravelCountriesFragment extends Fragment {
     private static final String TAG = "TravelCountriesFragment";
 
     //widgets
-    ListView countriesListView;
+    private ListView countriesListView;
     //ArrayList<Country> countries;
-    String[] popular_countries;
-    String[] all_countries;
+    private String[] popular_countries;
+    private String[] all_countries;
+    private DestinationMgr destinationMgr;
 
     //vars
     private IMainActivity mIMainActivity;
@@ -63,33 +65,11 @@ public class TravelCountriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         countriesListView = (ListView) getView().findViewById(R.id.countriesListView);
+        destinationMgr = new DestinationMgr();
         Resources res = getResources();
-        switch(mIncomingMessage){
-            case "Asia":
-                popular_countries = res.getStringArray(R.array.asia_popular_countries);
-                all_countries = res.getStringArray(R.array.asia_all_countries);
-                break;
-            case "Europe":
-                popular_countries = res.getStringArray(R.array.europe_popular_countries);
-                all_countries = res.getStringArray(R.array.europe_all_countries);
-                break;
-            case "North America":
-                popular_countries = res.getStringArray(R.array.north_america_popular_countries);
-                all_countries = res.getStringArray(R.array.north_america_all_countries);
-                break;
-            case "South America":
-                popular_countries = res.getStringArray(R.array.south_america_popular_countries);
-                all_countries = res.getStringArray(R.array.south_america_all_countries);
-                break;
-            case "Oceania":
-                popular_countries = res.getStringArray(R.array.oceania_popular_countries);
-                all_countries = res.getStringArray(R.array.oceania_popular_countries);
-                break;
-            case "Africa":
-                popular_countries = res.getStringArray(R.array.africa_popular_countries);
-                all_countries = res.getStringArray(R.array.africa_all_countries);
-                break;
-        }
+        popular_countries = destinationMgr.getPopularCountries(mIncomingMessage, res);
+        all_countries = destinationMgr.getAllCountries(mIncomingMessage, res);
+
 
         adapter = new ArrayAdapter(getActivity(), R.layout.country_row, popular_countries);
         countriesListView.setAdapter(adapter);

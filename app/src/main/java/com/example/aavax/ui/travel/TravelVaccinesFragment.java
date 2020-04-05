@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
+import com.example.aavax.ui.DestinationMgr;
 import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 import com.example.aavax.ui.maps.MapsActivity;
@@ -62,12 +63,8 @@ public class TravelVaccinesFragment extends Fragment {
     private String uId;
     private ExpandableListView expandableTextView;
     private ImageView mImageView;
-    private String[] asia_countries;
-    private String[] north_america_countries;
-    private String[] south_america_countries;
-    private String[] europe_countries;
-    private String[] africa_countries;
-    private String[] oceania_countries;
+    private DestinationMgr destinationMgr;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,8 +86,9 @@ public class TravelVaccinesFragment extends Fragment {
         }
 
         Resources res = view.getResources();
+        destinationMgr = new DestinationMgr();
         mImageView = view.findViewById(R.id.countryImg);
-        mImageView.setImageResource(findImage(view, mIncomingMessage));
+        mImageView.setImageResource(destinationMgr.findImage(view, mIncomingMessage, res));
         mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
         firebaseManager = new FirebaseManager();
 
@@ -260,19 +258,6 @@ public class TravelVaccinesFragment extends Fragment {
 
 
 
-/*
-        if(isServicesOK()){
-            Button viewClinicsBtn = (Button) view.findViewById(R.id.ViewClinicsBtn);
-            viewClinicsBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mIMainActivity.inflateFragment("Nearby Clinics", "");
-                }
-            });
-        }
-        */
-
-
         return view;
     }
     @Override
@@ -327,31 +312,31 @@ public class TravelVaccinesFragment extends Fragment {
         return false;
     }
 
-    private int findImage(View view, String countryName){
-        Resources res = view.getResources();
-        asia_countries = res.getStringArray(R.array.asia_all_countries);
-        north_america_countries = res.getStringArray(R.array.north_america_all_countries);
-        south_america_countries = res.getStringArray(R.array.south_america_all_countries);
-        europe_countries = res.getStringArray(R.array.europe_all_countries);
-        africa_countries = res.getStringArray(R.array.africa_all_countries);
-        oceania_countries = res.getStringArray(R.array.oceania_popular_countries);
-
-        if (Arrays.asList(asia_countries).contains(countryName))
-            return R.drawable.asia;
-        else if (Arrays.asList(north_america_countries).contains(countryName))
-            return R.drawable.north_america;
-        else if (Arrays.asList(south_america_countries).contains(countryName))
-            return R.drawable.south_america;
-        else if (Arrays.asList(europe_countries).contains(countryName))
-            return R.drawable.europe;
-        else if (Arrays.asList(africa_countries).contains(countryName))
-            return R.drawable.africa;
-        else if (Arrays.asList(oceania_countries).contains(countryName))
-            return R.drawable.oceania;
-        else
-            return R.drawable.antarctica;
-
-    }
+//    private int findImage(View view, String countryName){
+//        Resources res = view.getResources();
+//        asia_countries = res.getStringArray(R.array.asia_all_countries);
+//        north_america_countries = res.getStringArray(R.array.north_america_all_countries);
+//        south_america_countries = res.getStringArray(R.array.south_america_all_countries);
+//        europe_countries = res.getStringArray(R.array.europe_all_countries);
+//        africa_countries = res.getStringArray(R.array.africa_all_countries);
+//        oceania_countries = res.getStringArray(R.array.oceania_popular_countries);
+//
+//        if (Arrays.asList(asia_countries).contains(countryName))
+//            return R.drawable.asia;
+//        else if (Arrays.asList(north_america_countries).contains(countryName))
+//            return R.drawable.north_america;
+//        else if (Arrays.asList(south_america_countries).contains(countryName))
+//            return R.drawable.south_america;
+//        else if (Arrays.asList(europe_countries).contains(countryName))
+//            return R.drawable.europe;
+//        else if (Arrays.asList(africa_countries).contains(countryName))
+//            return R.drawable.africa;
+//        else if (Arrays.asList(oceania_countries).contains(countryName))
+//            return R.drawable.oceania;
+//        else
+//            return R.drawable.antarctica;
+//
+//    }
 
     @Override
     public void onResume() {
