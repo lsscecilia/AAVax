@@ -1,4 +1,4 @@
-package com.example.aavax.ui.Reminder;
+package com.example.aavax.ui.reminder;
 
 import android.view.View;
 import android.widget.TextView;
@@ -10,7 +10,7 @@ import com.example.aavax.R;
 import com.example.aavax.ui.AbsVaccineHolder;
 import com.example.aavax.ui.homepage.MyVaccInfoFragment;
 
-import model.Vaccine;
+import entity.Vaccine;
 
 public class ReminderVaccineHolder extends AbsVaccineHolder {
 

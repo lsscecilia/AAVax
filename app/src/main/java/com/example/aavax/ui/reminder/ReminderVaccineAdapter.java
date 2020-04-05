@@ -1,4 +1,4 @@
-package com.example.aavax.ui.Reminder;
+package com.example.aavax.ui.reminder;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import com.example.aavax.R;
 
 import java.util.ArrayList;
 
-import model.Vaccine;
+import entity.Vaccine;
 
 public class ReminderVaccineAdapter extends RecyclerView.Adapter<ReminderVaccineHolder>{
 

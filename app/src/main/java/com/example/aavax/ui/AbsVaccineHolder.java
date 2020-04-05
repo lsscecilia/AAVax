@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.aavax.R;
 import com.example.aavax.ui.homepage.MyVaccInfoFragment;
 
-import model.Vaccine;
+import entity.Vaccine;
 
 
 public abstract class AbsVaccineHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

@@ -44,7 +44,7 @@ public class VaccineDetailFragment extends Fragment {
                 {
                     if (v.getName().compareTo(vaccineName)==0)
                     {
-                        vaccineDetailText.setText(v.getDetail());
+                        vaccineDetailText.setText(v.getDate());
                         break;
                     }
 

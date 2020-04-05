@@ -3,14 +3,10 @@ package entity;
 public class Vaccine {
     private String name;
     private String date;
-
-    public Vaccine(String name, String date) {
-        this.name = name;
-        this.date = date;
     private String detail;
     private int numMonths;
     private Boolean oneTime;
-    }
+
 
     public Vaccine(String name, String detail, int numMonths, Boolean oneTime) {
         this.name = name;
