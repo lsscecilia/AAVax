@@ -38,7 +38,7 @@ import entity.FirebaseInterface;
 
 public class ProfilePageFragment extends Fragment  {
 
-    private static final String TAG = "ProfileFragment";
+    private static final String TAG = "Profile";
     //widgets
 
     //vars
@@ -184,6 +184,14 @@ public class ProfilePageFragment extends Fragment  {
     public String getInput(EditText editText) {
         return editText.getText().toString().trim();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        mIMainActivity.setToolbarTitle(TAG);
+    }
+
 
 
 }

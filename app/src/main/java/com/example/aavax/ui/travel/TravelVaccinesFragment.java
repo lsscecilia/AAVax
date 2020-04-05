@@ -72,12 +72,10 @@ public class TravelVaccinesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println(getTag() + " IS THE TAG");
         mIMainActivity.setToolbarTitle(getTag());
         Bundle bundle = this.getArguments();
         if (bundle != null){
             mIncomingMessage = bundle.getString((getString(R.string.intent_message)));
-            System.out.println(mIncomingMessage + "IS THE INCOMING MSG");
         }
     }
     @Nullable
@@ -198,7 +196,7 @@ public class TravelVaccinesFragment extends Fragment {
                     @Override
                     public void onCallback(ArrayList<VaccineLogEntry> value) {
                         ArrayList<VaccineLogEntry> userEntries = value;
-                        int day,year, mth;
+                        int day, year, mth;
                         for (String vaccineName : mRecommendedVaccines){
                             boolean valid = false;
                             for (VaccineLogEntry entry : userEntries){
@@ -213,6 +211,8 @@ public class TravelVaccinesFragment extends Fragment {
                                     Date nextDue;
                                     int numMths = entry.getVaccine().getNumMonths();
                                     int newMth = numMths+mth;
+                                    if (day == 0)
+                                        day += 1;
                                     if (newMth<=12)
                                     {
                                         newMth = numMths+mth;
@@ -231,13 +231,6 @@ public class TravelVaccinesFragment extends Fragment {
                                     LocalDate currentDate = LocalDate.now();
                                     LocalDate expireDate = LocalDate.of(year+2000,newMth, day);
 
-                                    //Date currentDate = new Date();
-                                    /*
-                                    int day1,year1, mth1;
-                                    day1 = currentDate.getDayOfMonth();
-                                    mth1 = currentDate.getMonthValue();
-                                    year1 = currentDate.getYear();
-                                    System.out.println("CURRENT DATE "+day1+"/"+mth1+"/"+year1);*/
                                     System.out.println(currentDate.toString());
                                     System.out.println(expireDate.toString());
                                     if (expireDate.compareTo(currentDate)>0)
@@ -358,6 +351,13 @@ public class TravelVaccinesFragment extends Fragment {
         else
             return R.drawable.antarctica;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        mIMainActivity.setToolbarTitle(getTag());
     }
 
 }

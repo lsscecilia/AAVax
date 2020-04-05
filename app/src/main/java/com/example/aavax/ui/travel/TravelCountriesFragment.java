@@ -126,4 +126,11 @@ public class TravelCountriesFragment extends Fragment {
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        mIMainActivity.setToolbarTitle(getTag());
+    }
 }

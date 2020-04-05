@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.FirebaseManager;
+import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -125,4 +126,6 @@ public class MyVaccInfoFragment extends Fragment {
         Log.d("HOMEFRAG EB RECEIVER", "Username :\"" + event.getCustomMessage() + "\" Successfully Received!");
         uId = event.getCustomMessage();
     }
+
+
 }

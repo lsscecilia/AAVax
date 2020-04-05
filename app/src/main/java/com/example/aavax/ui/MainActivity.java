@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
     private String[] continents;
     private String[] countries;
     private String[] vaccines;
+
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -315,20 +318,31 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        System.out.println(getSupportFragmentManager().getBackStackEntryCount() + "back stack count");
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
-            getSupportFragmentManager().popBackStackImmediate();
-            getSupportFragmentManager().beginTransaction().commit();
-        }
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        System.out.println(getSupportFragmentManager().getBackStackEntryCount() + "back stack count");
+//        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
+//            getSupportFragmentManager().popBackStackImmediate();
+//            getSupportFragmentManager().beginTransaction().commit();
+//        }
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
+
+//    fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+//        @Override
+//        public void onBackStackChanged() {
+//            // If the stack decreases it means I clicked the back button
+//            if( fragmentManager.getBackStackEntryCount() <= count){
+//                //check your position based on selected fragment and set it accordingly.
+//                navigation.getMenu().getItem(your_pos).setChecked(true);
+//            }
+//        }
+//    });
 
 
 

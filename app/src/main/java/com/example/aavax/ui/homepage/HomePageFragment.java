@@ -134,4 +134,11 @@ public class HomePageFragment extends Fragment {
         uId = event.getCustomMessage();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        mIMainActivity.setToolbarTitle(TAG);
+    }
+
 }

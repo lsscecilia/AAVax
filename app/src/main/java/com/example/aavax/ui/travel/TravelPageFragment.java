@@ -63,31 +63,13 @@ public class TravelPageFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
 
         mIMainActivity.inflateFragment(String.valueOf(v.getContentDescription()), String.valueOf(v.getContentDescription()));
-//        switch (v.getId()){
-//            case R.id.btn_asia:{
-//                mIMainActivity.inflateFragment(getString(R.string.fragment_a), message);
-//                break;
-//            }
-//
-//            case R.id.btn_europe:{
-//                break;
-//            }
-//
-//            case R.id.btn_north_america:{
-//                break;
-//            }
-//
-//            case R.id.btn_south_america:{
-//                break;
-//            }
-//
-//            case R.id.btn_oceania:{
-//                break;
-//            }
-//
-//            case R.id.btn_africa:{
-//                break;
-//            }
-//        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        mIMainActivity.setToolbarTitle(getTag());
     }
 }

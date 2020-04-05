@@ -39,7 +39,7 @@ import entity.VaccineLogEntry;
 
 public class RemindersPageFragment extends Fragment {
 
-    private static final String TAG = "RemindersFragment";
+    private static final String TAG = "Reminders";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
     private IMainActivity mIMainActivity;
@@ -153,4 +153,12 @@ public class RemindersPageFragment extends Fragment {
         }
         return false;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        mIMainActivity.setToolbarTitle(TAG);
+    }
+
 }
