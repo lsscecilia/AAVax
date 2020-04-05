@@ -154,13 +154,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     p = (GeoJsonPoint) g.getGeometry();
                     mMap.addMarker(new MarkerOptions().position(new LatLng(p.getCoordinates().latitude, p.getCoordinates().longitude)).title(clinicName));
                 }
-
-                recyclerView = findViewById(R.id.clinic_recycler);
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                // add line after each vaccine row
-                recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-                adapter = new ClinicAdapter(this, clinicArrayList);//string array list
-                recyclerView.setAdapter(adapter);
             }
 
 

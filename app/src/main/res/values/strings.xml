@@ -56,7 +56,7 @@
     <string name="create_account">Create account</string>
     <string name="new_account">New Account</string>
     <string name="forgot_password">"Forgot password\?"</string>
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">Email Address</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
