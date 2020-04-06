@@ -47,7 +47,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 
-import entity.FirebaseInterface;
+import control.AccountMgr;
+import control.ProfileMgr;
+import entity.AccountMgrInterface;
+import entity.ProfileMgrInterface;
 
 public class MainActivity extends AppCompatActivity implements IMainActivity , NavigationView.OnNavigationItemSelectedListener{
 
@@ -56,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
     private DrawerLayout drawer;
     private TextView mToolbarTitle;
     private String uId;
-    private FirebaseInterface firebaseManager;
+    private ProfileMgrInterface profileMgr;
+    private AccountMgrInterface accountMgr;
     private Menu menu;
     private FirebaseDatabase database;
     private DatabaseReference userRef;
@@ -74,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        firebaseManager = new FirebaseManager();
+        profileMgr = new ProfileMgr();
+        accountMgr = new AccountMgr();
+
         Resources res = getResources();
 
         //top toolbar
@@ -155,21 +161,15 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
                 });
 
                 //get name that are for this profile
-                firebaseManager.retrieveCurrentProfileName(new FirebaseManager.MyCallbackString() {
-                    @Override
-                    public void onCallback(String value) {
-                        TextView name = findViewById(R.id.profilename);
-                        name.setText(value);
-                    }
+                profileMgr.retrieveCurrentProfileName(value -> {
+                    TextView name = findViewById(R.id.profilename);
+                    name.setText(value);
                 }, uId);
 
                 //get email that is for this acount
-                firebaseManager.retrieveEmailAdress(new FirebaseManager.MyCallbackString() {
-                    @Override
-                    public void onCallback(String value) {
-                        TextView email = findViewById(R.id.emailaddress);
-                        email.setText(value);
-                    }
+                accountMgr.retrieveEmailAdress(value -> {
+                    TextView email = findViewById(R.id.emailaddress);
+                    email.setText(value);
                 }, uId);
             }
 
@@ -225,15 +225,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
             menu.removeItem(item.getItemId());
 
             System.out.println("CHANGE PROFILE HEREEEEEE");
-            firebaseManager.changeProfile(uId, Integer.toString(item.getItemId())); //change here
+            profileMgr.changeProfile(uId, Integer.toString(item.getItemId()));
 
             drawer.closeDrawer(GravityCompat.START);
-            /*
-            selectedFragment = new HomePageFragment();
-            title = "switch profile";
-            drawer.closeDrawer(GravityCompat.START);
-            doFragmentTransaction(selectedFragment, title, false, "");*/
-
 
         }
 
@@ -243,33 +237,30 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
-                    String title = "";
-                    switch (item.getItemId()) {
-                        case R.id.navigation_home:
-                            selectedFragment = new HomePageFragment();
-                            title = getString(R.string.my_vaccines);
-                            break;
-                        case R.id.navigation_travel:
-                            selectedFragment = new TravelPageFragment();
-                            title = getString(R.string.continents);
-                            break;
-                        case R.id.navigation_reminders:
-                            selectedFragment = new RemindersPageFragment();
-                            title = getString(R.string.title_reminders);
-                            break;
-                        case R.id.navigation_profile:
-                            selectedFragment = new ProfilePageFragment();
-                            title = getString(R.string.title_profile);
-                            break;
-                    }
-                    doFragmentTransaction(selectedFragment, title, true, "");
-
-                    return true;
+            item -> {
+                Fragment selectedFragment = null;
+                String title = "";
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        selectedFragment = new HomePageFragment();
+                        title = getString(R.string.my_vaccines);
+                        break;
+                    case R.id.navigation_travel:
+                        selectedFragment = new TravelPageFragment();
+                        title = getString(R.string.continents);
+                        break;
+                    case R.id.navigation_reminders:
+                        selectedFragment = new RemindersPageFragment();
+                        title = getString(R.string.title_reminders);
+                        break;
+                    case R.id.navigation_profile:
+                        selectedFragment = new ProfilePageFragment();
+                        title = getString(R.string.title_profile);
+                        break;
                 }
+                doFragmentTransaction(selectedFragment, title, true, "");
+
+                return true;
             };
 
     private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
@@ -316,34 +307,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         }
 
     }
-
-
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        System.out.println(getSupportFragmentManager().getBackStackEntryCount() + "back stack count");
-//        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
-//            getSupportFragmentManager().popBackStackImmediate();
-//            getSupportFragmentManager().beginTransaction().commit();
-//        }
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
-//    fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-//        @Override
-//        public void onBackStackChanged() {
-//            // If the stack decreases it means I clicked the back button
-//            if( fragmentManager.getBackStackEntryCount() <= count){
-//                //check your position based on selected fragment and set it accordingly.
-//                navigation.getMenu().getItem(your_pos).setChecked(true);
-//            }
-//        }
-//    });
-
 
 
     /**

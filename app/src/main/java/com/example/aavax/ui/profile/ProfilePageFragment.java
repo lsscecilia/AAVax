@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 import com.example.aavax.ui.login.LoginActivity;
 
@@ -34,7 +33,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import entity.FirebaseInterface;
+import control.ProfileMgr;
+import entity.ProfileMgrInterface;
 
 public class ProfilePageFragment extends Fragment  {
 
@@ -51,7 +51,7 @@ public class ProfilePageFragment extends Fragment  {
     private TextView otherProfiles;
     private TextView aboutUs;
     private TextView sign_out;
-    private FirebaseInterface firebaseManager;
+    private ProfileMgrInterface profileMgr;
     private String uId;
     private FragmentActivity myContext;
 
@@ -59,7 +59,7 @@ public class ProfilePageFragment extends Fragment  {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(getTag());
-        firebaseManager = new FirebaseManager();
+        profileMgr = new ProfileMgr();
     }
     @Nullable
     @Override
@@ -73,12 +73,7 @@ public class ProfilePageFragment extends Fragment  {
         usersName = view.findViewById(R.id.users_name);
 
         //set username
-        firebaseManager.retrieveCurrentProfileName(new FirebaseManager.MyCallbackString() {
-            @Override
-            public void onCallback(String value) {
-                usersName.setText(value);
-            }
-        }, uId);
+        profileMgr.retrieveCurrentProfileName(value -> usersName.setText(value), uId);
 
 
         //edit name with dialog
@@ -93,7 +88,7 @@ public class ProfilePageFragment extends Fragment  {
             public void onClick(DialogInterface dialog, int which) {
                 usersName.setText(editText.getText());
                 String name = getInput(editText);
-                firebaseManager.editProfile(uId, name);
+                profileMgr.editProfile(uId, name);
             }
         });
 
@@ -110,7 +105,7 @@ public class ProfilePageFragment extends Fragment  {
         otherProfiles = view.findViewById(R.id.other_profiles_button);
         otherProfiles.setOnClickListener(v -> {
 
-            firebaseManager.retrieveSubprofileNameAndID(value -> {
+            profileMgr.retrieveSubprofileNameAndID(value -> {
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("hashMap", value);
@@ -122,13 +117,10 @@ public class ProfilePageFragment extends Fragment  {
         });
 
         aboutUs = view.findViewById(R.id.about_us_button);
-        aboutUs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment myFragment = new AboutUsFragment();
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
-            }
+        aboutUs.setOnClickListener(v -> {
+            Fragment myFragment = new AboutUsFragment();
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
         });
         //onClickListen for about us
 

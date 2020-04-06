@@ -13,8 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
-import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,12 +20,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import entity.FirebaseInterface;
+import control.VaccineLogMgr;
 import entity.VaccineLogEntry;
+import entity.VaccineLogMgrInterface;
 
 public class MyVaccInfoFragment extends Fragment {
 
-    private FirebaseInterface firebaseManager;
+    private VaccineLogMgrInterface vaccineLogMgr;
     private String vaccineName;
     private ArrayList<VaccineLogEntry> vaccineArrayList;
     private String uId;
@@ -37,7 +36,7 @@ public class MyVaccInfoFragment extends Fragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        firebaseManager = new FirebaseManager();
+        vaccineLogMgr = new VaccineLogMgr();
         View view = inflater.inflate(R.layout.fragment_my_vacc_info, container, false);
 
         //get vaccine name from bundle
@@ -69,25 +68,22 @@ public class MyVaccInfoFragment extends Fragment {
         vaccine.setText(vaccineName);
 
         //retrieve vaccine
-        firebaseManager.retrieveVaccineLog(new FirebaseManager.MyCallbackVaccineLog() {
-            @Override
-            public void onCallback(ArrayList<VaccineLogEntry> value) {
-                for (VaccineLogEntry v: value)
+        vaccineLogMgr.retrieveVaccineLog(value -> {
+            for (VaccineLogEntry v: value)
+            {
+                if (v.getVaccine().getName().compareTo(vaccineName)==0)
                 {
-                    if (v.getVaccine().getName().compareTo(vaccineName)==0)
+                    dateTaken.setText(v.getDateTaken().getMonth()+"/"+v.getDateTaken().getDate()+"/"+v.getDateTaken().getYear());
+                    if (v.getReminder())
                     {
-                        dateTaken.setText(v.getDateTaken().getMonth()+"/"+v.getDateTaken().getDate()+"/"+v.getDateTaken().getYear());
-                        if (v.getReminder())
-                        {
-                            remindMe.setText("true");
-                            nextDue.setText(v.getNextDue().getMonth()+"/"+v.getNextDue().getDate()+"/"+v.getNextDue().getYear());
-                        }
+                        remindMe.setText("true");
+                        nextDue.setText(v.getNextDue().getMonth()+"/"+v.getNextDue().getDate()+"/"+v.getNextDue().getYear());
+                    }
 
-                        else
-                        {
-                            remindMe.setText("false");
-                            nextDue.setText("NA");
-                        }
+                    else
+                    {
+                        remindMe.setText("false");
+                        nextDue.setText("NA");
                     }
                 }
             }

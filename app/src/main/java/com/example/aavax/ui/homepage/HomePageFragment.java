@@ -20,11 +20,11 @@ import android.widget.ImageButton;
 
 import com.example.aavax.R;
 
-import entity.FirebaseInterface;
+import control.VaccineLogMgr;
 import entity.Vaccine;
+import entity.VaccineLogMgrInterface;
 
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,13 +42,13 @@ public class HomePageFragment extends Fragment {
     private VaccineAdapter adapter;
     private ArrayList<Vaccine> vaccineArrayList;
     private String uId;
-    private FirebaseInterface firebaseManager;
+    private VaccineLogMgrInterface vaccineLogMgr;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(TAG);
-        firebaseManager  = new FirebaseManager();
+        vaccineLogMgr = new VaccineLogMgr();
 
         //subscribe to eventBus
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -91,7 +91,7 @@ public class HomePageFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
         //retrieve user vaccine log
-        firebaseManager.retrieveUserVaccine(value -> {
+        vaccineLogMgr.retrieveUserVaccine(value -> {
             vaccineArrayList = value;
             adapter = new VaccineAdapter(getActivity(), vaccineArrayList, uId);
             recyclerView.setAdapter(adapter);

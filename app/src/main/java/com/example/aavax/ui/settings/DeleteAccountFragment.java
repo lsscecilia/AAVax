@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 import com.example.aavax.ui.login.LoginActivity;
 import com.google.firebase.auth.AuthCredential;
@@ -26,12 +25,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import entity.FirebaseInterface;
+import control.AccountMgr;
+import entity.AccountMgrInterface;
 
 public class DeleteAccountFragment extends Fragment {
     private static final String TAG = "Change password";
     private IMainActivity mIMainActivity;
-    private FirebaseInterface firebaseManager;
+    private AccountMgrInterface accountMgr;
     private String uId;
     private String email;
 
@@ -39,7 +39,7 @@ public class DeleteAccountFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        firebaseManager  = new FirebaseManager();
+        accountMgr = new AccountMgr();
 
         //subscribe to event bus
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -80,7 +80,7 @@ public class DeleteAccountFragment extends Fragment {
         View view = getView();
         final EditText passwordEditText =  view.findViewById(R.id.passwordDeleteAcc);
 
-        firebaseManager.retrieveEmailAdress(value -> {
+        accountMgr.retrieveEmailAdress(value -> {
             email = value;
             AuthCredential credential = EmailAuthProvider.getCredential(email, pw);
             user.reauthenticate(credential)
@@ -108,7 +108,6 @@ public class DeleteAccountFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        //EventBus.getDefault().register(this);
     }
 
     /**

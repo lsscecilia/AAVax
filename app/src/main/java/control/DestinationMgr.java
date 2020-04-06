@@ -1,4 +1,4 @@
-package com.example.aavax.ui;
+package control;
 
 import android.content.res.Resources;
 

@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 import com.example.aavax.ui.homepage.HomePageFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -27,13 +26,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import entity.FirebaseInterface;
+import control.ProfileMgr;
+import entity.ProfileMgrInterface;
 
 
 public class EditProfileFragment extends Fragment {
 
     private static final String TAG = "Edit Profile";
-    private FirebaseInterface firebaseManager;
+    private ProfileMgrInterface profileMgr;
     private String uId;
     private String pId;
     private Menu menu;
@@ -44,7 +44,7 @@ public class EditProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIMainActivity.setToolbarTitle(TAG);
-        firebaseManager  = new FirebaseManager();
+        profileMgr = new ProfileMgr();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -80,80 +80,71 @@ public class EditProfileFragment extends Fragment {
 
 
         //show profile details
-        firebaseManager.retrieveProfile(new FirebaseManager.MyCallbackProfile() {
-            @Override
-            public void onCallback(String name, String dob) {
+        profileMgr.retrieveProfile((name, dob) -> {
 
-                if (name.indexOf(" ")!=-1)
+            if (name.indexOf(" ")!=-1)
+            {
+                int index = name.indexOf(" ");
+                int lastIndex = name.length();
+                if (name!=null)
                 {
-                    int index = name.indexOf(" ");
-                    int lastIndex = name.length();
-                    if (name!=null)
-                    {
-                        String firstName = name.substring(0,index);
-                        String lastName = name.substring(index+1, lastIndex);
-                        editFirstNameText.setText(firstName);
-                        editLastNameText.setText(lastName);
-                        editDateOfBirthText.setText(dob);
-                    }
-                }
-                else
-                {
-                    editFirstNameText.setText(name);
-                    editLastNameText.setText("");
+                    String firstName = name.substring(0,index);
+                    String lastName = name.substring(index+1, lastIndex);
+                    editFirstNameText.setText(firstName);
+                    editLastNameText.setText(lastName);
                     editDateOfBirthText.setText(dob);
                 }
-
             }
+            else
+            {
+                editFirstNameText.setText(name);
+                editLastNameText.setText("");
+                editDateOfBirthText.setText(dob);
+            }
+
         }, uId, pId);
 
         //edit profile
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavigationView navView = getActivity().findViewById(R.id.nav_view);
-                menu = navView.getMenu();
+        editProfile.setOnClickListener(v -> {
+            NavigationView navView = getActivity().findViewById(R.id.nav_view);
+            menu = navView.getMenu();
 
-                //get user input
-                final String firstNameInput = getInput(editFirstNameText);
-                final String lastNameInput = getInput(editLastNameText);
-                final String dobInput = getInput(editDateOfBirthText);
+            //get user input
+            final String firstNameInput = getInput(editFirstNameText);
+            final String lastNameInput = getInput(editLastNameText);
+            final String dobInput = getInput(editDateOfBirthText);
 
-                //save to database
-                firebaseManager.editProfile(uId, pId, firstNameInput+" "+lastNameInput, dobInput);
+            //save to database
+            profileMgr.editProfile(uId, pId, firstNameInput+" "+lastNameInput, dobInput);
 
-                //switch profile to this current one
-                firebaseManager.changeProfile(uId,pId);
+            //switch profile to this current one
+            profileMgr.changeProfile(uId,pId);
 
-                //remove from menu bar?
-                menu.removeItem(Integer.parseInt(pId));
+            //remove from menu bar?
+            menu.removeItem(Integer.parseInt(pId));
 
-                //go back to the home page fragment
-                AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                Fragment myFragment = new HomePageFragment();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
-            }
+            //go back to the home page fragment
+            AppCompatActivity activity = (AppCompatActivity) view.getContext();
+            Fragment myFragment = new HomePageFragment();
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
         });
 
 
-        deleteProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavigationView navView = getActivity().findViewById(R.id.nav_view);
-                menu = navView.getMenu();
+        deleteProfile.setOnClickListener(v -> {
+            NavigationView navView = getActivity().findViewById(R.id.nav_view);
+            menu = navView.getMenu();
 
 
-                //delete from database
-                firebaseManager.deleteProfile(uId,pId);
+            //delete from database
+            profileMgr.deleteProfile(uId,pId);
 
-                //remove from menu
-                menu.removeItem(Integer.parseInt(pId));
+            //remove from menu
+            menu.removeItem(Integer.parseInt(pId));
 
-                //go back to profile page fragment --> try
-                AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                Fragment myFragment = new ProfilePageFragment();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
-            }
+            //go back to profile page fragment --> try
+            AppCompatActivity activity = (AppCompatActivity) view.getContext();
+            Fragment myFragment = new ProfilePageFragment();
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
         });
 
 

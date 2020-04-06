@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.DestinationMgr;
-import com.example.aavax.ui.FirebaseManager;
+import control.DestinationMgr;
+
 import com.example.aavax.ui.IMainActivity;
 import com.example.aavax.ui.maps.MapsActivity;
 import com.google.android.gms.common.ConnectionResult;
@@ -36,12 +36,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 import entity.CDCThreatLevel;
 import entity.DestinationInterface;
-import entity.FirebaseInterface;
 import entity.VaccineLogEntry;
 
 

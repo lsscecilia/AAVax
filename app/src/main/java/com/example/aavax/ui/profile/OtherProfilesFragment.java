@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,8 +28,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-import entity.FirebaseInterface;
+import control.ProfileMgr;
 import entity.Profile;
+import entity.ProfileMgrInterface;
 
 public class OtherProfilesFragment extends Fragment {
     private static final String TAG = "Other_Profiles";
@@ -40,7 +40,7 @@ public class OtherProfilesFragment extends Fragment {
     private OtherProfilesAdapter adapter;
     private ArrayList<Profile> profileArrayList;
     private String uId;
-    private FirebaseInterface firebaseManager;
+    private ProfileMgrInterface profileMgr;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class OtherProfilesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_other_profiles, container, false);
         super.onCreateView(inflater, container, savedInstanceState);
         profileArrayList = new ArrayList<>();
-        firebaseManager = new FirebaseManager();
+        profileMgr = new ProfileMgr();
 
         return view;
     }
@@ -84,15 +84,12 @@ public class OtherProfilesFragment extends Fragment {
             hashMap= new HashMap<>();
 
         final ImageButton addProfileButton = view.findViewById(R.id.addProfileBtn);
-        addProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        addProfileButton.setOnClickListener(v -> {
 
 
-                Intent intent = new Intent(addProfileButton.getContext(), NewProfileEntry.class);
-                intent.putExtra("num of side Profile", Integer.toString(hashMap.size()+1));
-                startActivity(intent);
-            }
+            Intent intent = new Intent(addProfileButton.getContext(), NewProfileEntry.class);
+            intent.putExtra("num of side Profile", Integer.toString(hashMap.size()+1));
+            startActivity(intent);
         });
 
         //get names that are sub profiles

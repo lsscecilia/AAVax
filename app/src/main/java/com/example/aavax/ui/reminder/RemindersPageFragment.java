@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 import com.example.aavax.ui.maps.MapsActivity;
 import com.google.android.gms.common.ConnectionResult;
@@ -33,8 +32,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import entity.FirebaseInterface;
+import control.VaccineLogMgr;
 import entity.VaccineLogEntry;
+import entity.VaccineLogMgrInterface;
 
 
 public class RemindersPageFragment extends Fragment {
@@ -48,7 +48,7 @@ public class RemindersPageFragment extends Fragment {
     private ReminderAdapter adapter;
     private ArrayList<VaccineLogEntry> vaccineLogEntries;
     private String uId;
-    private FirebaseInterface firebaseManager;
+    private VaccineLogMgrInterface vaccineLogMgr;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class RemindersPageFragment extends Fragment {
         }
 
         View view = inflater.inflate(R.layout.fragment_reminders_page, container, false);
-        firebaseManager = new FirebaseManager();
+        vaccineLogMgr = new VaccineLogMgr();
         super.onCreateView(inflater, container, savedInstanceState);
         vaccineLogEntries = new ArrayList<>();
 
@@ -71,12 +71,9 @@ public class RemindersPageFragment extends Fragment {
 
         if(isServicesOK()){
             Button viewClinicsBtn = (Button) view.findViewById(R.id.ViewClinicsBtnRemind);
-            viewClinicsBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), MapsActivity.class);
-                    startActivity(intent);
-                }
+            viewClinicsBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
+                startActivity(intent);
             });
         }
 
@@ -90,13 +87,10 @@ public class RemindersPageFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        firebaseManager.retrieveVaccineLogWithReminder(new FirebaseManager.MyCallbackVaccineLog() {
-            @Override
-            public void onCallback(ArrayList<VaccineLogEntry> value) {
-                vaccineLogEntries = value;
-                adapter = new ReminderAdapter(getActivity(), vaccineLogEntries, uId);
-                recyclerView.setAdapter(adapter);
-            }
+        vaccineLogMgr.retrieveVaccineLogWithReminder(value -> {
+            vaccineLogEntries = value;
+            adapter = new ReminderAdapter(getActivity(), vaccineLogEntries, uId);
+            recyclerView.setAdapter(adapter);
         }, uId);
 
         recyclerView.setAdapter(adapter);

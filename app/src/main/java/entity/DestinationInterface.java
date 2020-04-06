@@ -1,9 +1,6 @@
 package entity;
 
-import com.example.aavax.ui.DestinationMgr;
-import com.example.aavax.ui.FirebaseManager;
-
-import java.util.Date;
+import control.DestinationMgr;
 
 public interface DestinationInterface {
 

@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -26,14 +25,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import entity.FirebaseInterface;
+import control.AccountMgr;
+import entity.AccountMgrInterface;
 
 
 public class ChangePasswordFragment extends Fragment {
 
     private static final String TAG = "Change password";
     private IMainActivity mIMainActivity;
-    private FirebaseInterface firebaseManager;
+    private AccountMgrInterface accountMgr;
     private String uId;
     private String email;
 
@@ -41,7 +41,7 @@ public class ChangePasswordFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        firebaseManager  = new FirebaseManager();
+        accountMgr = new AccountMgr();
 
         //subscribe to event bus
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -114,14 +114,14 @@ public class ChangePasswordFragment extends Fragment {
         // Get auth credentials from the user for re-authentication. The example below shows
         // email and password credentials but there are multiple possible providers,
         // such as GoogleAuthProvider or FacebookAuthProvider.
-        firebaseManager.retrieveEmailAdress(value -> {
+        accountMgr.retrieveEmailAdress(value -> {
             email = value;
             AuthCredential credential = EmailAuthProvider.getCredential(email, oldPw);
             user.reauthenticate(credential)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             user.updatePassword(newPw);
-                            firebaseManager.changePassword(newPw,uId);
+                            accountMgr.changePassword(newPw,uId);
 
                             Intent intent = new Intent(getActivity(), SettingsActivity.class);
                             startActivity(intent);

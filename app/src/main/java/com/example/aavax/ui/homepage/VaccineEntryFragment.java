@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.DatePickerFragment;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.IMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,15 +34,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import entity.FirebaseInterface;
+import control.VaccineLogMgr;
 import entity.Vaccine;
+import entity.VaccineLogMgrInterface;
 
 public class VaccineEntryFragment extends Fragment {
 
     private IMainActivity mIMainActivity;
     private static final String TAG = "Add Vaccine";
     private String selectedDate;
-    private FirebaseInterface firebaseManager;
+    private VaccineLogMgrInterface vaccineLogMgr;
     private List<Vaccine> vaccines;
     private Date date;
     private String vaccineChoosen;
@@ -73,8 +73,8 @@ public class VaccineEntryFragment extends Fragment {
 
         //get vaccines from database
         final List<String> data = new ArrayList<>();
-        firebaseManager = new FirebaseManager();
-        firebaseManager.retrieveVaccines(value -> {
+        vaccineLogMgr = new VaccineLogMgr();
+        vaccineLogMgr.retrieveVaccines(value -> {
             for (Vaccine v: value)
             {
                 data.add(v.getName());
@@ -90,29 +90,24 @@ public class VaccineEntryFragment extends Fragment {
         builder.setView(listView);
         final AlertDialog dialog = builder.create();
         final EditText editVaccine = view.findViewById(R.id.editVaccine);
+
         editVaccine.setOnClickListener(v -> dialog.show());
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                editVaccine.setText(adapter.getItem(position));
-                vaccineChoosen = adapter.getItem(position);
-                dialog.dismiss();
-            }
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            editVaccine.setText(adapter.getItem(position));
+            vaccineChoosen = adapter.getItem(position);
+            dialog.dismiss();
         });
 
 
         final Button addEntry = view.findViewById(R.id.addVaccineBtn);
-        addEntry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //save data
-                firebaseManager.addVaccineLogEntry(uId, date, vaccineChoosen);
-                //go back to HomePageFragment
-                Fragment fragment = new HomePageFragment();
-                doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
+        addEntry.setOnClickListener(v -> {
+            //save data
+            vaccineLogMgr.addVaccineLogEntry(uId, date, vaccineChoosen);
+            //go back to HomePageFragment
+            Fragment fragment = new HomePageFragment();
+            doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
 
-            }
         });
 
         return view;

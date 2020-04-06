@@ -9,17 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
-import com.example.aavax.ui.FirebaseManager;
 
 import java.util.HashMap;
-
-import entity.FirebaseInterface;
 
 
 public class OtherProfilesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private TextView profileName;
     private String pId;
-    private FirebaseInterface firebaseManager;
     private HashMap<String, String> profiles;
     private String uId;
 
@@ -27,7 +23,6 @@ public class OtherProfilesHolder extends RecyclerView.ViewHolder implements View
         super(itemView);
         itemView.setOnClickListener(this);
         profileName = itemView.findViewById(R.id.profile_name);
-        firebaseManager = new FirebaseManager();
     }
 
     public void setDetails(String profile, int position, String uId) {

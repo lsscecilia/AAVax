@@ -3,45 +3,31 @@ package com.example.aavax.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import entity.Account;
+import control.AccountMgr;
+import entity.AccountMgrInterface;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
     public static final String TAG = "TAG";
-    private FirebaseAuth mAuth;
-    String userID;
-    private FirebaseDatabase mFirebaseDatabase;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference myRef;
+    private AccountMgrInterface accountMgr;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-        mAuth = FirebaseAuth.getInstance();
+
+        accountMgr = new AccountMgr();
 
         final EditText emailText = findViewById(R.id.emailText);
         final EditText passwordText = findViewById(R.id.password);
@@ -53,57 +39,18 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.create_account_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
-        mAuth = FirebaseAuth.getInstance();
-
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: Submit pressed.");
-                final String email = getInput(emailText);
-                final String confirmPassword = getInput(confirmPasswordText);
-                final String firstName = getInput(firstNameText);
-                final String lastName = getInput(lastNameText);
-                final String dob = getInput(dateOfBirthText);
-
-                //handle the exception if the EditText fields are null
-                if (!email.equals("") && !confirmPassword.equals("") && !firstName.equals("") && !lastName.equals("")) {
-                    mAuth.createUserWithEmailAndPassword(email,confirmPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(CreateAccountActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
-                                userID = mAuth.getCurrentUser().getUid();
-                                System.out.println("userid" + userID);
-                                Account user = new Account(email, confirmPassword, firstName, lastName, dob);
-                                myRef.child("users").child(userID).setValue(user);
-
-                            }else {
-                                Toast.makeText(CreateAccountActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
 
 
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                }
-            }
+        createAccount.setOnClickListener(view -> {
+            Log.d(TAG, "onClick: Submit pressed.");
+            final String email = getInput(emailText);
+            final String confirmPassword = getInput(confirmPasswordText);
+            final String firstName = getInput(firstNameText);
+            final String lastName = getInput(lastNameText);
+            final String dob = getInput(dateOfBirthText);
+
+
+            accountMgr.createAccount(email, confirmPassword, firstName, lastName, dob, this);
         });
 
         toolbar.setNavigationOnClickListener(v -> {

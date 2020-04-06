@@ -22,7 +22,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.DatePickerFragment;
-import com.example.aavax.ui.FirebaseManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,13 +31,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import entity.FirebaseInterface;
+import control.VaccineLogMgr;
 import entity.VaccineLogEntry;
+import entity.VaccineLogMgrInterface;
 
 public class EditMyVaccInfoFragment extends Fragment {
     private String vaccineName;
     private String uId;
-    private FirebaseInterface firebaseManager;
+    private VaccineLogMgrInterface vaccineLogMgr;
     private String selectedDateTaken;
     private String selectedNextDue;
     private  Date dateTakenOriginal;
@@ -62,7 +62,7 @@ public class EditMyVaccInfoFragment extends Fragment {
         final Button confirmChanges = view.findViewById(R.id.confirmChangesBtn);
         final Button deleteEntry = view.findViewById(R.id.deleteEntryBtn);
 
-        firebaseManager = new FirebaseManager();
+        vaccineLogMgr = new VaccineLogMgr();
 
         //subscribe to event bus
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -77,7 +77,7 @@ public class EditMyVaccInfoFragment extends Fragment {
         vaccine.setText(vaccineName);
 
         //retrieve vaccine
-        firebaseManager.retrieveVaccineLog(value -> {
+        vaccineLogMgr.retrieveVaccineLog(value -> {
             for (VaccineLogEntry v: value)
             {
                 System.out.println(v.getVaccine() + "taken on: " + v.getDateTaken());
@@ -158,7 +158,7 @@ public class EditMyVaccInfoFragment extends Fragment {
                 if (reminder==null)
                     reminder = reminderOriginal;
 
-                firebaseManager.updateVaccineLogEntry(uId, vaccineName, dateTaken, nextDue, reminder);
+                vaccineLogMgr.updateVaccineLogEntry(uId, vaccineName, dateTaken, nextDue, reminder);
                 //go back to home page fragment
                 Fragment fragment = new HomePageFragment();
                 doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
@@ -169,7 +169,7 @@ public class EditMyVaccInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //delete data
-                firebaseManager.deleteVaccineLogEntry(uId, vaccineName);
+                vaccineLogMgr.deleteVaccineLogEntry(uId, vaccineName);
 
                 //go back to home page fragment
                 Fragment fragment = new HomePageFragment();

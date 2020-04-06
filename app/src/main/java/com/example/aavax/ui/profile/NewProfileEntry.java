@@ -13,17 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
-import com.example.aavax.ui.FirebaseManager;
 import com.example.aavax.ui.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import entity.FirebaseInterface;
+import control.ProfileMgr;
+import entity.ProfileMgrInterface;
 
 public class NewProfileEntry extends AppCompatActivity {
-    private FirebaseInterface firebaseManager;
+    private ProfileMgrInterface profileMgr;
     private String uId;
     private String pId;
 
@@ -36,7 +36,7 @@ public class NewProfileEntry extends AppCompatActivity {
             EventBus.getDefault().register(this);
         }
 
-        firebaseManager = new FirebaseManager();
+        profileMgr = new ProfileMgr();
 
         final Button createProfile = findViewById(R.id.create_profile_button);
         final EditText firstNameText = findViewById(R.id.firstNameProfile);
@@ -47,41 +47,35 @@ public class NewProfileEntry extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
 
         // back button
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Implemented by activity
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed(); // Implemented by activity
         });
 
         // create account button
-        createProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        createProfile.setOnClickListener(v -> {
 
-                //get  input
-                final String firstName = getInput(firstNameText);
-                final String lastName = getInput(lastNameText);
-                final String dob = getInput(dateOfBirthText);
+            //get  input
+            final String firstName = getInput(firstNameText);
+            final String lastName = getInput(lastNameText);
+            final String dob = getInput(dateOfBirthText);
 
-                //get pid
-                Bundle bundle = getIntent().getExtras();
-                System.out.println("value in new profile buncle"+bundle.getString("num of side Profile"));
+            //get pid
+            Bundle bundle = getIntent().getExtras();
+            System.out.println("value in new profile buncle"+bundle.getString("num of side Profile"));
 
-                if(bundle.getString("num of side Profile")!= null) {
-                    pId = bundle.getString("num of side Profile");
-                }
-
-                System.out.println("pid in new profile entry" + pId );
-
-                //save to database
-                firebaseManager.addProfile(uId, firstName + " " + lastName, dob);
-
-
-                //go to home page fragment
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+            if(bundle.getString("num of side Profile")!= null) {
+                pId = bundle.getString("num of side Profile");
             }
+
+            System.out.println("pid in new profile entry" + pId );
+
+            //save to database
+            profileMgr.addProfile(uId, firstName + " " + lastName, dob);
+
+
+            //go to home page fragment
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         });
     }
 
