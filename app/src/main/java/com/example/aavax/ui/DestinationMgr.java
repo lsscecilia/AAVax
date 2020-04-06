@@ -111,68 +111,9 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
 
     }
 
-    /**
-     * retrieve vaccines in user VaccineLogEntries
-     * @param myCallback
-     * @param Uid
-     */
-    @Override
-    public void retrieveUserVaccine(final MyCallback myCallback, final String Uid)
-    {
-        database = FirebaseDatabase.getInstance();
-        userRef = database.getReference("users");
-        System.out.println("retrieve user vaccine firebase manager");
-
-        //get user vaccine
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<Vaccine> vaccineArrayList = new ArrayList<>();
-                String profileId="";
-                System.out.println("user id in firebase manager: " + Uid);
-
-                //find profile
-                System.out.println("number of profiles" +dataSnapshot.child(Uid).child("profiles").getChildrenCount() );
-                // ArrayList<Profile> profiles = dataSnapshot.child(Uid).child("profiles").getValue();
-                if (dataSnapshot.child(Uid).child("profiles").getChildrenCount()!=1)
-                {
-                    for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").getChildren())
-                    {
-                        System.out.println("finding profile....." + data.child("thisProfile").getValue(boolean.class));
-
-                        //then error here how
-                        if (data.child("thisProfile").getValue(boolean.class))
-                        {
-                            profileId = data.getKey();
-                            System.out.println("profile id: "+profileId);
-                            break;
-
-                        }
-                    }
-                }
-                else
-                    profileId = "0";
 
 
-                for (DataSnapshot data: dataSnapshot.child(Uid).child("profiles").child(profileId).child("vaccineLogEntries").getChildren())
-                {
-                    vaccineArrayList.add(data.getValue(VaccineLogEntry.class).getVaccine());
-                    System.out.println(data.getValue(VaccineLogEntry.class).getVaccine().getName() + "usre vaccine");
-                }
-                myCallback.onCallback(vaccineArrayList);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public interface MyCallBackVaccines {
-        void onCallback(ArrayList<String> vaccines);
-    }
 
     @Override
     public void retrieveMandatoryVaccines(final MyCallBackVaccines myCallback, final String countryName){
@@ -293,16 +234,12 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
         });
     }
 
-    public interface MyCallback {
-        void onCallback(ArrayList<Vaccine> value);
+    public interface MyCallBackVaccines {
+        void onCallback(ArrayList<String> vaccines);
     }
 
     public interface MyCallbackVaccineLog {
         void onCallback(ArrayList<VaccineLogEntry> value);
-    }
-
-    public interface MyCallbackString {
-        void onCallback(String value);
     }
 
     public interface MyCallBackCdcLevels {
