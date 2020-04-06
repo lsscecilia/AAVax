@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import entity.CDCThreatLevel;
+import entity.DestinationInterface;
 import entity.FirebaseInterface;
 import entity.VaccineLogEntry;
 
@@ -58,7 +59,7 @@ public class TravelVaccinesFragment extends Fragment {
     private ArrayList<String> mCdcHeaders = new ArrayList<>();
     ArrayList<ArrayList<String>> mCdcDetails = new ArrayList<>();
     private String[][] mCdcDetailsArray;
-    private FirebaseInterface firebaseManager;
+    private DestinationInterface destinationInterface;
     private String mIncomingMessage = "";
     private String uId;
     private ExpandableListView expandableTextView;
@@ -90,11 +91,10 @@ public class TravelVaccinesFragment extends Fragment {
         mImageView = view.findViewById(R.id.countryImg);
         mImageView.setImageResource(destinationMgr.findImage(view, mIncomingMessage, res));
         mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        firebaseManager = new FirebaseManager();
+        destinationInterface = new DestinationMgr();
 
 
-
-        firebaseManager.retrieveCDCThreatLevels(new FirebaseManager.MyCallBackCdcLevels() {
+        destinationInterface.retrieveCDCThreatLevels(new DestinationMgr.MyCallBackCdcLevels() {
             @Override
             public void onCallback(ArrayList<CDCThreatLevel> levels) {
                 for (CDCThreatLevel level : levels){
@@ -149,11 +149,11 @@ public class TravelVaccinesFragment extends Fragment {
             }
         });
 
-        firebaseManager.retrieveMandatoryVaccines(new FirebaseManager.MyCallBackVaccines() {
+        destinationInterface.retrieveMandatoryVaccines(new DestinationMgr.MyCallBackVaccines() {
             @Override
             public void onCallback(ArrayList<String> vaccines) {
                 mMandatoryVaccines.addAll(vaccines);
-                firebaseManager.retrieveVaccineLog(new FirebaseManager.MyCallbackVaccineLog() {
+                destinationInterface.retrieveVaccineLog(new DestinationMgr.MyCallbackVaccineLog() {
                     @Override
                     public void onCallback(ArrayList<VaccineLogEntry> value) {
                         ArrayList<VaccineLogEntry> userEntries = value;
@@ -186,11 +186,11 @@ public class TravelVaccinesFragment extends Fragment {
 
         }, mIncomingMessage);
 
-        firebaseManager.retrieveRecommendedVaccines(new FirebaseManager.MyCallBackVaccines() {
+        destinationInterface.retrieveRecommendedVaccines(new DestinationMgr.MyCallBackVaccines() {
             @Override
             public void onCallback(ArrayList<String> vaccines) {
                 mRecommendedVaccines.addAll(vaccines);
-                firebaseManager.retrieveVaccineLog(new FirebaseManager.MyCallbackVaccineLog() {
+                destinationInterface.retrieveVaccineLog(new DestinationMgr.MyCallbackVaccineLog() {
                     @Override
                     public void onCallback(ArrayList<VaccineLogEntry> value) {
                         ArrayList<VaccineLogEntry> userEntries = value;
@@ -312,31 +312,6 @@ public class TravelVaccinesFragment extends Fragment {
         return false;
     }
 
-//    private int findImage(View view, String countryName){
-//        Resources res = view.getResources();
-//        asia_countries = res.getStringArray(R.array.asia_all_countries);
-//        north_america_countries = res.getStringArray(R.array.north_america_all_countries);
-//        south_america_countries = res.getStringArray(R.array.south_america_all_countries);
-//        europe_countries = res.getStringArray(R.array.europe_all_countries);
-//        africa_countries = res.getStringArray(R.array.africa_all_countries);
-//        oceania_countries = res.getStringArray(R.array.oceania_popular_countries);
-//
-//        if (Arrays.asList(asia_countries).contains(countryName))
-//            return R.drawable.asia;
-//        else if (Arrays.asList(north_america_countries).contains(countryName))
-//            return R.drawable.north_america;
-//        else if (Arrays.asList(south_america_countries).contains(countryName))
-//            return R.drawable.south_america;
-//        else if (Arrays.asList(europe_countries).contains(countryName))
-//            return R.drawable.europe;
-//        else if (Arrays.asList(africa_countries).contains(countryName))
-//            return R.drawable.africa;
-//        else if (Arrays.asList(oceania_countries).contains(countryName))
-//            return R.drawable.oceania;
-//        else
-//            return R.drawable.antarctica;
-//
-//    }
 
     @Override
     public void onResume() {

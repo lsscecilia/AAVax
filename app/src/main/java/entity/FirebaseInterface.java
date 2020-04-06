@@ -26,9 +26,9 @@ public interface FirebaseInterface {
     public void editProfile(final String uId,String name);
     public void editProfile(final String uId,String pId ,String name, String dob);
 
-    public void retrieveMandatoryVaccines(final FirebaseManager.MyCallBackVaccines myCallback, final String countryName);
-    public void retrieveRecommendedVaccines(final FirebaseManager.MyCallBackVaccines myCallback, final String countryName);
-    public void retrieveCDCThreatLevels(final FirebaseManager.MyCallBackCdcLevels myCallback, final String countryName);
+//    public void retrieveMandatoryVaccines(final FirebaseManager.MyCallBackVaccines myCallback, final String countryName);
+//    public void retrieveRecommendedVaccines(final FirebaseManager.MyCallBackVaccines myCallback, final String countryName);
+//    public void retrieveCDCThreatLevels(final FirebaseManager.MyCallBackCdcLevels myCallback, final String countryName);
 
 
 }
