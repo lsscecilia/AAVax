@@ -15,8 +15,6 @@ import com.example.aavax.ui.MainActivity;
 public class SettingsActivity extends AppCompatActivity {
 
 
-    private TextView mToolbarTitle;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

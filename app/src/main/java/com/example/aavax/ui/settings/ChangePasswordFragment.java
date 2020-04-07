@@ -32,7 +32,6 @@ import entity.AccountMgrInterface;
 public class ChangePasswordFragment extends Fragment {
 
     private static final String TAG = "Change password";
-    private IMainActivity mIMainActivity;
     private AccountMgrInterface accountMgr;
     private String uId;
     private String email;
@@ -143,11 +142,6 @@ public class ChangePasswordFragment extends Fragment {
     }
 
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        //EventBus.getDefault().register(this);
-    }
 
     /**
      * On stop, it will stop getting updates from EventBus

@@ -18,8 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 import control.VaccineLogMgr;
 import entity.VaccineLogEntry;
 import entity.VaccineLogMgrInterface;
@@ -28,7 +26,6 @@ public class MyVaccInfoFragment extends Fragment {
 
     private VaccineLogMgrInterface vaccineLogMgr;
     private String vaccineName;
-    private ArrayList<VaccineLogEntry> vaccineArrayList;
     private String uId;
 
     @Override
@@ -102,11 +99,6 @@ public class MyVaccInfoFragment extends Fragment {
         return view;
     }
 
-
-    @Override
-    public void onStart(){
-        super.onStart();
-    }
 
     /**
      * On stop, it will stop getting updates from EventBus

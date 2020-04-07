@@ -4,9 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -22,25 +19,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.maps.android.data.geojson.GeoJsonFeature;
-import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.maps.android.data.geojson.GeoJsonPoint;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import static java.util.stream.Collectors.toMap;
+
+import control.CHASClinicMgr;
+import entity.CHASClinic;
+import entity.CHASClinicMgrInterface;
+
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -53,17 +43,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
 
     //vars
+    private CHASClinicMgrInterface clinicMgr;
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location currentLocation = null;
     private Location lastLocation = null;
-    private GeoJsonLayer layer;
-    private HashMap<GeoJsonFeature, Float> distance;
     boolean flag = false;
-    private RecyclerView recyclerView;
-    private ClinicAdapter adapter;
-    private String clinicName;
-    ArrayList<String> clinicArrayList = new ArrayList<>();
+    ArrayList<CHASClinic> clinicArrayList = new ArrayList<>();
 
 
     @Override
@@ -74,6 +60,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        clinicMgr = new CHASClinicMgr();
     }
 
 
@@ -90,90 +78,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
-        try {
-            layer = new GeoJsonLayer(mMap, R.raw.chas_clinics, getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         getLocationPermission();
+
+        getDeviceLocation();
         //get current location
         if (mLocationPermissionsGranted) {
-            System.out.println("try to get device location");
             if (lastLocation == null && currentLocation != null) {
                 lastLocation = currentLocation;
                 System.out.println("last location set once only");
                 flag = true;
-                distance = new HashMap<>();
-                System.out.println("last location: " + lastLocation.getLatitude() + "lol " + lastLocation.getLongitude());
-                for (GeoJsonFeature feature : layer.getFeatures()) {
-                    GeoJsonPoint point = (GeoJsonPoint) feature.getGeometry();
-                    Location l = new Location("");
-                    l.setLatitude(point.getCoordinates().latitude);
-                    l.setLongitude(point.getCoordinates().longitude);
-
-                    distance.put(feature, l.distanceTo(lastLocation));
-
-                    // do something to the feature
-                }
-
-                sortByValue(distance);
-
-                Iterator hmIterator1 = distance.entrySet().iterator();
-
-                // Iterate through the hashmap
-
-                while (hmIterator1.hasNext()) {
-                    Map.Entry mapElement = (Map.Entry) hmIterator1.next();
-                    GeoJsonFeature feature = (GeoJsonFeature) mapElement.getKey();
-                    Float marks = ((Float) mapElement.getValue());
-                }
-
-                GeoJsonFeature g;
-                GeoJsonPoint p;
-
-                Iterator hmIterator = distance.entrySet().iterator();
-                String desc;
-                int index, clinicIndex, endIndex;
-                String details, clinicName;
-                while (hmIterator.hasNext()) {
-                    Map.Entry mapElement = (Map.Entry) hmIterator.next();
-                    Float marks = ((Float) mapElement.getValue());
-                    g = (GeoJsonFeature) mapElement.getKey();
-                    desc = g.getProperty("Description");
-                    index = desc.indexOf("<th>HCI_NAME</th>");
-                    clinicIndex = index + 22;
-                    details = desc.substring(clinicIndex);
-                    endIndex = details.indexOf("<");
-                    clinicName = details.substring(0, endIndex);
-                    clinicArrayList.add(clinicName);
-
-                    p = (GeoJsonPoint) g.getGeometry();
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(p.getCoordinates().latitude, p.getCoordinates().longitude)).title(clinicName));
-                }
+                clinicArrayList = clinicMgr.getClinic(mMap, this);
+                clinicMgr.setClinicsMarker(mMap, clinicArrayList);
+                getDeviceLocation();
             }
-
-
-            getDeviceLocation();
-
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         }
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
     }
 
 
-    private void getDeviceLocation() {
+    private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -195,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             if (currentLocation != null)
                                 moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                        13f);
+                                        15f);
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -272,16 +205,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
-    public static HashMap<GeoJsonFeature, Float> sortByValue(HashMap<GeoJsonFeature, Float> hm) {
-        HashMap<GeoJsonFeature, Float> sorted = hm
-                .entrySet()
-                .stream()
-                .filter(d -> !Double.isNaN(d.getValue()))
-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-        return sorted;
-    }
-
 
 }

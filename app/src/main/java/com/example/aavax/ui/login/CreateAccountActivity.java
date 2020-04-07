@@ -18,7 +18,7 @@ import entity.AccountMgrInterface;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    public static final String TAG = "TAG";
+    public static final String TAG = "CreateAccount";
     private AccountMgrInterface accountMgr;
 
 
@@ -84,8 +84,8 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     }
 
-    public void onEventBus(String username){
-        CustomMessageEvent event = new CustomMessageEvent(username);
+    public void onEventBus(String userId){
+        CustomMessageEvent event = new CustomMessageEvent(userId);
         EventBus.getDefault().postSticky(event);
     }
 

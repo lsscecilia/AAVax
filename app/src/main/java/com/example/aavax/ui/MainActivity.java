@@ -20,7 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.aavax.R;
-import com.example.aavax.ui.homepage.HomePageFragment;
+import com.example.aavax.ui.homepage.VaccinationHistoryFragment;
 import com.example.aavax.ui.login.LoginActivity;
 import com.example.aavax.ui.homepage.VaccineDetailFragment;
 import com.example.aavax.ui.maps.MapViewFragment;
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
 
 
         if (savedInstanceState == null) {
-            Fragment fragment = new HomePageFragment();
+            Fragment fragment = new VaccinationHistoryFragment();
             doFragmentTransaction(fragment, getString(R.string.my_vaccines), true, "");
         }
     }
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
                 String title = "";
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        selectedFragment = new HomePageFragment();
+                        selectedFragment = new VaccinationHistoryFragment();
                         title = getString(R.string.my_vaccines);
                         break;
                     case R.id.navigation_travel:

@@ -12,29 +12,22 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aavax.R;
-import com.google.firebase.auth.FirebaseAuth;
 
 import control.AccountMgr;
-import control.ProfileMgr;
 import entity.AccountMgrInterface;
-import entity.ProfileMgrInterface;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private static final String TAG = "EmailPassword";
     private AccountMgrInterface accountMgr;
-    private ProfileMgrInterface profileMgr;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         accountMgr = new AccountMgr();
-        profileMgr = new ProfileMgr();
+
 
         final EditText emailEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);

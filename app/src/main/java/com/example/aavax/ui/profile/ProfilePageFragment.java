@@ -53,7 +53,6 @@ public class ProfilePageFragment extends Fragment  {
     private TextView sign_out;
     private ProfileMgrInterface profileMgr;
     private String uId;
-    private FragmentActivity myContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,7 +130,7 @@ public class ProfilePageFragment extends Fragment  {
     }
 
     private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         if(!message.equals("")){
             Bundle bundle = new Bundle();
             bundle.putString(getString(R.string.intent_message), message);
@@ -150,11 +149,6 @@ public class ProfilePageFragment extends Fragment  {
         mIMainActivity = (IMainActivity) getActivity();
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
-        super.onAttach(activity);
-    }
 
     /**
      * On stop, it will stop getting updates from EventBus

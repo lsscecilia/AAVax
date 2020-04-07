@@ -29,7 +29,7 @@ import control.AccountMgr;
 import entity.AccountMgrInterface;
 
 public class DeleteAccountFragment extends Fragment {
-    private static final String TAG = "Change password";
+    private static final String TAG = "Delete account";
     private IMainActivity mIMainActivity;
     private AccountMgrInterface accountMgr;
     private String uId;
@@ -65,14 +65,15 @@ public class DeleteAccountFragment extends Fragment {
         deleteAccBtn.setOnClickListener(v -> {
             //read input
             String password = getInput(passwordEditText);
-            deleteAcc(password);
+            accountMgr.deleteAcc(password, getView(), getActivity(), uId);
+            //deleteAcc(password);
 
         });
 
         return view;
     }
 
-
+    /*
     private void deleteAcc(String pw)
     {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -97,7 +98,7 @@ public class DeleteAccountFragment extends Fragment {
                         }
                     });
         }, uId);
-    }
+    }*/
 
 
     public String getInput(EditText editText){

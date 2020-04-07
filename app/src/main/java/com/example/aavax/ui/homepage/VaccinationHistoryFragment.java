@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-public class HomePageFragment extends Fragment {
+public class VaccinationHistoryFragment extends Fragment {
 
     private static final String TAG = "My Vaccinations";
 
@@ -113,11 +113,6 @@ public class HomePageFragment extends Fragment {
         transaction.commit();
     }
 
-
-    @Override
-    public void onStart(){
-        super.onStart();
-    }
 
     /**
      * On stop, it will stop getting updates from EventBus

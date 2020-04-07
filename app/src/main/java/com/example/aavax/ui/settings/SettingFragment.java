@@ -59,14 +59,6 @@ public class SettingFragment extends Fragment {
 
 
     /**
-     * On fragment start, it will register for EventBus, a subscription Mechanism
-     */
-    @Override
-    public void onStart(){
-        super.onStart();
-    }
-
-    /**
      * On stop, it will stop getting updates from EventBus
      */
     @Override

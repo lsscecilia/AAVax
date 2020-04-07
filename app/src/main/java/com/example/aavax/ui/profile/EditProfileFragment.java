@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.IMainActivity;
-import com.example.aavax.ui.homepage.HomePageFragment;
+import com.example.aavax.ui.homepage.VaccinationHistoryFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -125,7 +125,7 @@ public class EditProfileFragment extends Fragment {
 
             //go back to the home page fragment
             AppCompatActivity activity = (AppCompatActivity) view.getContext();
-            Fragment myFragment = new HomePageFragment();
+            Fragment myFragment = new VaccinationHistoryFragment();
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
         });
 

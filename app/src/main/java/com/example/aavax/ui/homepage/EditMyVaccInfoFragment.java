@@ -160,7 +160,7 @@ public class EditMyVaccInfoFragment extends Fragment {
 
                 vaccineLogMgr.updateVaccineLogEntry(uId, vaccineName, dateTaken, nextDue, reminder);
                 //go back to home page fragment
-                Fragment fragment = new HomePageFragment();
+                Fragment fragment = new VaccinationHistoryFragment();
                 doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
             }
         });
@@ -172,7 +172,7 @@ public class EditMyVaccInfoFragment extends Fragment {
                 vaccineLogMgr.deleteVaccineLogEntry(uId, vaccineName);
 
                 //go back to home page fragment
-                Fragment fragment = new HomePageFragment();
+                Fragment fragment = new VaccinationHistoryFragment();
                 doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
             }
         });
@@ -218,10 +218,6 @@ public class EditMyVaccInfoFragment extends Fragment {
         transaction.commit();
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-    }
 
     /**
      * On stop, it will stop getting updates from EventBus

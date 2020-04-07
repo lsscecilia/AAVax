@@ -2,6 +2,7 @@ package control;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -15,7 +16,9 @@ import com.example.aavax.ui.MainActivity;
 import com.example.aavax.ui.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,8 +50,9 @@ public class AccountMgr implements AccountMgrInterface {
         myRef = mFirebaseDatabase.getReference();
     }
 
+
     /**
-     * This method is called when user sign in. Will go to HomePageFragment in MainActivity if authentication is successful
+     * This method is called when user sign in. Will go to VaccinationHistoryFragment in MainActivity if authentication is successful
      * @param email
      * @param password
      * @param activity
@@ -198,6 +202,36 @@ public class AccountMgr implements AccountMgrInterface {
             }
         });
     }
+
+    @Override
+    public void deleteAcc(String pw, View view, Activity activity, String uId)
+    {
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
+        final EditText passwordEditText =  view.findViewById(R.id.passwordDeleteAcc);
+
+        retrieveEmailAdress(value -> {
+            String email;
+            email = value;
+            AuthCredential credential = EmailAuthProvider.getCredential(email, pw);
+            user.reauthenticate(credential)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            user.delete();
+
+                            Intent intent = new Intent(activity, LoginActivity.class);
+                            activity.startActivity(intent);
+                        } else {
+                            passwordEditText.setError("incorrect password entered");
+
+                        }
+                    });
+        }, uId);
+    }
+
+
+
 
     public void setDefaultProfile(String Uid) {
         database = FirebaseDatabase.getInstance();

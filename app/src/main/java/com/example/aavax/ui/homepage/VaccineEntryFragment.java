@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +43,6 @@ public class VaccineEntryFragment extends Fragment {
     private static final String TAG = "Add Vaccine";
     private String selectedDate;
     private VaccineLogMgrInterface vaccineLogMgr;
-    private List<Vaccine> vaccines;
     private Date date;
     private String vaccineChoosen;
     private String uId;
@@ -104,8 +102,8 @@ public class VaccineEntryFragment extends Fragment {
         addEntry.setOnClickListener(v -> {
             //save data
             vaccineLogMgr.addVaccineLogEntry(uId, date, vaccineChoosen);
-            //go back to HomePageFragment
-            Fragment fragment = new HomePageFragment();
+            //go back to VaccinationHistoryFragment
+            Fragment fragment = new VaccinationHistoryFragment();
             doFragmentTransaction(fragment, getString(R.string.my_vaccines), false, uId);
 
         });

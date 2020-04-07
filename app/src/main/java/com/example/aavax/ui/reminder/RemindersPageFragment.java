@@ -103,12 +103,6 @@ public class RemindersPageFragment extends Fragment {
         mIMainActivity = (IMainActivity) getActivity();
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-
-    }
-
     /**
      * On stop, it will stop getting updates from EventBus
      */

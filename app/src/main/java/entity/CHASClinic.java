@@ -1,16 +1,15 @@
 package entity;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class CHASClinic {
     private String name;
-    private String openingHours;
-    private Location location;
-    //private String detail;
+    private LatLng latLng;
 
 
-    public CHASClinic(String name, String openingHours, Location location) {
+    public CHASClinic(String name, LatLng latLng) {
         this.name = name;
-        this.openingHours = openingHours;
-        this.location = location;
+        this.latLng = latLng;
     }
 
     public String getName() {
@@ -21,19 +20,11 @@ public class CHASClinic {
         this.name = name;
     }
 
-    public String getOpeningHours() {
-        return openingHours;
+    public LatLng getLatLng() {
+        return latLng;
     }
 
-    public void setOpeningHours(String openingHours) {
-        this.openingHours = openingHours;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 }
