@@ -17,6 +17,9 @@ import com.example.aavax.ui.IMainActivity;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter to show the list of vaccines required for a country
+ */
 public class RecyclerViewTravelVacAdapter extends RecyclerView.Adapter<RecyclerViewTravelVacAdapter.ViewHolder>{
 
     private static final String TAG = "RecyclerViewAdapter";

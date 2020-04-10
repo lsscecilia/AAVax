@@ -20,6 +20,11 @@ import entity.DestinationInterface;
 import entity.Vaccine;
 import entity.VaccineLogEntry;
 
+/**
+ * implements VaccineLogMgrInterface
+ * allows the app to interact with firebase database
+ */
+
 public class DestinationMgr extends Fragment implements DestinationInterface {
 
     private String[] popular_countries;
@@ -37,7 +42,12 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
     private DatabaseReference userRef;
 
 
-
+    /**
+     * gets list of popular countries within the respective continent
+     * @param message
+     * @param res
+     * @return
+     */
     public String[] getPopularCountries(String message, Resources res){
         switch(message){
             case "Asia":
@@ -62,6 +72,12 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
         return popular_countries;
     }
 
+    /**
+     * gets list of all countries within the respective continent
+     * @param message
+     * @param res
+     * @return
+     */
     public String[] getAllCountries(String message, Resources res){
         switch(message){
             case "Asia":
@@ -86,6 +102,13 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
         return all_countries;
     }
 
+    /**
+     * Obtains image of the respective country to be displayed
+     * @param view
+     * @param countryName
+     * @param res
+     * @return
+     */
     public int findImage(View view, String countryName, Resources res){
         asia_countries = res.getStringArray(R.array.asia_all_countries);
         north_america_countries = res.getStringArray(R.array.north_america_all_countries);
@@ -112,9 +135,11 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
     }
 
 
-
-
-
+    /**
+     * retrieves the mandatory vaccines needed for the respective country
+     * @param myCallback
+     * @param countryName
+     */
     @Override
     public void retrieveMandatoryVaccines(final MyCallBackVaccines myCallback, final String countryName){
         database = FirebaseDatabase.getInstance();
@@ -137,6 +162,11 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
 
     }
 
+    /**
+     * retrieves the recommended vaccines needed for the respective country
+     * @param myCallback
+     * @param countryName
+     */
     @Override
     public void retrieveRecommendedVaccines(final MyCallBackVaccines myCallback, final String countryName){
         database = FirebaseDatabase.getInstance();
@@ -160,6 +190,11 @@ public class DestinationMgr extends Fragment implements DestinationInterface {
     }
 
 
+    /**
+     * retrieves the CDC threat levels for the respective country
+     * @param myCallback
+     * @param countryName
+     */
     @Override
     public void retrieveCDCThreatLevels(final MyCallBackCdcLevels myCallback, final String countryName){
         database = FirebaseDatabase.getInstance();

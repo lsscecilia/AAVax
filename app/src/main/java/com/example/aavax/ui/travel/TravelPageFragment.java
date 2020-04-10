@@ -15,7 +15,11 @@ import android.widget.ImageView;
 import com.example.aavax.R;
 import com.example.aavax.ui.IMainActivity;
 
-
+/**
+ * Shows the list of continents available for travel
+ * Called by: {@link com.example.aavax.ui.MainActivity}
+ * Calls: {@link com.example.aavax.ui.travel.TravelCountriesFragment}
+ */
 public class TravelPageFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "TravelFragment";

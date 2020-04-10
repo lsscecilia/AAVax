@@ -15,7 +15,7 @@ import entity.ProfileMgrInterface;
 
 /**
  * implements ProfileMgrInterface
- * allows the app to interact with firebasa database, acting as an control class for Profile(entity class)
+ * allows the app to interact with firebase database, acting as an control class for Profile(entity class)
  */
 public class ProfileMgr implements ProfileMgrInterface {
     private FirebaseDatabase database;

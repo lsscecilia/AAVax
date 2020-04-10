@@ -124,6 +124,10 @@ public class RemindersPageFragment extends Fragment {
 
     }
 
+    /**
+     * To check if app is allowed permission to access Google Maps
+     * @return
+     */
     public boolean isServicesOK(){
         Log.d(TAG, "isServicesOK: checking google services version");
 

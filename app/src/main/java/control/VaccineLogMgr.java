@@ -18,7 +18,7 @@ import entity.VaccineLogMgrInterface;
 
 /**
  * implements VaccineLogMgrInterface
- * allows the app to interact with firebasa database, acting as an control class for VaccineLogEntry (entity class)
+ * allows the app to interact with firebase database, acting as an control class for VaccineLogEntry (entity class)
  */
 public class VaccineLogMgr implements VaccineLogMgrInterface {
 

@@ -12,6 +12,9 @@ import androidx.core.content.ContextCompat;
 
 import com.example.aavax.R;
 
+/**
+ * Adapter to show the CDC levels and their details
+ */
 public class ExpandableTextViewAdapter extends BaseExpandableListAdapter {
 
     private String[] cdcHeaders;

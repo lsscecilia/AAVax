@@ -21,7 +21,11 @@ import com.example.aavax.R;
 import control.DestinationMgr;
 import com.example.aavax.ui.IMainActivity;
 
-
+/**
+ * Shows the list of countries under the selected continent
+ * Called by: {@link com.example.aavax.ui.travel.TravelPageFragment}
+ * Calls: {@link com.example.aavax.ui.travel.TravelVaccinesFragment}
+ */
 public class TravelCountriesFragment extends Fragment {
 
     private static final String TAG = "TravelCountriesFragment";

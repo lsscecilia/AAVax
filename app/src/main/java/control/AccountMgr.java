@@ -35,7 +35,7 @@ import entity.AccountMgrInterface;
 
 /**
  * implements AccountMgrInterface
- * allows the app to interact with firebasa database, acting as an control class for Account (entity class)
+ * allows the app to interact with firebase database, acting as an control class for Account (entity class)
  */
 public class AccountMgr implements AccountMgrInterface {
 

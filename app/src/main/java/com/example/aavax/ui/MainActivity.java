@@ -211,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         menu = navView.getMenu();
         Fragment selectedFragment = null;
         String title = "";
-        System.out.println("lol whats happening here");
         if (item.getItemId()== R.id.setting)
         {
             drawer.closeDrawer(GravityCompat.START);
@@ -219,8 +218,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         }
         else if (item.getItemId()==R.id.signout)
         {
-            System.out.println("no activity change lol");
-
             drawer.closeDrawer(GravityCompat.START);
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         }
@@ -228,12 +225,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         {
             System.out.println("remove what itemId" + item.getItemId());
             menu.removeItem(item.getItemId());
-
-            System.out.println("CHANGE PROFILE HEREEEEEE");
             profileMgr.switchProfile(uId, Integer.toString(item.getItemId()));
-
             drawer.closeDrawer(GravityCompat.START);
-
         }
 
 
@@ -268,6 +261,13 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
                 return true;
             };
 
+    /**
+     * function to change from one fragment to another
+     * @param fragment
+     * @param tag
+     * @param addToBackStack
+     * @param message
+     */
     private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if(!message.equals("")){
@@ -282,11 +282,20 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
         transaction.commit();
     }
 
+    /**
+     * Sets the title of the toolbar for each page
+     * @param fragmentTag
+     */
     @Override
     public void setToolbarTitle(String fragmentTag) {
         mToolbarTitle.setText(fragmentTag);
     }
 
+    /**
+     * Inflates the relevant fragment
+     * @param fragmentTag
+     * @param message
+     */
     @Override
     public void inflateFragment(String fragmentTag, String message) {
         continents = getResources().getStringArray(R.array.continents);

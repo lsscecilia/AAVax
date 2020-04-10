@@ -42,12 +42,14 @@ import entity.CDCThreatLevel;
 import entity.DestinationInterface;
 import entity.VaccineLogEntry;
 
-
+/**
+ * Displays the CDC levels, mandatory vaccines and recommended vaccines for the selected country,
+ * together with the validity of the vaccine for the user
+ * Called by: {@link com.example.aavax.ui.travel.TravelCountriesFragment}
+ */
 public class TravelVaccinesFragment extends Fragment {
 
-    //private static final String TAG = "RemindersFragment";
     private static final int ERROR_DIALOG_REQUEST = 9001;
-
     private IMainActivity mIMainActivity;
     //vars
     private ArrayList<String> mMandatoryVaccines = new ArrayList<>();
