@@ -1,6 +1,7 @@
 package com.example.aavax.ui.maps;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -31,7 +32,6 @@ import entity.CHASClinic;
 import entity.CHASClinicMgrInterface;
 
 
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -43,13 +43,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
 
     //vars
-    private CHASClinicMgrInterface clinicMgr;
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location currentLocation = null;
     private Location lastLocation = null;
     boolean flag = false;
-    ArrayList<CHASClinic> clinicArrayList = new ArrayList<>();
+    private CHASClinicMgrInterface clinicMgr;
+
+    private ClinicAdapter adapter;
+    private String clinicName;
+    ArrayList<CHASClinic> chasClinics;
 
 
     @Override
@@ -60,6 +63,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Toolbar toolbar = findViewById(R.id.mapsToolBar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed(); // Implemented by activity
+        });
 
         clinicMgr = new CHASClinicMgr();
     }
@@ -78,35 +88,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        getLocationPermission();
 
-        getDeviceLocation();
+
+        getLocationPermission();
         //get current location
         if (mLocationPermissionsGranted) {
+            System.out.println("try to get device location");
             if (lastLocation == null && currentLocation != null) {
                 lastLocation = currentLocation;
                 System.out.println("last location set once only");
                 flag = true;
-                clinicArrayList = clinicMgr.getClinic(mMap, this);
-                clinicMgr.setClinicsMarker(mMap, clinicArrayList);
-                getDeviceLocation();
+                chasClinics = clinicMgr.getClinic(mMap, this);
+                clinicMgr.setClinicsMarker(mMap,chasClinics);
             }
 
-        }
+
+            getDeviceLocation();
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
         }
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
     }
 
 
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -128,11 +141,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             if (currentLocation != null)
                                 moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                        15f);
+                                        DEFAULT_ZOOM);
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                            moveCamera(new LatLng(1.3521, 103.8198),
+                                    DEFAULT_ZOOM);
                         }
                     }
                 });
@@ -178,8 +193,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
         }
-
-
     }
 
     @Override
@@ -205,5 +218,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+
+
 
 }

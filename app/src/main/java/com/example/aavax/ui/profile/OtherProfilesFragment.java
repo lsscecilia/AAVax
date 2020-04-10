@@ -45,7 +45,7 @@ public class OtherProfilesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mIMainActivity.setToolbarTitle(getTag());
+        mIMainActivity.setToolbarTitle("Other profiles");
     }
 
     @Nullable

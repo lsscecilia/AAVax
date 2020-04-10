@@ -7,7 +7,7 @@
     android:background="@color/appBackground">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/mapsToolBar"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:background="@color/colorPrimary" />

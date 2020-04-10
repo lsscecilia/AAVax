@@ -7,10 +7,11 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/mapsToolBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +28,7 @@
     android:id="@+id/fragment_container1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar"
+    android:layout_below="@+id/mapsToolBar"
     android:layout_marginTop="0dp"
     android:layout_marginBottom="0dp">
 
