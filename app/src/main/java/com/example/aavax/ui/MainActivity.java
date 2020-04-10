@@ -23,7 +23,6 @@ import com.example.aavax.R;
 import com.example.aavax.ui.homepage.VaccinationHistoryFragment;
 import com.example.aavax.ui.login.LoginActivity;
 import com.example.aavax.ui.homepage.VaccineDetailFragment;
-import com.example.aavax.ui.maps.MapViewFragment;
 import com.example.aavax.ui.profile.ProfilePageFragment;
 import com.example.aavax.ui.reminder.RemindersPageFragment;
 import com.example.aavax.ui.settings.SettingsActivity;
@@ -52,6 +51,12 @@ import control.ProfileMgr;
 import entity.AccountMgrInterface;
 import entity.ProfileMgrInterface;
 
+/**
+ * MainActivity provides the "frame" for the whole application
+ * Called by: {@link LoginActivity}
+ * Calls (through bottom navigation bar) : {@link VaccinationHistoryFragment}, {@link TravelPageFragment}, {@link RemindersPageFragment}, {@link ProfilePageFragment}
+ * Calls (through Sidebar) : {@link SettingsActivity}, {@link LoginActivity when user request to log out}, {@link MainActivity during switching of profile}
+ */
 public class MainActivity extends AppCompatActivity implements IMainActivity , NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "MainActivity";
@@ -225,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
             menu.removeItem(item.getItemId());
 
             System.out.println("CHANGE PROFILE HEREEEEEE");
-            profileMgr.changeProfile(uId, Integer.toString(item.getItemId()));
+            profileMgr.switchProfile(uId, Integer.toString(item.getItemId()));
 
             drawer.closeDrawer(GravityCompat.START);
 
@@ -296,11 +301,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity , N
             doFragmentTransaction(fragment, fragmentTag, true, message);
 
         }
-        else if (fragmentTag.equals("Nearby Clinics")){
-            MapViewFragment fragment = new MapViewFragment();
-            doFragmentTransaction(fragment, fragmentTag, true, message);
-        }
-
         else if (Arrays.asList(vaccines).contains(fragmentTag)){
             VaccineDetailFragment fragment = new VaccineDetailFragment();
             doFragmentTransaction(fragment, fragmentTag, true, message);

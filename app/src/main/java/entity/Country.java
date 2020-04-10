@@ -1,17 +1,19 @@
 package entity;
 import java.util.ArrayList;
 
+/**
+ * Class for Object country
+ * Contains country's name, list of required vaccines, list of recommended vaccines
+ */
 public class Country {
     private String name;
     private ArrayList<Vaccine> vaccineRequired;
     private ArrayList<Vaccine> vaccineRecommended;
-    //private CDCThreatLevel cdcThreatLevel;
 
     public Country(String name, ArrayList<Vaccine> vaccineRequired, ArrayList<Vaccine> vaccineRecommended) {
         this.name = name;
         this.vaccineRequired = vaccineRequired;
         this.vaccineRecommended = vaccineRecommended;
-        //this.cdcThreatLevel = cdcThreatLevel;
     }
 
     public Country(){}
@@ -40,11 +42,4 @@ public class Country {
         this.vaccineRecommended = vaccineRecommended;
     }
 
-//    public CDCThreatLevel getCdcThreatLevel() {
-//        return cdcThreatLevel;
-//    }
-//
-//    public void setCdcThreatLevel(CDCThreatLevel cdcThreatLevel) {
-//        this.cdcThreatLevel = cdcThreatLevel;
-//    }
 }

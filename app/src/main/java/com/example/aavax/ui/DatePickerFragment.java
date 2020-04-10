@@ -24,6 +24,10 @@ import java.util.Date;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
+/**
+ * Dialog Fragment that prompts user to choose date with a calender
+ * Used in: {@link com.example.aavax.ui.profile.EditProfileFragment}, {@link com.example.aavax.ui.homepage.VaccineEntryFragment}
+ */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
 
@@ -53,11 +57,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 new Intent().putExtra("selectedDate", selectedDate)
 
         );
-
-
-        //TextView dateChosen = view.findViewById(R.id.dateChosen);
-        //Button lastTakenDateBtn = view.findViewById(R.id.lastUpdatedBtn);
-       // dateChosen.setText(currentDateString);
     }
 
 

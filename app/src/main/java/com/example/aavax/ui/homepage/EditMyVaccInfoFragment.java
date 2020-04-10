@@ -35,6 +35,12 @@ import control.VaccineLogMgr;
 import entity.VaccineLogEntry;
 import entity.VaccineLogMgrInterface;
 
+
+/**
+ * edit vaccine log entry
+ * Called by: {@link MyVaccInfoFragment}
+ * Calls: {@link VaccinationHistoryFragment}
+ */
 public class EditMyVaccInfoFragment extends Fragment {
     private String vaccineName;
     private String uId;
@@ -48,8 +54,8 @@ public class EditMyVaccInfoFragment extends Fragment {
     private Date nextDue=null;
     private String reminder=null;
 
-    public static final int REQUEST_CODE = 22;
-    public static final int REQUEST_CODE2 = 3;
+    private static final int REQUEST_CODE = 22;
+    private static final int REQUEST_CODE2 = 3;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

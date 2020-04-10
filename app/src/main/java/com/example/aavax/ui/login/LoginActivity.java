@@ -16,6 +16,13 @@ import com.example.aavax.R;
 import control.AccountMgr;
 import entity.AccountMgrInterface;
 
+/**
+ * existing user able to login, new user able to create account. First page when user open the application
+ * Called by: {@link com.example.aavax.ui.profile.ProfilePageFragment}when user request to log out,
+ * {@link com.example.aavax.ui.MainActivity} when user request to log out,
+ * {@link com.example.aavax.ui.settings.DeleteAccountFragment} on sucessful account deletion
+ * Calls: {@link com.example.aavax.ui.MainActivity}, {@link CreateAccountActivity}
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private AccountMgrInterface accountMgr;

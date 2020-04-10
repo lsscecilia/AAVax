@@ -1,6 +1,10 @@
 package entity;
 import java.util.Date;
 
+/**
+ * Class for Object VaccineLogEntry
+ * Contains vaccine taken, data taken for this vaccine, date for the next dose, boolean var to indicate if reminder is requested by user
+ */
 public class VaccineLogEntry {
     private Date dateTaken;
     private Vaccine vaccine;

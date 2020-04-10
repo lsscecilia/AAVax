@@ -15,12 +15,6 @@ import androidx.fragment.app.Fragment;
 import com.example.aavax.R;
 import com.example.aavax.ui.CustomMessageEvent;
 import com.example.aavax.ui.IMainActivity;
-import com.example.aavax.ui.login.LoginActivity;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -28,6 +22,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import control.AccountMgr;
 import entity.AccountMgrInterface;
 
+/**
+ * page to confirm deletion of account. User prompted to enter account password again.
+ * Called by: {@link SettingFragment}
+ * Calls: {@link com.example.aavax.ui.login.LoginActivity on sucessful account deletion}
+ */
 public class DeleteAccountFragment extends Fragment {
     private static final String TAG = "Delete account";
     private IMainActivity mIMainActivity;

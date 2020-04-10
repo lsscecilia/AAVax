@@ -10,6 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aavax.R;
 
+/**
+ * Hold setting option in SettingsAdapter
+ * Used in: {@link SettingsAdapter}
+ * Calls: {@link ChangePasswordFragment}, {@link DeleteAccountFragment} based on user's request
+ */
 public class SettingsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView settingsName;

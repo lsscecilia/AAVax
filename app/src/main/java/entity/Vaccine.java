@@ -1,5 +1,9 @@
 package entity;
 
+/**
+ * Class for Object Vaccine
+ * Contains vaccine's name, detail, number of months till it expiry, and boolean var to indicate if this vaccine is only required once
+ */
 public class Vaccine {
     private String name;
     private String detail;

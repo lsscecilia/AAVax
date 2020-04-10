@@ -32,6 +32,11 @@ import control.ProfileMgr;
 import entity.Profile;
 import entity.ProfileMgrInterface;
 
+/**
+ * shows the list of other profiles.
+ * Called by: {@link ProfilePageFragment}
+ * Calls: {@link EditProfileFragment in OtherProfilesHolder when a particular profile is choosen}, {@link NewProfileEntry when user request for new profile entry}
+ */
 public class OtherProfilesFragment extends Fragment {
     private static final String TAG = "Other_Profiles";
 

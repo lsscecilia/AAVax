@@ -15,7 +15,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-
+/**
+ * adapter to show list of other profiles
+ * Used in: {@link OtherProfilesFragment}
+ * Uses: {@link OtherProfilesHolder}
+ */
 public class OtherProfilesAdapter extends RecyclerView.Adapter<OtherProfilesHolder> {
 
     private Context context;

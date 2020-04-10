@@ -16,6 +16,11 @@ import org.greenrobot.eventbus.Subscribe;
 import control.AccountMgr;
 import entity.AccountMgrInterface;
 
+/**
+ * create new account
+ * Called by: {@link LoginActivity}
+ * Calls: {@link LoginActivity}
+ */
 public class CreateAccountActivity extends AppCompatActivity {
 
     public static final String TAG = "CreateAccount";

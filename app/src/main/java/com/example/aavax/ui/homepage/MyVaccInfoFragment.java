@@ -22,6 +22,11 @@ import control.VaccineLogMgr;
 import entity.VaccineLogEntry;
 import entity.VaccineLogMgrInterface;
 
+/**
+ * Display user's vaccination history for a particular vaccine
+ * Called by: {@link VaccinationHistoryFragment}, {@link com.example.aavax.ui.reminder.RemindersPageFragment}
+ * Calls: {@link EditMyVaccInfoFragment}, {@link VaccineDetailFragment}
+ */
 public class MyVaccInfoFragment extends Fragment {
 
     private VaccineLogMgrInterface vaccineLogMgr;

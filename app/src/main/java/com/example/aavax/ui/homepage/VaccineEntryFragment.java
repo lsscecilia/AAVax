@@ -37,6 +37,12 @@ import control.VaccineLogMgr;
 import entity.Vaccine;
 import entity.VaccineLogMgrInterface;
 
+
+/**
+ * add new vaccine entry to profile's vaccination history
+ * Called by; {@link VaccinationHistoryFragment}
+ * Calls: {@link VaccinationHistoryFragment}
+ */
 public class VaccineEntryFragment extends Fragment {
 
     private IMainActivity mIMainActivity;

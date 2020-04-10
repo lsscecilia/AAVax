@@ -28,7 +28,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import control.AccountMgr;
 import entity.AccountMgrInterface;
 
-
+/**
+ * change account password
+ * Called by: {@link SettingFragment}
+ * Calls: {@link SettingsActivity on successful change of password}
+ */
 public class ChangePasswordFragment extends Fragment {
 
     private static final String TAG = "Change password";

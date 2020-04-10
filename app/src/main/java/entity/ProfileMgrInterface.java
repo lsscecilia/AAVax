@@ -11,6 +11,6 @@ public interface ProfileMgrInterface {
     public void editProfile(final String uId,String pId ,String name, String dob);
     public void setDefaultProfile(final String Uid);
     public void addProfile(final String Uid, String name, String dob);
-    public void changeProfile(final String Uid,final String profileId);
+    public void switchProfile(final String Uid, final String profileId);
     public void deleteProfile(String Uid, String profileId);
 }

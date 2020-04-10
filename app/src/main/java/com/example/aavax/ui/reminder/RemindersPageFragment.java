@@ -36,7 +36,11 @@ import control.VaccineLogMgr;
 import entity.VaccineLogEntry;
 import entity.VaccineLogMgrInterface;
 
-
+/**
+ * Show a list of vaccines & its date where user is supposed to be taken again
+ * Called by: {@link com.example.aavax.ui.MainActivity}
+ * Calls: {@link com.example.aavax.ui.homepage.MyVaccInfoFragment in ReminderHolder when a particular vaccine reminder is chosen}
+ */
 public class RemindersPageFragment extends Fragment {
 
     private static final String TAG = "Reminders";

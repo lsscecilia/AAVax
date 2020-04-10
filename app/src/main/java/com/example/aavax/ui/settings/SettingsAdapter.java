@@ -12,7 +12,11 @@ import com.example.aavax.R;
 
 import java.util.ArrayList;
 
-
+/**
+ * adapter to hold list of settings option
+ * Used in: {@link SettingFragment}
+ * Uses: {@link SettingsHolder}
+ */
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsHolder> {
     private Context context;
     private String uId;

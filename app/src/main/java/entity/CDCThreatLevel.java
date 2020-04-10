@@ -1,5 +1,9 @@
 package entity;
 
+/**
+ * Class for object CDCThreatLevel
+ * contains cdc level and details
+ */
 public class CDCThreatLevel {
     private int level;
     private String detail;

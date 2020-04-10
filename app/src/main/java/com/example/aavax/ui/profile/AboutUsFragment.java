@@ -14,6 +14,11 @@ import androidx.fragment.app.Fragment;
 import com.example.aavax.R;
 import com.example.aavax.ui.IMainActivity;
 
+/**
+ * About us
+ * Called by: {@link ProfilePageFragment}
+ * Calls: -
+ */
 public class AboutUsFragment extends Fragment {
     private static final String TAG = "About us";
     //widgets

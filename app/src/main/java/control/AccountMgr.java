@@ -2,7 +2,6 @@ package control;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -34,6 +33,10 @@ import java.util.HashMap;
 import entity.Account;
 import entity.AccountMgrInterface;
 
+/**
+ * implements AccountMgrInterface
+ * allows the app to interact with firebasa database, acting as an control class for Account (entity class)
+ */
 public class AccountMgr implements AccountMgrInterface {
 
     private FirebaseDatabase database;
@@ -102,6 +105,15 @@ public class AccountMgr implements AccountMgrInterface {
     }
 
 
+    /**
+     * this method is called to create account for new user
+     * @param email
+     * @param password
+     * @param firstName
+     * @param lastName
+     * @param dob
+     * @param activity
+     */
     @Override
     public void createAccount(String email, String password, String firstName, String lastName, String dob, Activity activity)
     {
@@ -127,6 +139,11 @@ public class AccountMgr implements AccountMgrInterface {
         }
     }
 
+    /**
+     * change password
+     * @param password
+     * @param uId
+     */
     @Override
     public void changePassword(String password, String uId) {
         database = FirebaseDatabase.getInstance();
@@ -135,6 +152,11 @@ public class AccountMgr implements AccountMgrInterface {
         userRef.child(uId).child("password").setValue(password);
     }
 
+    /**
+     * get current profile's name
+     * @param myCallback
+     * @param Uid
+     */
     @Override
     public void retrieveCurrentProfileName(MyCallbackString myCallback, String Uid) {
         database = FirebaseDatabase.getInstance();
@@ -158,6 +180,11 @@ public class AccountMgr implements AccountMgrInterface {
         });
     }
 
+    /**
+     * retrieve current account's email address
+     * @param myCallback
+     * @param Uid
+     */
     @Override
     public void retrieveEmailAdress(MyCallbackString myCallback, String Uid) {
         database = FirebaseDatabase.getInstance();
@@ -176,6 +203,11 @@ public class AccountMgr implements AccountMgrInterface {
         });
     }
 
+    /**
+     * retrieve sub profile name and ID
+     * @param myCallback
+     * @param Uid
+     */
     @Override
     public void retrieveSubprofileNameAndID(MyCallbackHashMap myCallback, String Uid) {
         database = FirebaseDatabase.getInstance();
@@ -203,6 +235,13 @@ public class AccountMgr implements AccountMgrInterface {
         });
     }
 
+    /**
+     * delete account
+     * @param pw
+     * @param view
+     * @param activity
+     * @param uId
+     */
     @Override
     public void deleteAcc(String pw, View view, Activity activity, String uId)
     {
@@ -231,8 +270,10 @@ public class AccountMgr implements AccountMgrInterface {
     }
 
 
-
-
+    /**
+     * set first profile to be the default profile
+     * @param Uid
+     */
     public void setDefaultProfile(String Uid) {
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");

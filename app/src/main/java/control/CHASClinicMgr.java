@@ -18,8 +18,19 @@ import java.util.ArrayList;
 import entity.CHASClinic;
 import entity.CHASClinicMgrInterface;
 
+/**
+ * implements CHASClinicMgrInterface
+ * allows the app to interact with database, acting as an control class for CHASClinic (entity class)
+ */
 public class CHASClinicMgr implements CHASClinicMgrInterface {
 
+
+    /**
+     * get list of CHAS clinic
+     * @param mMap
+     * @param activity
+     * @return
+     */
     public ArrayList<CHASClinic> getClinic(GoogleMap mMap, Activity activity)
     {
         ArrayList<CHASClinic> clinicArrayList = new ArrayList<>();
@@ -55,6 +66,11 @@ public class CHASClinicMgr implements CHASClinicMgrInterface {
         return clinicArrayList;
     }
 
+    /**
+     * set markers of CHAS Clinic on google maps
+     * @param mMap
+     * @param clinics
+     */
     public void setClinicsMarker(GoogleMap mMap, ArrayList<CHASClinic> clinics)
     {
         for (CHASClinic clinic: clinics)

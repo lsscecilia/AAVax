@@ -13,11 +13,19 @@ import java.util.HashMap;
 import entity.Profile;
 import entity.ProfileMgrInterface;
 
+/**
+ * implements ProfileMgrInterface
+ * allows the app to interact with firebasa database, acting as an control class for Profile(entity class)
+ */
 public class ProfileMgr implements ProfileMgrInterface {
     private FirebaseDatabase database;
     private DatabaseReference userRef;
 
-
+    /**
+     * retrieve sub profile name and ID
+     * @param myCallback
+     * @param Uid
+     */
     @Override
     public void retrieveSubprofileNameAndID(final MyCallbackHashMap myCallback, final String Uid)
     {
@@ -46,6 +54,11 @@ public class ProfileMgr implements ProfileMgrInterface {
         });
     }
 
+    /**
+     * retrieve name of current profile
+     * @param myCallback
+     * @param Uid
+     */
     @Override
     public void retrieveCurrentProfileName(final MyCallbackString myCallback, final String Uid)
     {
@@ -70,6 +83,12 @@ public class ProfileMgr implements ProfileMgrInterface {
         });
     }
 
+    /**
+     * retrieve particular profile with userID and profileID
+     * @param myCallback
+     * @param uId
+     * @param pId
+     */
     @Override
     public void retrieveProfile(MyCallbackProfile myCallback, String uId, String pId) {
         database = FirebaseDatabase.getInstance();
@@ -90,6 +109,11 @@ public class ProfileMgr implements ProfileMgrInterface {
         });
     }
 
+    /**
+     * edit current profile name with userID
+     * @param uId
+     * @param name
+     */
     @Override
     public void editProfile(String uId, String name) {
         database = FirebaseDatabase.getInstance();
@@ -111,6 +135,13 @@ public class ProfileMgr implements ProfileMgrInterface {
         });
     }
 
+    /**
+     * edit particular profile details with userID and profileID
+     * @param uId
+     * @param pId
+     * @param name
+     * @param dob
+     */
     @Override
     public void editProfile(String uId, String pId, String name, String dob) {
         database = FirebaseDatabase.getInstance();
@@ -119,6 +150,11 @@ public class ProfileMgr implements ProfileMgrInterface {
         userRef.child(uId).child("profiles").child(pId).child("dateOfBirth").setValue(dob);
     }
 
+
+    /**
+     * set first profile in database to be default profile
+     * @param Uid
+     */
     @Override
     public void setDefaultProfile(String Uid) {
         database = FirebaseDatabase.getInstance();
@@ -154,6 +190,12 @@ public class ProfileMgr implements ProfileMgrInterface {
         });
     }
 
+    /**
+     * add profile to a existing account
+     * @param Uid
+     * @param name
+     * @param dob
+     */
     @Override
     public void addProfile(String Uid, String name, String dob) {
         database = FirebaseDatabase.getInstance();
@@ -171,7 +213,7 @@ public class ProfileMgr implements ProfileMgrInterface {
                 }
 
                 userRef.child(Uid).child("profiles").child(Integer.toString(maxProfileId+1)).setValue(profile);
-                changeProfile(Uid,Integer.toString(maxProfileId+1 ));
+                switchProfile(Uid,Integer.toString(maxProfileId+1 ));
             }
 
             @Override
@@ -181,8 +223,13 @@ public class ProfileMgr implements ProfileMgrInterface {
         });
     }
 
+    /**
+     * switching of profiles
+     * @param Uid
+     * @param profileId
+     */
     @Override
-    public void changeProfile(String Uid, String profileId) {
+    public void switchProfile(String Uid, String profileId) {
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("users");
         System.out.println("change profile to " + profileId);
@@ -211,6 +258,11 @@ public class ProfileMgr implements ProfileMgrInterface {
         });
     }
 
+    /**
+     * delete profile
+     * @param Uid
+     * @param profileId
+     */
     @Override
     public void deleteProfile(String Uid, String profileId) {
         database = FirebaseDatabase.getInstance();

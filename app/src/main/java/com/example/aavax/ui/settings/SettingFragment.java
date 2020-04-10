@@ -20,6 +20,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+/**
+ * list of settings option for user to choose
+ * Called by: {@link SettingsActivity}
+ * Calls: {@link DeleteAccountFragment}, {@link ChangePasswordFragment} in respective SettingsHolder
+ */
 public class SettingFragment extends Fragment {
 
     private RecyclerView recyclerView;

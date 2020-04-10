@@ -16,6 +16,8 @@ import entity.Vaccine;
 
 /**
  * adapter to show the list of vaccines
+ * Used in: {@link VaccinationHistoryFragment}
+ * Uses: {@link VaccineHolder}
  */
 public class VaccineAdapter extends RecyclerView.Adapter<VaccineHolder> {
 

@@ -36,6 +36,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import control.ProfileMgr;
 import entity.ProfileMgrInterface;
 
+/**
+ * display details of current profile
+ * Called by: {@link com.example.aavax.ui.MainActivity}
+ * Calls: {@link OtherProfilesFragment}, {@link AboutUsFragment}, {@link LoginActivity}
+ */
 public class ProfilePageFragment extends Fragment  {
 
     private static final String TAG = "Profile";

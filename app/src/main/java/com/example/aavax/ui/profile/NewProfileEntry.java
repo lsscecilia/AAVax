@@ -21,11 +21,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import control.ProfileMgr;
 import entity.ProfileMgrInterface;
 
+/**
+ * add new profile to account
+ * Called by: {@link OtherProfilesFragment}
+ * Calls: {@link MainActivity on sucessful profile creation}
+ */
 public class NewProfileEntry extends AppCompatActivity {
     private ProfileMgrInterface profileMgr;
     private String uId;
     private String pId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,5 +1,8 @@
 package com.example.aavax.ui;
 
+/**
+ * Message to be pass through event bus
+ */
 public class CustomMessageEvent {
     private String customMessage;
 

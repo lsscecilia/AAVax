@@ -12,9 +12,12 @@ import com.example.aavax.R;
 import com.example.aavax.ui.MainActivity;
 
 
+/**
+ * settings activity
+ * Called by: {@link MainActivity "settings"  option at the sidebar}
+ * Calls: {@link SettingFragment}
+ */
 public class SettingsActivity extends AppCompatActivity {
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -12,7 +12,11 @@ import com.example.aavax.R;
 
 import java.util.HashMap;
 
-
+/**
+ * holder to hold profiles in OtherProfileAdapter
+ * Used in:{@link OtherProfilesAdapter}
+ * Calls: {@link EditProfileFragment}
+ */
 public class OtherProfilesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private TextView profileName;
     private String pId;

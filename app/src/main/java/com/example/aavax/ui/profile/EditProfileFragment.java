@@ -29,7 +29,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import control.ProfileMgr;
 import entity.ProfileMgrInterface;
 
-
+/**
+ * user able to edit & delete their profile
+ * Called by: {@link OtherProfilesFragment}
+ * Calls: {@link VaccinationHistoryFragment on sucessful edit}, {@link ProfilePageFragment on sucessful profile deletion}
+ */
 public class EditProfileFragment extends Fragment {
 
     private static final String TAG = "Edit Profile";
@@ -118,7 +122,7 @@ public class EditProfileFragment extends Fragment {
             profileMgr.editProfile(uId, pId, firstNameInput+" "+lastNameInput, dobInput);
 
             //switch profile to this current one
-            profileMgr.changeProfile(uId,pId);
+            profileMgr.switchProfile(uId,pId);
 
             //remove from menu bar?
             menu.removeItem(Integer.parseInt(pId));

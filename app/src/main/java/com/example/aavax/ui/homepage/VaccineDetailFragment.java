@@ -18,6 +18,12 @@ import control.VaccineLogMgr;
 import entity.Vaccine;
 import entity.VaccineLogMgrInterface;
 
+
+/**
+ * shows details of a particular vaccine
+ * Called by: {@link MyVaccInfoFragment}
+ * Calls:  -
+ */
 public class VaccineDetailFragment extends Fragment {
 
     private IMainActivity mIMainActivity;

@@ -2,6 +2,11 @@ package entity;
 
 import java.util.ArrayList;
 
+
+/**
+ * Class for object Account
+ * contains account's email, password and list of profiles
+ */
 public class Account {
     private String email;
     private String password;

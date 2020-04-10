@@ -33,6 +33,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+/**
+ * Show a list that consist of all of user vaccination history
+ * Called by: {@link com.example.aavax.ui.MainActivity}
+ * Calls: {@link MyVaccInfoFragment in VaccineHolder when a particular vaccine is chosen}, {@link VaccineEntryFragment when user request to enter new vaccine entry}
+ */
 public class VaccinationHistoryFragment extends Fragment {
 
     private static final String TAG = "My Vaccinations";

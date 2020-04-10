@@ -2,6 +2,10 @@ package entity;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * Class for object CHAS clinic
+ * contains clinic's name and coordinates in the form of latitude and longitude
+ */
 public class CHASClinic {
     private String name;
     private LatLng latLng;

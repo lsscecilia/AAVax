@@ -13,6 +13,11 @@ import com.example.aavax.ui.homepage.MyVaccInfoFragment;
 
 import entity.VaccineLogEntry;
 
+/**
+ * holder to hold reminder in ReminderAdapter
+ * Used by: {@link ReminderAdapter}
+ * Calls: {@link MyVaccInfoFragment}
+ */
 public class ReminderHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     private TextView vaccineName;
     private TextView vaccineDate;

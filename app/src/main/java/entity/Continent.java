@@ -1,5 +1,9 @@
 package entity;
 
+/**
+ * Class for Object Continent
+ * Contains continent's name
+ */
 public class Continent {
     private String name;
 

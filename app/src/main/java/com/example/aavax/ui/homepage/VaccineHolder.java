@@ -12,6 +12,11 @@ import com.example.aavax.R;
 
 import entity.Vaccine;
 
+/**
+ * holder to hold vaccine in VaccineAdapter
+ * Used in: {@link VaccineAdapter}
+ * Calls: {@link MyVaccInfoFragment}
+ */
 public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView vaccineName;
@@ -42,7 +47,5 @@ public class VaccineHolder extends RecyclerView.ViewHolder implements View.OnCli
         myFragment.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myFragment).addToBackStack(null).commit();
     }
-
-
 }
 

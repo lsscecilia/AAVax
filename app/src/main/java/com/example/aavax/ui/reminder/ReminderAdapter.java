@@ -14,6 +14,11 @@ import java.util.ArrayList;
 
 import entity.VaccineLogEntry;
 
+/**
+ * adapter to show list of reminders
+ * Used in: {@link RemindersPageFragment}
+ * Uses: {@link ReminderHolder}
+ */
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderHolder>{
     private Context context;
     private String uId;

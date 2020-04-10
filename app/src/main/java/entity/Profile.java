@@ -3,12 +3,15 @@ package entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for Object Profile
+ * Contains profile's name , date of birth, list of vaccine log entry and boolean var to indicate if this is current profile
+ */
 public class Profile {
     private String name;
     private String dateOfBirth;
     private List<VaccineLogEntry> vaccineLogEntries;
     private boolean thisProfile;
-   // private VaccineLog vaccineLog;
 
 
     public Profile() {
